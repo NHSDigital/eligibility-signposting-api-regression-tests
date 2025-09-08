@@ -1,0 +1,134 @@
+name: Regression Tests
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :'
+        required: true
+        type: string
+        default: "@regression"
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+        default: "DEV"
+      id:
+        description: 'Unique run identifier (Do not change this)'
+        required: false
+        default: "Manually Triggered Run"
+      pull_request_id:
+        description: 'The ID of the pull request. This should be in the format pr-xxxx where xxxx is the pull request id'
+        required: false
+        default: ""
+      github_tag:
+        description: 'The github tag to run the test pack from'
+        required: false
+        default: "main"
+
+jobs:
+  regression_tests:
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    steps:
+      # we need to leave this step in as run_regression test scripts expect the third step in the job to have the name of the input id
+      # the first step is auto generated 'set up job' step
+      - name: show_input_parameters
+        env:
+          tags: ${{ inputs.tags }}
+          environment: ${{ inputs.environment }}
+          id: ${{ inputs.id }}
+          pull_request_id: ${{ inputs.pull_request_id }}
+          github_tag: ${{ inputs.github_tag }}
+        run: |
+          echo "tags: ${tags}"
+          echo "environment: ${environment}"
+          echo "id: ${id}"
+          echo "pull_request_id: ${pull_request_id}"
+          echo "github_tag: ${github_tag}"
+          # output to summary
+          # shellcheck disable=SC2129
+          echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "pull_request_id: ${pull_request_id}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
+
+      - name: ${{github.event.inputs.id}}
+        env:
+          ID: ${{github.event.inputs.id}}
+          ENV: ${{ inputs.environment }}
+          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
+        run: |
+          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"
+          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"  >> "$GITHUB_STEP_SUMMARY"
+
+  run_regression_tests:
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    needs: [regression_tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          ref: ${{ inputs.github_tag }}
+
+      # using git commit sha for version of action to ensure we have stable version
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+
+      - name: Cache asdf
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.asdf
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+
+      - name: Install asdf dependencies in .tool-versions
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+        env:
+          PYTHON_CONFIGURE_OPTS: --enable-shared
+
+      - name: Cache Virtualenv
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: make install
+
+      - name: App product to APP for PR
+        continue-on-error: true
+        env:
+          PRODUCT: ${{ inputs.product }}
+          PR_ID: ${{ inputs.pull_request_id }}
+          APIGEE_MFA_SECRET: ${{ secrets.APIGEE_MFA_SECRET }}
+          APIGEE_PASSWORD: ${{ secrets.APIGEE_PASSWORD }}
+          APIGEE_USER: ${{ secrets.APIGEE_USER }}
+        run: |
+          export APIGEE_MFA_SECRET="$APIGEE_MFA_SECRET"
+          export APIGEE_PASSWORD="$APIGEE_PASSWORD"
+          export APIGEE_USER="$APIGEE_USER"
+          poetry run python ./scripts/add_pr_product_to_app.py --product="$PRODUCT" --pr="$PR_ID"
+
+      - name: Regression Tests
+        id: tests
+        continue-on-error: true
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
+          INPUT_TAG: ${{ inputs.tags }}
+        run: |
+          echo Automated E2E Regression tests coming soon
+
+      - name: force error on failure
+        if: steps.tests.outcome != 'success'
+        run: |
+          echo The regression tests step failed, this likely means there are test failures.
+          exit 1

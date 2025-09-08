@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "eligibility-signposting-api-regression-tests"
+version = "0.1.0"
+description = ""
+authors = ["SeanSteberis <sean.steberis@airelogic.com>"]
+readme = "README.md"
+package-mode = false
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+pytest-nhsd-apim = "^5.0.0"
+pytest = "^8.4.1"
+nhs-number-generator = {git = "https://github.com/Iain-S/nhs_number_generator.git"}
+flake8 = "^7.3.0"
+isort = "^6.0.1"
+black = "^25.1.0"
+assertpy = "^1.1"
+requests = "^2.32.4"
+jsonschema = "^4.25.0"
+pip-licenses = "^5.0.0"
+requests-oauthlib = "^2.0.0"
+pre-commit = "^4.2.0"
+boto3 = "^1.40.4"
+faker = "^37.5.3"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/.*",
+    "**/__pycache__",
+    "**/venv",
+    "**/.venv"
+]
+defineConstant = { DEBUG = true }
+reportMissingImports = true
+
+pythonVersion = "3.13"
+pythonPlatform = "Linux"
+
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
