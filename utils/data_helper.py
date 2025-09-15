@@ -21,7 +21,10 @@ def initialise_tests(folder):
 
 def resolve_placeholders_in_data(data, context, file_name):
     if isinstance(data, dict):
-        return {k: resolve_placeholders_in_data(v, context, file_name) for k, v in data.items()}
+        return {
+            k: resolve_placeholders_in_data(v, context, file_name)
+            for k, v in data.items()
+        }
     if isinstance(data, list):
         return [resolve_placeholders_in_data(item, context, file_name) for item in data]
     return resolve_placeholders(data, context, file_name)

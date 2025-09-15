@@ -19,7 +19,7 @@ class EligibilityApiClient:
         load_dotenv(dotenv_path=Path(__file__).resolve().parent / "../.env")
 
         self.api_url: str = api_url
-        self.session = boto3.session.Session(profile_name='test')
+        self.session = boto3.session.Session(profile_name="test")
 
         self.cert_dir: Path = Path(cert_dir)
         self.cert_dir.mkdir(parents=True, exist_ok=True)

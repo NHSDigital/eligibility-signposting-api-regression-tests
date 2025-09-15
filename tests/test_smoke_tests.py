@@ -11,15 +11,22 @@ all_expected_responses = load_all_expected_responses(test_config.SMOKE_TEST_RESP
 config_path = test_config.SMOKE_TEST_CONFIGS
 
 param_list = list(all_data.items())
-id_list = [f"{filename} - {scenario.get('scenario_name', 'No Scenario')}" for filename, scenario in param_list]
+id_list = [
+    f"{filename} - {scenario.get('scenario_name', 'No Scenario')}"
+    for filename, scenario in param_list
+]
 
 
 @pytest.mark.sandboxtests
 @pytest.mark.parametrize(("filename", "scenario"), param_list, ids=id_list)
 def test_run_smoke_case(filename, scenario, eligibility_client, get_scenario_params):
-    nhs_number, config_filenames, request_headers, query_params, expected_response_code = get_scenario_params(
-        scenario, config_path
-    )
+    (
+        nhs_number,
+        config_filenames,
+        request_headers,
+        query_params,
+        expected_response_code,
+    ) = get_scenario_params(scenario, config_path)
 
     actual_response = eligibility_client.make_request(
         nhs_number, headers=request_headers, query_params=query_params, strict_ssl=False

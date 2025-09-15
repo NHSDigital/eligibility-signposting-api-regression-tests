@@ -38,7 +38,10 @@ def _resolve_placeholder_value(placeholder: str) -> str:
         return placeholder
 
     parts = placeholder.split("_")
-    if len(parts) != placeholder_parts_length or parts[0] not in valid_placeholder_types:
+    if (
+        len(parts) != placeholder_parts_length
+        or parts[0] not in valid_placeholder_types
+    ):
         return result
 
     today = datetime.now(UTC)
@@ -68,7 +71,11 @@ def _resolve_age_placeholder(today: datetime, years_back: int, format_type: str)
     try:
         result_date = today.replace(year=target_year)
     except ValueError:
-        if today.month == february and today.day == leap_year_day and not isleap(target_year):
+        if (
+            today.month == february
+            and today.day == leap_year_day
+            and not isleap(target_year)
+        ):
             result_date = datetime(target_year, 2, 28, tzinfo=UTC)
         else:
             raise
@@ -76,4 +83,6 @@ def _resolve_age_placeholder(today: datetime, years_back: int, format_type: str)
 
 
 def _format_date(date: datetime, format_type: str) -> str:
-    return date.strftime("%Y%m%d") if format_type == "DATE" else date.strftime("%-d %B %Y")
+    return (
+        date.strftime("%Y%m%d") if format_type == "DATE" else date.strftime("%-d %B %Y")
+    )

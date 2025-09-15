@@ -1,8 +1,10 @@
+import logging
 import uuid
+
 from requests import get as api_get_request
 from requests import post as api_post_request
+
 from methods.shared import common
-import logging
 
 
 def get(context, **kwargs):

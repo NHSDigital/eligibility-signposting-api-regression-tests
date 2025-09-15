@@ -19,7 +19,7 @@ class S3ConfigManager:
     def __init__(self, bucket_name: str, s3_prefix: str = "") -> None:
         self.bucket_name: str = bucket_name
         self.s3_prefix: str = s3_prefix
-        self.s3_client = boto3.session.Session(profile_name='test').client("s3")
+        self.s3_client = boto3.session.Session(profile_name="test").client("s3")
 
     def _s3_key(self, filename: str) -> str:
         return str(Path(self.s3_prefix) / filename)
@@ -38,15 +38,27 @@ class S3ConfigManager:
 
         try:
             if self.config_exists_and_matches(local_path, s3_key):
-                logger.info("\n🔍 Config '%s' already exists and matches in S3. Skipping upload.", filename)
+                logger.info(
+                    "\n🔍 Config '%s' already exists and matches in S3. Skipping upload.",
+                    filename,
+                )
                 return
-            logger.info("\n🧹 A different config exists under '%s/'. Deleting all existing files...", self.s3_prefix)
+            logger.info(
+                "\n🧹 A different config exists under '%s/'. Deleting all existing files...",
+                self.s3_prefix,
+            )
             self.delete_all_in_prefix()
         except self.s3_client.exceptions.NoSuchKey:
-            logger.info("\n🆕 No config found under '%s/'. Proceeding to upload.", self.s3_prefix)
+            logger.info(
+                "\n🆕 No config found under '%s/'. Proceeding to upload.",
+                self.s3_prefix,
+            )
         except botocore.exceptions.ClientError as error:
             if error.response.get("Error", {}).get("Code") == "NoSuchKey":
-                logger.info("\n🆕 No config found under '%s/'. Proceeding to upload.", self.s3_prefix)
+                logger.info(
+                    "\n🆕 No config found under '%s/'. Proceeding to upload.",
+                    self.s3_prefix,
+                )
             else:
                 raise
 
@@ -77,12 +89,20 @@ class S3ConfigManager:
 
     def delete_all_in_prefix(self) -> None:
         """Delete all S3 objects under the current prefix."""
-        response = self.s3_client.list_objects_v2(Bucket=self.bucket_name, Prefix=self.s3_prefix)
+        response = self.s3_client.list_objects_v2(
+            Bucket=self.bucket_name, Prefix=self.s3_prefix
+        )
 
         if "Contents" in response:
             to_delete = [{"Key": obj["Key"]} for obj in response["Contents"]]
-            self.s3_client.delete_objects(Bucket=self.bucket_name, Delete={"Objects": to_delete})
-            logger.info("🗑️ Deleted %d file(s) under prefix '%s/'.", len(to_delete), self.s3_prefix)
+            self.s3_client.delete_objects(
+                Bucket=self.bucket_name, Delete={"Objects": to_delete}
+            )
+            logger.info(
+                "🗑️ Deleted %d file(s) under prefix '%s/'.",
+                len(to_delete),
+                self.s3_prefix,
+            )
         else:
             logger.info("📭 Nothing to delete under prefix '%s/'.", self.s3_prefix)
 
@@ -110,7 +130,9 @@ class S3ConfigManager:
             resolved_json_str = json.dumps(resolved, indent=2)
 
             if self.config_exists_and_matches_str(resolved_json_str, s3_key):
-                logger.info("✅ Config '%s' is unchanged in S3. Skipping upload.", filename)
+                logger.info(
+                    "✅ Config '%s' is unchanged in S3. Skipping upload.", filename
+                )
             else:
                 logger.info("⬆️ Uploading config '%s' to S3...", filename)
                 self.s3_client.put_object(
@@ -131,7 +153,9 @@ class S3ConfigManager:
 
     def _list_existing_keys(self) -> list[str]:
         """List all object keys under the current S3 prefix."""
-        response = self.s3_client.list_objects_v2(Bucket=self.bucket_name, Prefix=self.s3_prefix)
+        response = self.s3_client.list_objects_v2(
+            Bucket=self.bucket_name, Prefix=self.s3_prefix
+        )
         return [obj["Key"] for obj in response.get("Contents", [])]
 
     def _delete_keys(self, keys: list[str]) -> None:

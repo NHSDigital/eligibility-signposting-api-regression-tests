@@ -12,7 +12,9 @@ VAR_PATTERN = re.compile(r"<<([^<>]+)>>")
 REQUIRED_TOKEN_PARTS = 3
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 class DateVariableResolver:
@@ -36,19 +38,25 @@ class DateVariableResolver:
         if unit == "week":
             return (self.today + timedelta(weeks=offset)).strftime(DATE_FORMAT)
         if unit == "year":
-            return (self.today.replace(year=self.today.year + offset)).strftime(DATE_FORMAT)
+            return (self.today.replace(year=self.today.year + offset)).strftime(
+                DATE_FORMAT
+            )
         if unit == "age":
             try:
                 birth_date = self.today.replace(year=self.today.year - offset)
             except ValueError:
-                birth_date = self.today.replace(month=2, day=28, year=self.today.year - offset)
+                birth_date = self.today.replace(
+                    month=2, day=28, year=self.today.year - offset
+                )
             return birth_date.strftime(DATE_FORMAT)
         msg = f"Unsupported calculation unit: {unit}"
         raise ValueError(msg)
 
 
 class JsonTestDataProcessor:
-    def __init__(self, input_dir: Path, output_dir: Path, resolver: DateVariableResolver):
+    def __init__(
+        self, input_dir: Path, output_dir: Path, resolver: DateVariableResolver
+    ):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.resolver = resolver

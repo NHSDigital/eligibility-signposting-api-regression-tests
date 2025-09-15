@@ -1,0 +1,13 @@
+from messages.psu.prescription_status_update import StatusUpdate
+
+from methods.api.common_api_methods import get_headers, post
+
+
+def send_status_update(context):
+    url = f"{context.psu_base_url}/"
+
+    headers = get_headers(context, "oauth2")
+    context.send_update_body = StatusUpdate(context).body
+    context.response = post(
+        data=context.send_update_body, url=url, context=context, headers=headers
+    )

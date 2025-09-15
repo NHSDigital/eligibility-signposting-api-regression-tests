@@ -1,7 +1,7 @@
 import logging
 import os
+
 import boto3
-import utils.credential_helper as credential_helper
 from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 class DynamoDBHelper:
     def __init__(self, table_name):
         # Create DynamoDB resource using credentials from env
-        self.session = boto3.Session(profile_name='test')
+        self.session = boto3.Session(profile_name="test")
         self.credentials = self.session.get_credentials()
-        self.dynamodb = self.session.resource('dynamodb')
+        self.dynamodb = self.session.resource("dynamodb")
         self.table = self.dynamodb.Table(table_name)
 
     def insert_item(self, item: dict):
@@ -22,7 +22,9 @@ class DynamoDBHelper:
         try:
             response = self.table.put_item(Item=item)
         except ClientError as e:
-            logger.exception("Failed to insert item: %s", e.response["Error"]["Message"])
+            logger.exception(
+                "Failed to insert item: %s", e.response["Error"]["Message"]
+            )
             raise
         else:
             return response
@@ -62,4 +64,6 @@ def insert_into_dynamo(data):
             table.insert_item(item)
             logger.info("✅ Inserted: %s", item)
         except ClientError as e:
-            logger.exception("❌ Failed to insert %s: %s", item, e.response["Error"]["Message"])
+            logger.exception(
+                "❌ Failed to insert %s: %s", item, e.response["Error"]["Message"]
+            )

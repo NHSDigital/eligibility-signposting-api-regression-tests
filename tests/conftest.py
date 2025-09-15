@@ -12,7 +12,9 @@ from utils.s3_config_manager import upload_configs_to_s3
 load_dotenv(dotenv_path=".env")
 
 # Constants
-BASE_URL = os.getenv("BASE_URL", "https://test.eligibility-signposting-api.nhs.uk/patient-check")
+BASE_URL = os.getenv(
+    "BASE_URL", "https://test.eligibility-signposting-api.nhs.uk/patient-check"
+)
 # API_KEY = os.getenv("API_KEY", "")
 DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME", "eligibility_data_store")
 # AWS_REGION = os.getenv("AWS_REGION", "eu-west-2")
@@ -42,6 +44,12 @@ def get_scenario_params(request):
 
         upload_configs_to_s3(config_filenames, config_path)
 
-        return nhs_number, config_filenames, request_headers, query_params, expected_response_code
+        return (
+            nhs_number,
+            config_filenames,
+            request_headers,
+            query_params,
+            expected_response_code,
+        )
 
     return _setup

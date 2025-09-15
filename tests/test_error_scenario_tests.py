@@ -37,7 +37,9 @@ def test_check_for_missing_person(eligibility_client):
         ],
     }
 
-    response = eligibility_client.make_request(nhs_number, headers=request_headers, raise_on_error=False)
+    response = eligibility_client.make_request(
+        nhs_number, headers=request_headers, raise_on_error=False
+    )
 
     assert response["status_code"] == http.HTTPStatus.NOT_FOUND
     assert response["body"] == expected_body
@@ -142,8 +144,12 @@ def test_nhs_login_header_handling(eligibility_client, test_case):
         raise_on_error=False,
     )
 
-    assert response["status_code"] == test_case["expected_status"], f"{test_case['scenario']} failed on status code"
-    assert response["body"] == test_case["expected_body"], f"{test_case['scenario']} failed on response body"
+    assert (
+        response["status_code"] == test_case["expected_status"]
+    ), f"{test_case['scenario']} failed on status code"
+    assert (
+        response["body"] == test_case["expected_body"]
+    ), f"{test_case['scenario']} failed on response body"
     assert response["headers"].get("Content-Type".lower()) == "application/fhir+json"
 
 
@@ -221,8 +227,12 @@ def test_query_param_errors(eligibility_client, test_case):
         raise_on_error=False,
     )
 
-    assert response["status_code"] == test_case["expected_status"], f"{test_case['scenario']} failed on status code"
-    assert response["body"] == test_case["expected_body"], f"{test_case['scenario']} failed on response body"
+    assert (
+        response["status_code"] == test_case["expected_status"]
+    ), f"{test_case['scenario']} failed on status code"
+    assert (
+        response["body"] == test_case["expected_body"]
+    ), f"{test_case['scenario']} failed on response body"
     assert response["headers"].get("Content-Type".lower()) == "application/fhir+json"
 
 
@@ -253,7 +263,9 @@ def test_no_config_error(eligibility_client):
     delete_all_configs_from_s3()
 
     response = eligibility_client.make_request(
-        nhs_number="9990032010", headers={"nhs-login-nhs-number": "9990032010"}, raise_on_error=False
+        nhs_number="9990032010",
+        headers={"nhs-login-nhs-number": "9990032010"},
+        raise_on_error=False,
     )
 
     assert response["status_code"] == http.HTTPStatus.INTERNAL_SERVER_ERROR

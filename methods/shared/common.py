@@ -1,19 +1,16 @@
-import json
-
 from assertpy import assert_that as assertpy_assert  # type: ignore
+from environment import (
+    APIGEE_APPS,
+    CIS2_USERS,
+    JWT_KID,
+    JWT_PRIVATE_KEY,
+    LOGIN_USERS,
+)
 from pytest_nhsd_apim.identity_service import (
     AuthorizationCodeAuthenticator,
     AuthorizationCodeConfig,
-    ClientCredentialsConfig,
     ClientCredentialsAuthenticator,
-)
-
-from features.environment import (
-    CIS2_USERS,
-    LOGIN_USERS,
-    APIGEE_APPS,
-    JWT_PRIVATE_KEY,
-    JWT_KID,
+    ClientCredentialsConfig,
 )
 
 
