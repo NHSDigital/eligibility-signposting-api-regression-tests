@@ -9,7 +9,7 @@ env:
 
 jobs:
   quality_checks:
-    uses: .github/workflows/quality-checks.yml
+    uses: ./.github/workflows/quality-checks.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
