@@ -54,7 +54,7 @@ lint-flake8:
 
 lint: lint-black lint-pyright lint-flake8
 
-run-tests: guard-env
+run-tests-old: guard-env
 	echo "Running Regression Tests"
 	poetry run python ./runner.py --env=$(env) --tags=$(tags)
 
@@ -76,5 +76,5 @@ deep-clean-install:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-run-all-tests:
+run-tests:
 	poetry run pytest

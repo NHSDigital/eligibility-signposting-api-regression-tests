@@ -9,7 +9,7 @@ env:
 
 jobs:
   quality_checks:
-    uses: NHSDigital/eps-workflow-quality-checks/.github/workflows/quality-checks.yml@v4.0.5
+    uses: .github/workflows/quality-checks.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -68,7 +68,6 @@ jobs:
 
       - name: Install node packages
         run: |
-          export PATH="/home/runner/.asdf/installs/poetry/2.1.4/bin:$PATH"
           make install-node
 
       - name: Set VERSION_TAG env var to be short git SHA and get next tag version

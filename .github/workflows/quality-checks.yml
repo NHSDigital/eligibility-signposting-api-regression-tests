@@ -1,0 +1,57 @@
+name: Quality Checks
+
+on:
+  workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        required: false
+
+jobs:
+  quality_checks:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH_NAME }}
+          fetch-depth: 0
+
+      - name: Check licenses (Makefile)
+        run: |
+          make check-licenses
+
+      - name: Check licenses (Python)
+        run: make check-licenses
+
+      - name: Run code lint
+        run: make lint
+
+      - name: actionlint
+        uses: raven-actions/actionlint@v2
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_paths: >-
+            *test*
+            .venv
+            node_modules
+            .git
+
+      - name: "check is SONAR_TOKEN exists"
+        env:
+            super_secret: ${{ secrets.SONAR_TOKEN }}
+        if: ${{ env.super_secret != '' }}
+        run: echo "SONAR_TOKEN_EXISTS=true" >> "$GITHUB_ENV"
+
+      - name: Run SonarQube analysis
+        if: ${{ env.SONAR_TOKEN_EXISTS == 'true' }}
+        run: mvn sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@master
+        if: ${{ env.SONAR_TOKEN_EXISTS == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

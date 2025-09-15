@@ -11,7 +11,7 @@ on:
         description: 'Environment to run tests against'
         type: environment
         required: true
-        default: "DEV"
+        default: "dev"
       id:
         description: 'Unique run identifier (Do not change this)'
         required: false
@@ -30,8 +30,6 @@ jobs:
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
-      # we need to leave this step in as run_regression test scripts expect the third step in the job to have the name of the input id
-      # the first step is auto generated 'set up job' step
       - name: show_input_parameters
         env:
           tags: ${{ inputs.tags }}
@@ -62,11 +60,6 @@ jobs:
           echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"
           echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"  >> "$GITHUB_STEP_SUMMARY"
 
-  run_regression_tests:
-    runs-on: ubuntu-22.04
-    environment: ${{ inputs.environment }}
-    needs: [regression_tests]
-    steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
@@ -124,8 +117,7 @@ jobs:
           ENVIRONMENT: ${{ inputs.environment }}
           PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
           INPUT_TAG: ${{ inputs.tags }}
-        run: |
-          echo Automated E2E Regression tests coming soon
+        run: make run-tests
 
       - name: force error on failure
         if: steps.tests.outcome != 'success'
