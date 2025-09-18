@@ -19,7 +19,7 @@ logging.basicConfig(
 
 class DateVariableResolver:
     def __init__(self, today: datetime | None = None):
-        self.today = today or datetime.now(tz=timezone.UTC)
+        self.today = today or datetime.now(tz=timezone.utc)
 
     def resolve(self, token: str) -> str:
         logger.debug("Resolving variable: %s", token)

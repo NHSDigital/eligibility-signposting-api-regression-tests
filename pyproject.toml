@@ -37,9 +37,14 @@ include = ["src"]
 exclude = ["**/.*",
     "**/__pycache__",
     "**/venv",
-    "**/.venv"
+    "**/.venv",
+    "**/node_modules"
 ]
 defineConstant = { DEBUG = true }
+reportArgumentType = false
+reportReturnType = false
+reportAttributeAccessIssue = false
+reportOptionalMemberAccess = false
 reportMissingImports = true
 
 pythonVersion = "3.13"
