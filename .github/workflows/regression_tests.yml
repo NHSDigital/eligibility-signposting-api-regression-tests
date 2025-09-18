@@ -96,6 +96,13 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: make install
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.0.0
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::448049830832:role/vdselid_dev
+          role-session-name: MySessionName
+
       - name: Regression Tests
         id: tests
         continue-on-error: true
