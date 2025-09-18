@@ -102,8 +102,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
           aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::448049830832:role/vdselid_dev
-          role-session-name: MySessionName
+          role-to-assume: arn:aws:iam::448049830832:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          role-session-name: AutomatedTests
 
       - name: Regression Tests
         id: tests
