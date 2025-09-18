@@ -27,6 +27,8 @@ on:
 
 jobs:
   regression_tests:
+    permissions:
+      id-token: write
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
