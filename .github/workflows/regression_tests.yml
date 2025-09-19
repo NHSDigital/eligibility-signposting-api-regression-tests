@@ -104,7 +104,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
           aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::448049830832:role/service-roles/Eligibility-Signposting-API-E2E-Regression-Tests
+          role-to-assume: arn:aws:iam::448049830832:role/Eligibility-Signposting-API-E2E-Regression-Tests
 
       - name: Regression Tests
         id: tests
