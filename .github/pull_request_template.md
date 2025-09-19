@@ -17,7 +17,7 @@ Add any summary information of what is in the change. **Remove this line if you 
 Pull requests should be named using the following format:
 
 ```text
-Tag: [AEA-NNNN] - Short description
+Tag: [ELI-NNNN] - Short description
 ```
 
 Tag can be one of:
@@ -45,7 +45,7 @@ The description of your pull request will be used as the commit message for the 
 If you need to rename your pull request, you can restart the checks by either:
 
 - Closing and reopening the pull request
-- pushing an empty commit 
+- pushing an empty commit
   ```bash
   git commit --allow-empty -m 'trigger build'
   git push

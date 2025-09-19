@@ -14,11 +14,10 @@ ignore_keys = ["lastUpdated", "responseId", "id"]
 
 
 class EligibilityApiClient:
-    def __init__(self, api_url: str, cert_dir: str = "tests/e2e/certs") -> None:
+    def __init__(self, api_url: str, cert_dir: str = "tests/certs") -> None:
         load_dotenv(dotenv_path=Path(__file__).resolve().parent / "../.env")
 
         self.api_url: str = api_url
-        self.session = boto3.session.Session(profile_name="test")
 
         self.cert_dir: Path = Path(cert_dir)
         self.cert_dir.mkdir(parents=True, exist_ok=True)
@@ -30,16 +29,16 @@ class EligibilityApiClient:
         }
 
         self.ssm_params: dict[str, str] = {
-            "private_key": "/test/mtls/api_private_key_cert",
-            "client_cert": "/test/mtls/api_client_cert",
-            "ca_cert": "/test/mtls/api_ca_cert",
+            "private_key": "/dev/mtls/api_private_key_cert",
+            "client_cert": "/dev/mtls/api_client_cert",
+            "ca_cert": "/dev/mtls/api_ca_cert",
         }
 
         self._ensure_certs_present()
 
     def _get_ssm_parameter(self, param_name: str, *, decrypt: bool = True) -> str:
         try:
-            client = self.session.client("ssm")
+            client = boto3.client("ssm")
             response = client.get_parameter(Name=param_name, WithDecryption=decrypt)
             return response["Parameter"]["Value"]
         except ClientError as e:

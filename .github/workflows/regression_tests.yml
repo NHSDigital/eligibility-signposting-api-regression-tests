@@ -29,6 +29,8 @@ jobs:
   regression_tests:
     permissions:
       id-token: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
@@ -98,15 +100,21 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: make install
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.0.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
       - name: Regression Tests
         id: tests
         continue-on-error: true
         env:
+          DYNAMODB_TABLE_NAME: ${{ vars.DYNAMODB_TABLE_NAME }}
           ENVIRONMENT: ${{ inputs.environment }}
           PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
           INPUT_TAG: ${{ inputs.tags }}
-        run: echo Coming Soon!
-#        run: make run-tests
+        run: make run-tests
 
       - name: force error on failure
         if: steps.tests.outcome != 'success'

@@ -19,7 +19,7 @@ class S3ConfigManager:
     def __init__(self, bucket_name: str, s3_prefix: str = "") -> None:
         self.bucket_name: str = bucket_name
         self.s3_prefix: str = s3_prefix
-        self.s3_client = boto3.session.Session(profile_name="test").client("s3")
+        self.s3_client = boto3.client("s3")
 
     def _s3_key(self, filename: str) -> str:
         return str(Path(self.s3_prefix) / filename)
