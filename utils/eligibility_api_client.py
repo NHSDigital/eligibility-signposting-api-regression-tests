@@ -14,7 +14,7 @@ ignore_keys = ["lastUpdated", "responseId", "id"]
 
 
 class EligibilityApiClient:
-    def __init__(self, api_url: str, cert_dir: str = "tests/e2e/certs") -> None:
+    def __init__(self, api_url: str, cert_dir: str = "tests/certs") -> None:
         load_dotenv(dotenv_path=Path(__file__).resolve().parent / "../.env")
 
         self.api_url: str = api_url
@@ -29,9 +29,9 @@ class EligibilityApiClient:
         }
 
         self.ssm_params: dict[str, str] = {
-            "private_key": "/test/mtls/api_private_key_cert",
-            "client_cert": "/test/mtls/api_client_cert",
-            "ca_cert": "/test/mtls/api_ca_cert",
+            "private_key": "/dev/mtls/api_private_key_cert",
+            "client_cert": "/dev/mtls/api_client_cert",
+            "ca_cert": "/dev/mtls/api_ca_cert",
         }
 
         self._ensure_certs_present()
