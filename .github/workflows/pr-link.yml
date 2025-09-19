@@ -9,6 +9,8 @@ jobs:
       REF: ${{ github.event.pull_request.head.ref }}
     permissions:
       id-token: write
+      pull-requests: write
+      issues: write
     steps:
       - name: Check ticket name conforms to requirements
         run: echo "$REF" | grep -i -E -q "(eli-[0-9]+)|(dependabot\/)"
@@ -35,7 +37,6 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
