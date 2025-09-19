@@ -18,7 +18,6 @@ class EligibilityApiClient:
         load_dotenv(dotenv_path=Path(__file__).resolve().parent / "../.env")
 
         self.api_url: str = api_url
-        self.session = boto3.session.Session(profile_name="test")
 
         self.cert_dir: Path = Path(cert_dir)
         self.cert_dir.mkdir(parents=True, exist_ok=True)
@@ -39,7 +38,7 @@ class EligibilityApiClient:
 
     def _get_ssm_parameter(self, param_name: str, *, decrypt: bool = True) -> str:
         try:
-            client = self.session.client("ssm")
+            client = boto3.client("ssm")
             response = client.get_parameter(Name=param_name, WithDecryption=decrypt)
             return response["Parameter"]["Value"]
         except ClientError as e:
