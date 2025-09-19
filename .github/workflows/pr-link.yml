@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       REF: ${{ github.event.pull_request.head.ref }}
-    permissions:
-      pull-requests: write
     steps:
       - name: Check ticket name conforms to requirements
         run: echo "$REF" | grep -i -E -q "(eli-[0-9]+)|(dependabot\/)"
@@ -40,6 +38,6 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'This branch is work on a ticket in an NHS England JIRA Project. Here is a handy link to the ticket:
-            # [${{ env.TICKET_NAME }}](https://nhsd-jira.digital.nhs.uk/browse/${{ env.TICKET_NAME }})'
+              body: "This branch is work on a ticket in an NHS England JIRA Project. Here is a handy link to the ticket:
+                # [${{ env.TICKET_NAME }}](https://nhsd-jira.digital.nhs.uk/browse/${{ env.TICKET_NAME }})"
             })
