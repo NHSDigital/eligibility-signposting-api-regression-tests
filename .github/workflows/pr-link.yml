@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       REF: ${{ github.event.pull_request.head.ref }}
+    permissions:
+      id-token: write
     steps:
       - name: Check ticket name conforms to requirements
         run: echo "$REF" | grep -i -E -q "(eli-[0-9]+)|(dependabot\/)"
