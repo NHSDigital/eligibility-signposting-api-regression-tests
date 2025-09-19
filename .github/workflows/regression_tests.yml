@@ -110,6 +110,7 @@ jobs:
         id: tests
         continue-on-error: true
         env:
+          DYNAMODB_TABLE_NAME: ${{ var.DYNAMODB_TABLE_NAME }}
           ENVIRONMENT: ${{ inputs.environment }}
           PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
           INPUT_TAG: ${{ inputs.tags }}
