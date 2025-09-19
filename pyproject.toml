@@ -18,7 +18,7 @@ pytest = "^8.4.1"
 nhs-number-generator = {git = "https://github.com/Iain-S/nhs_number_generator.git"}
 flake8 = "^7.3.0"
 isort = "^6.0.1"
-black = "^25.1.0"
+black = "^25.9.0"
 assertpy = "^1.1"
 requests = "^2.32.4"
 jsonschema = "^4.25.0"
