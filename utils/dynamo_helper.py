@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class DynamoDBHelper:
     def __init__(self, table_name):
         # Create DynamoDB resource using credentials from env
-        self.session = boto3.Session(profile_name="test")
-        self.credentials = self.session.get_credentials()
-        self.dynamodb = self.session.resource("dynamodb")
+        self.dynamodb = boto3.resource("dynamodb")
         self.table = self.dynamodb.Table(table_name)
 
     def insert_item(self, item: dict):
