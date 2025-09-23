@@ -77,4 +77,4 @@ pre-commit:
 	poetry run pre-commit run --all-files
 
 run-tests:
-	poetry run pytest tests/test_story_tests.py -vv
+	poetry run pytest tests/test_story_tests.py
