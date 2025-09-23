@@ -6,18 +6,14 @@ import pytest
 from dotenv import load_dotenv
 
 from utils.eligibility_api_client import EligibilityApiClient
-from utils.s3_config_manager import upload_configs_to_s3
+from utils.s3_config_manager import upload_configs_to_s3, delete_all_configs_from_s3
 
 # Load environment variables from .env.local
 load_dotenv(dotenv_path=".env")
 
 # Constants
-BASE_URL = os.getenv(
-    "BASE_URL", "https://test.eligibility-signposting-api.nhs.uk/patient-check"
-)
-# API_KEY = os.getenv("API_KEY", "")
+BASE_URL = os.getenv("BASE_URL")
 DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME", "eligibility_data_store")
-# AWS_REGION = os.getenv("AWS_REGION", "eu-west-2")
 
 # Resolve test data path robustly
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,6 +48,7 @@ def get_scenario_params(request):
         query_params = scenario.get("query_params", {})
         expected_response_code = scenario["expected_response_code"]
 
+        delete_all_configs_from_s3()
         upload_configs_to_s3(config_filenames, config_path)
 
         return (

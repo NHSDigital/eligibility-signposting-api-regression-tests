@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from .dynamo_helper import insert_into_dynamo
+from .dynamo_helper import insert_into_dynamo, reset_dynamo_tables
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
 
@@ -12,6 +12,7 @@ def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
 
+    reset_dynamo_tables()
     # Insert to Dynamo (placeholder)
     for scenario in all_data.values():
         insert_into_dynamo(scenario["dynamo_items"])

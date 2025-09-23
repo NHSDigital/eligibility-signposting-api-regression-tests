@@ -53,6 +53,18 @@ class DynamoDBHelper:
         else:
             return response.get("Item")
 
+    def delete_item(self, key: dict):
+        """
+        delete a single item by primary key.
+        """
+        try:
+            response = self.table.delete(Key=key)
+        except ClientError as e:
+            logger.exception("Failed to delete item: %s", e.response["Error"]["Message"])
+            raise
+        else:
+            return response
+
 
 def insert_into_dynamo(data):
     logger.info("Inserting into Dynamo: %s", data)
@@ -65,3 +77,8 @@ def insert_into_dynamo(data):
             logger.exception(
                 "❌ Failed to insert %s: %s", item, e.response["Error"]["Message"]
             )
+
+
+def reset_dynamo_tables():
+    table = DynamoDBHelper(os.getenv("DYNAMODB_TABLE_NAME"))
+    self.table.delete()
