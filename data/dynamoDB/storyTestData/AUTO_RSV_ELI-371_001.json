@@ -1,5 +1,5 @@
 {
-  "scenario_name": "RSV - Ineligible - Suppressed by AND rule with different rule names",
+  "scenario_name": "RSV - NotActionable - Suppressed by AND rule with different rule names",
   "request_headers": {
     "nhs-login-nhs-number": "9900037101"
   },

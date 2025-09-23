@@ -78,13 +78,13 @@
           {
             "Type": "S",
             "Name": "This is a rule on it's own and not part of the AND rules above",
-            "Description": "Testing of AND rules where names are different",
+            "Description": "This is a rule on it's own",
             "Operator": "=",
             "Comparator": "19820501",
             "AttributeLevel": "PERSON",
             "AttributeName": "DATE_OF_BIRTH",
             "CohortLabel": "rsv_75to79",
-            "Priority": 1000
+            "Priority": 999
           },
           {
             "Type": "R",
