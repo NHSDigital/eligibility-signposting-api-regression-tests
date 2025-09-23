@@ -77,4 +77,4 @@ pre-commit:
 	poetry run pre-commit run --all-files
 
 run-tests: guard-env
-	poetry run pytest tests/test_story_tests.py --env=${env}
+	poetry run pytest --env=${env} --capture=tee-sys --show-capture=all tests/test_story_tests.py
