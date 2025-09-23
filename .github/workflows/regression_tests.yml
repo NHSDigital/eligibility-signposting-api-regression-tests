@@ -16,10 +16,6 @@ on:
         description: 'Unique run identifier (Do not change this)'
         required: false
         default: "Manually Triggered Run"
-      pull_request_id:
-        description: 'The ID of the pull request. This should be in the format pr-xxxx where xxxx is the pull request id'
-        required: false
-        default: ""
       github_tag:
         description: 'The github tag to run the test pack from'
         required: false
@@ -39,13 +35,11 @@ jobs:
           tags: ${{ inputs.tags }}
           environment: ${{ inputs.environment }}
           id: ${{ inputs.id }}
-          pull_request_id: ${{ inputs.pull_request_id }}
           github_tag: ${{ inputs.github_tag }}
         run: |
           echo "tags: ${tags}"
           echo "environment: ${environment}"
           echo "id: ${id}"
-          echo "pull_request_id: ${pull_request_id}"
           echo "github_tag: ${github_tag}"
           # output to summary
           # shellcheck disable=SC2129
