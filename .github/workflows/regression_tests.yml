@@ -107,7 +107,6 @@ jobs:
           S3_PREFIX: ${{ vars.S3_PREFIX }}
           DYNAMODB_TABLE_NAME: ${{ vars.DYNAMODB_TABLE_NAME }}
           ENVIRONMENT: ${{ inputs.environment }}
-          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
           make run-tests env="$ENVIRONMENT"
