@@ -26,9 +26,19 @@ DYNAMO_DATA_PATH = BASE_DIR / "data" / "dynamoDB" / "test_data.json"
 logger = logging.getLogger(__name__)
 
 
-@pytest.fixture(scope="session")
-def eligibility_client():
-    return EligibilityApiClient(BASE_URL, cert_dir="certs")
+def pytest_addoption(parser):
+    parser.addoption(
+        "--env",
+        required=True,
+        action="store",
+        default="",
+        help="Specify the environment for testing: 'dev', 'test' or 'preprod'",
+    )
+
+
+@pytest.fixture()
+def eligibility_client(env):
+    return EligibilityApiClient(env, cert_dir="certs")
 
 
 @pytest.fixture
@@ -53,3 +63,8 @@ def get_scenario_params(request):
         )
 
     return _setup
+
+
+@pytest.fixture
+def env(request):
+    return request.config.getoption("--env")

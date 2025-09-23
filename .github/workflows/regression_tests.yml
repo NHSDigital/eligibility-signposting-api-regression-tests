@@ -52,17 +52,15 @@ jobs:
           echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
           echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
           echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "pull_request_id: ${pull_request_id}"  >> "$GITHUB_STEP_SUMMARY"
           echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
 
       - name: ${{github.event.inputs.id}}
         env:
           ID: ${{github.event.inputs.id}}
           ENV: ${{ inputs.environment }}
-          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
         run: |
-          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"
-          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"  >> "$GITHUB_STEP_SUMMARY"
+          echo run identifier "$ID"-"$ENV"
+          echo run identifier "$ID"-"$ENV"  >> "$GITHUB_STEP_SUMMARY"
 
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -118,7 +116,7 @@ jobs:
           PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
-          poetry run pytest tests/test_story_tests.py -vv
+          make run-tests env="$ENVIRONMENT"
 
       - name: force error on failure
         if: steps.tests.outcome != 'success'

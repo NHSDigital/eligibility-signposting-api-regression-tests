@@ -14,11 +14,13 @@ ignore_keys = ["lastUpdated", "responseId", "id"]
 
 
 class EligibilityApiClient:
-    def __init__(self, api_url: str, cert_dir: str = "tests/certs") -> None:
+    def __init__(self, env: str, cert_dir: str = "tests/certs") -> None:
         load_dotenv(dotenv_path=Path(__file__).resolve().parent / "../.env")
-
-        self.api_url: str = api_url
-
+        env = env.lower()
+        assert env in ["dev", "test", "preprod"], "env must be dev, test, or preprod"
+        self.api_url: str = (
+            f"https://{env}.eligibility-signposting-api.nhs.uk/patient-check"
+        )
         self.cert_dir: Path = Path(cert_dir)
         self.cert_dir.mkdir(parents=True, exist_ok=True)
 
@@ -29,9 +31,9 @@ class EligibilityApiClient:
         }
 
         self.ssm_params: dict[str, str] = {
-            "private_key": "/dev/mtls/api_private_key_cert",
-            "client_cert": "/dev/mtls/api_client_cert",
-            "ca_cert": "/dev/mtls/api_ca_cert",
+            "private_key": f"/{env}/mtls/api_private_key_cert",
+            "client_cert": f"/{env}/mtls/api_client_cert",
+            "ca_cert": f"/{env}/mtls/api_ca_cert",
         }
 
         self._ensure_certs_present()
