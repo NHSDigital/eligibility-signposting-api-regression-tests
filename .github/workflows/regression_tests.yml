@@ -12,13 +12,19 @@ on:
         type: environment
         required: true
         default: "dev"
+      log_level:
+        description: 'Log level to output to console'
+        type: choice
+        options: ["INFO", "DEBUG"]
+        required: false
+        default: "INFO"
       id:
         description: 'Unique run identifier (Do not change this)'
-        required: false
+        required: true
         default: "Manually Triggered Run"
       github_tag:
         description: 'The github tag to run the test pack from'
-        required: false
+        required: true
         default: "main"
 
 jobs:
@@ -34,17 +40,20 @@ jobs:
         env:
           tags: ${{ inputs.tags }}
           environment: ${{ inputs.environment }}
+          log_level: ${{ inputs.log_level }}
           id: ${{ inputs.id }}
           github_tag: ${{ inputs.github_tag }}
         run: |
           echo "tags: ${tags}"
           echo "environment: ${environment}"
+          echo "log_level: ${log_level}"
           echo "id: ${id}"
           echo "github_tag: ${github_tag}"
           # output to summary
           # shellcheck disable=SC2129
           echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
           echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "log_level: ${log_level}"  >> "$GITHUB_STEP_SUMMARY"
           echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
           echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
 
@@ -100,12 +109,13 @@ jobs:
 
       - name: Regression Tests
         id: tests
-        continue-on-error: true
+#        continue-on-error: true
         env:
           ENVIRONMENT: ${{ inputs.environment }}
+          LOG_LEVEL: ${{ inputs.log_level }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
-          make run-tests env="$ENVIRONMENT"
+          make run-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
 
       - name: force error on failure
         if: steps.tests.outcome != 'success'
