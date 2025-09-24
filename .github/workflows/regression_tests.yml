@@ -109,16 +109,9 @@ jobs:
 
       - name: Regression Tests
         id: tests
-#        continue-on-error: true
         env:
           ENVIRONMENT: ${{ inputs.environment }}
           LOG_LEVEL: ${{ inputs.log_level }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
           make run-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
-
-      - name: force error on failure
-        if: steps.tests.outcome != 'success'
-        run: |
-          echo The regression tests step failed, this likely means there are test failures.
-          exit 1
