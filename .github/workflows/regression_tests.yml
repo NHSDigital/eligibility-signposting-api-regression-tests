@@ -102,10 +102,6 @@ jobs:
         id: tests
         continue-on-error: true
         env:
-          BASE_URL: ${{ vars.BASE_URL }}
-          S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
-          S3_PREFIX: ${{ vars.S3_PREFIX }}
-          DYNAMODB_TABLE_NAME: ${{ vars.DYNAMODB_TABLE_NAME }}
           ENVIRONMENT: ${{ inputs.environment }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |

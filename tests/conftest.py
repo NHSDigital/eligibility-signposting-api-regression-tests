@@ -8,12 +8,7 @@ from dotenv import load_dotenv
 from utils.eligibility_api_client import EligibilityApiClient
 from utils.s3_config_manager import upload_configs_to_s3, delete_all_configs_from_s3
 
-# Load environment variables from .env.local
-load_dotenv(dotenv_path=".env")
-
-# Constants
-BASE_URL = os.getenv("BASE_URL")
-DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME", "eligibility_data_store")
+load_dotenv()
 
 # Resolve test data path robustly
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,12 +27,53 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture()
-def eligibility_client(env):
-    return EligibilityApiClient(env, cert_dir="certs")
+def pytest_configure(config):
+    env = config.getoption("--env").lower()
+    assert env in [
+        "dev",
+        "test",
+        "preprod",
+    ], f"env must be dev, test, or preprod but was: {env}"
+
+    logger.info(f"Setting environment variables for: {env}")
+    os.environ["BASE_URL"] = (
+        f"https://{env}.eligibility-signposting-api.nhs.uk/patient-check/"
+    )
+    os.environ["S3_BUCKET_NAME"] = f"eligibility-signposting-api-{env}-eli-rules"
+    os.environ["SSM_PARAM_KEY_FILE"] = f"/{env}/mtls/api_private_key_cert"
+    os.environ["SSM_PARAM_CLIENT_CERT"] = f"/{env}/mtls/api_client_cert"
+    os.environ["SSM_PARAM_CA_CERT"] = f"/{env}/mtls/api_ca_cert"
+    os.environ["DYNAMODB_TABLE_NAME"] = (
+        f"eligibility-signposting-api-{env}-eligibility_datastore"
+    )
+
+    assert os.getenv("BASE_URL") is not None, "BASE_URL must be set"
+    assert os.getenv("S3_BUCKET_NAME") is not None, "S3_BUCKET_NAME must be set"
+    assert os.getenv("SSM_PARAM_KEY_FILE") is not None, "SSM_PARAM_KEY_FILE must be set"
+    assert (
+        os.getenv("SSM_PARAM_CLIENT_CERT") is not None
+    ), "SSM_PARAM_CLIENT_CERT must be set"
+    assert os.getenv("SSM_PARAM_CA_CERT") is not None, "SSM_PARAM_CA_CERT must be set"
+    assert (
+        os.getenv("DYNAMODB_TABLE_NAME") is not None
+    ), "DYNAMODB_TABLE_NAME must be set"
+
+    logger.debug(f"Environment variables for the {env.upper()} environment:")
+    logger.debug(f"BASE_URL: {os.getenv("BASE_URL")}")
+    logger.debug(f"S3_BUCKET_NAME: {os.getenv("S3_BUCKET_NAME")}")
+    logger.debug(f"SSM_PARAM_KEY_FILE: {os.getenv("SSM_PARAM_KEY_FILE")}")
+    logger.debug(f"SSM_PARAM_CLIENT_CERT: {os.getenv("SSM_PARAM_CLIENT_CERT")}")
+    logger.debug(f"SSM_PARAM_CA_CERT: {os.getenv("SSM_PARAM_CA_CERT")}")
+    logger.debug(f"DYNAMODB_TABLE_NAME: {os.getenv("DYNAMODB_TABLE_NAME")}")
+    return
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def eligibility_client():
+    return EligibilityApiClient(cert_dir="certs")
+
+
+@pytest.fixture(scope="session")
 def get_scenario_params(request):
     _ = request
 
@@ -60,8 +96,3 @@ def get_scenario_params(request):
         )
 
     return _setup
-
-
-@pytest.fixture
-def env(request):
-    return request.config.getoption("--env")

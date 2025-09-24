@@ -3,15 +3,17 @@ import os
 
 import boto3
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
+load_dotenv()
 
 
 class DynamoDBHelper:
     def __init__(self, table_name):
         # Create DynamoDB resource using credentials from env
         self.table_name = table_name
-        self.dynamodb_client = boto3.client("dynamodb")
+        self.dynamodb_client = boto3.client("dynamodb", "eu-west-2")
         self.table_description = self.dynamodb_client.describe_table(
             TableName=self.table_name
         )
@@ -19,7 +21,7 @@ class DynamoDBHelper:
         self.attribute_definitions = self.table_description["Table"][
             "AttributeDefinitions"
         ]
-        self.dynamodb_resource = boto3.resource("dynamodb")
+        self.dynamodb_resource = boto3.resource("dynamodb", "eu-west-2")
         self.table = self.dynamodb_resource.Table(table_name)
 
     def insert_item(self, item: dict):
@@ -78,28 +80,33 @@ class DynamoDBHelper:
 
 
 def reset_dynamo_tables():
-    table = DynamoDBHelper(os.getenv("DYNAMODB_TABLE_NAME"))
+    logger.info("Resetting DynamoDB. This may take a few moments, please be patient.")
+    dynamo_table_name = os.getenv("DYNAMODB_TABLE_NAME")
+    assert dynamo_table_name is not None, "DynamoDB table name not specified"
+    table = DynamoDBHelper(dynamo_table_name)
 
     # --- Step 1: Delete the table if it exists ---
     try:
-        print(f"Attempting to delete table '{table.table_name}'...")
+        logger.info(f"Deleting table '{table.table_name}'...")
         table.dynamodb_client.delete_table(TableName=table.table_name)
 
         # Wait for the table to be completely deleted
-        print(f"Waiting for table '{table.table_name}' to be deleted...")
+        logger.debug(f"Waiting for table '{table.table_name}' to be deleted...")
         waiter = table.dynamodb_client.get_waiter("table_not_exists")
         waiter.wait(TableName=table.table_name)
-        print(f"Table '{table.table_name}' successfully deleted.")
+        logger.info(f"Table '{table.table_name}' successfully deleted.")
 
     except ClientError as e:
         if e.response["Error"]["Code"] == "ResourceNotFoundException":
-            print(f"Table '{table.table_name}' does not exist. Skipping deletion.")
+            logger.warning(
+                f"Table '{table.table_name}' does not exist. Skipping deletion."
+            )
         else:
-            print(f"Error deleting table '{table.table_name}': {e}")
+            logger.exception(f"Error deleting table '{table.table_name}': {e}")
             return
 
     # --- Step 2: Recreate the table ---
-    print(f"\nAttempting to create table '{table.table_name}'...")
+    logger.info(f"Creating table '{table.table_name}'...")
     try:
         table.dynamodb_client.create_table(
             TableName=table.table_name,
@@ -109,24 +116,26 @@ def reset_dynamo_tables():
         )
 
         # Wait for the new table to become active
-        print(
+        logger.debug(
             f"Waiting for table '{table.table_name}' to be created and become active..."
         )
         waiter = table.dynamodb_client.get_waiter("table_exists")
         waiter.wait(TableName=table.table_name)
-        print(f"Table '{table.table_name}' successfully created and is now active.")
+        logger.info(
+            f"Table '{table.table_name}' successfully created and is now active."
+        )
 
     except ClientError as e:
-        print(f"Error creating table '{table.table_name}': {e}")
+        logger.exception(f"Error creating table '{table.table_name}': {e}")
 
 
 def insert_into_dynamo(data):
-    logger.info("Inserting into Dynamo: %s", data)
+    logger.debug("Inserting into Dynamo: %s", data)
     table = DynamoDBHelper(os.getenv("DYNAMODB_TABLE_NAME"))
     for item in data:
         try:
             table.insert_item(item)
-            logger.info("✅ Inserted: %s", item)
+            logger.debug("✅ Inserted: %s", item)
         except ClientError as e:
             logger.exception(
                 "❌ Failed to insert %s: %s", item, e.response["Error"]["Message"]
