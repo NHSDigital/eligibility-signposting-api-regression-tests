@@ -36,6 +36,7 @@ def pytest_configure(config):
     ], f"env must be dev, test, or preprod but was: {env}"
 
     logger.info(f"Setting environment variables for: {env}")
+    os.environ["ENVIRONMENT"] = env
     os.environ["BASE_URL"] = (
         f"https://{env}.eligibility-signposting-api.nhs.uk/patient-check/"
     )
@@ -59,6 +60,7 @@ def pytest_configure(config):
     ), "DYNAMODB_TABLE_NAME must be set"
 
     logger.debug(f"Environment variables for the {env.upper()} environment:")
+    logger.debug(f"ENVIRONMENT {os.getenv("ENVIRONMENT")}")
     logger.debug(f"BASE_URL: {os.getenv("BASE_URL")}")
     logger.debug(f"S3_BUCKET_NAME: {os.getenv("S3_BUCKET_NAME")}")
     logger.debug(f"SSM_PARAM_KEY_FILE: {os.getenv("SSM_PARAM_KEY_FILE")}")
