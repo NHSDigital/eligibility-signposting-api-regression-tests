@@ -1,12 +1,16 @@
 name: PR Link ticket
 on:
   pull_request:
-    types: [opened]
+    types: [ opened ]
 jobs:
   link-ticket:
     runs-on: ubuntu-22.04
     env:
       REF: ${{ github.event.pull_request.head.ref }}
+    permissions:
+      id-token: write
+      pull-requests: write
+      issues: write
     steps:
       - name: Check ticket name conforms to requirements
         run: echo "$REF" | grep -i -E -q "(eli-[0-9]+)|(dependabot\/)"
@@ -31,10 +35,13 @@ jobs:
       - name: Comment on PR with link to JIRA ticket
         if: contains(github.event.pull_request.head.ref, 'eli-')
         continue-on-error: true
-        uses: unsplash/comment-on-pr@b5610c6125a7197eaec80072ea35ef53e1fc6035
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v8
         with:
-          msg: |
-            This branch is work on a ticket in an NHS England JIRA Project. Here's a handy link to the ticket:
-            # [${{ env.TICKET_NAME }}](https://nhsd-jira.digital.nhs.uk/browse/${{ env.TICKET_NAME }})
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `This branch is work on a ticket in an NHS England JIRA Project. Here is a handy link to the ticket:
+                [${{ env.TICKET_NAME }}](https://nhsd-jira.digital.nhs.uk/browse/${{ env.TICKET_NAME }})`
+            })

@@ -14,35 +14,10 @@ When developing new features that need to be regression tested, you'll need to c
 ## Setup
 
 ### Environment Variables
-It is necessary to set some Environment variables in order to run any tests in your local environment. The tests will look for environment variables in the following order
-(For security, the values will not be displayed here):
-1. `.env` file
-2. OS environment variable
-
-The following environment variables may need to be set for the correct environment you wish to test against:
-* BASE_URL
-* ABORT_ON_AWS_FAILURE
-* AWS_DEFAULT_REGION
-* AWS_ACCESS_KEY_ID
-* AWS_SECRET_ACCESS_KEY
-* AWS_SESSION_TOKEN
-* DYNAMODB_TABLE_NAME
-* S3_BUCKET_NAME
-* S3_PREFIX
-* S3_JSON_SOURCE_DIR
-* IGNORE_KEYS
-* KEEP_SEED
-
-To make this easier, a `template.env` file is located on the root. Fill in the values and rename this to `.env`
-
-Any file that begins with `.env` is automatically ignored by Git
+Environment Variable for this are used, however are not necessary to be set by the user.
 
 ### Preparing your development environment
-This test pack utilises the power of Docker to quickly and easily spin up a dev environment for you to work in
-the Dockerfile is located in `{project_root}/.devcontainer/Dockerfile`
-
-### Setup without docker development environment
-If you'd like to use your own machine without containerisation. You will need the following;
+You will need the following;
 * Ubuntu (WSL)
 * [ASDF](https://asdf-vm.com/guide/getting-started.html)
 * You can now run the `make install-full` command
@@ -53,29 +28,26 @@ You can now activate your virtual environment `source .venv/bin/activate`
 ## Developing/Debugging Tests
 
 ## Running the tests:
+Before running the tests, authentication to AWS is necessary.
 
 ### Method 1 (Recommended):
-Run the `runner.py` file located in the root of the project <br />
-This is the preferred method and allows you to include/exclude tags <br />
-a `~` before the tag name excludes it. <br />
-This is how the tests are run on the CI
-<h4> You MUST specify the environment and product <br />
-
-#### Example: `python runner.py --env=INT --tags smoke --tags ~slow`
-This will run all tests with the tag `@smoke` but skip any tests tagged with `@slow`
+Run the `make run-tests` command
+You need to specify the following when executing this command:
+*  env= (options: dev test preprod)
+*  log_level= (options: INFO DEBUG)
+Example: ` make run-tests env=dev log_level=INFO`
 
 ### Method 2:
-Run the tests by calling the Make command `make run-tests`. This requires the parameter `env=` is passed in.
-Optionally, you can pass in tags to be run, for example `tags=regression` will run all tests tagged as `regression`.
+Run the tests by calling the pytest command directly.
+This allows for further customisation suitable for debugging purposes
 
 For example:
-```
-env=internal-dev PULL_REQUEST_ID=pr-300 tags=regression make run-tests
-```
+`poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_story_tests.py`
 
-Change the `env` variable accordingly to either `INT` or `INTERNAL-DEV`.
+**Note that we with the `poetry run` command before calling pytest**
 
 ### Commit to Git
-Pre commit hooks run checks on your code to ensure quality before being allowed to commit. You can perform this process by running: <br /> `make pre-commit`
+Pre commit hooks run checks on your code to ensure quality before being allowed to commit.
+You can perform this process by running: <br /> `make pre-commit`
 
 You may need to run this multiple times to ensure everything is ok before committing.

@@ -4,7 +4,7 @@ project_name = eligibility-signposting-api-regression-tests
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
-		echo "Environment variable $* not set"; \
+		echo "Parameter $* needed!"; \
 		exit 1; \
 	fi
 
@@ -54,10 +54,6 @@ lint-flake8:
 
 lint: lint-black lint-pyright lint-flake8
 
-run-tests-old: guard-env
-	echo "Running Regression Tests"
-	poetry run python ./runner.py --env=$(env) --tags=$(tags)
-
 check-licenses:
 	scripts/check_python_licenses.sh
 
@@ -76,5 +72,7 @@ deep-clean-install:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-run-tests:
-	poetry run pytest
+run-tests: guard-env guard-log_level
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_story_tests.py
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_error_scenario_tests.py
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py

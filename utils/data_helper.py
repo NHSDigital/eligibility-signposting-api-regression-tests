@@ -1,21 +1,27 @@
 import json
+import logging
 from pathlib import Path
 
-from .dynamo_helper import insert_into_dynamo
+from dotenv import load_dotenv
+
+from .dynamo_helper import insert_into_dynamo, reset_dynamo_tables
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
 
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
+load_dotenv()
+logger = logging.getLogger(__name__)
 
 
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
 
-    # Insert to Dynamo (placeholder)
+    reset_dynamo_tables()
+    logger.info("Adding data into Dynamo")
     for scenario in all_data.values():
         insert_into_dynamo(scenario["dynamo_items"])
-
+    logger.info("Data Added to Dynamo")
     return all_data, dto
 
 

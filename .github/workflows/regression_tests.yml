@@ -12,23 +12,27 @@ on:
         type: environment
         required: true
         default: "dev"
+      log_level:
+        description: 'Log level to output to console'
+        type: choice
+        options: ["INFO", "DEBUG"]
+        required: false
+        default: "INFO"
       id:
-        description: 'Unique run identifier (Do not change this)'
-        required: false
+        description: "Run identifier (Don't change - Only used for CI)"
+        required: true
         default: "Manually Triggered Run"
-      pull_request_id:
-        description: 'The ID of the pull request. This should be in the format pr-xxxx where xxxx is the pull request id'
-        required: false
-        default: ""
       github_tag:
         description: 'The github tag to run the test pack from'
-        required: false
+        required: true
         default: "main"
 
 jobs:
   regression_tests:
     permissions:
       id-token: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
@@ -36,31 +40,30 @@ jobs:
         env:
           tags: ${{ inputs.tags }}
           environment: ${{ inputs.environment }}
+          log_level: ${{ inputs.log_level }}
           id: ${{ inputs.id }}
-          pull_request_id: ${{ inputs.pull_request_id }}
           github_tag: ${{ inputs.github_tag }}
         run: |
           echo "tags: ${tags}"
           echo "environment: ${environment}"
+          echo "log_level: ${log_level}"
           echo "id: ${id}"
-          echo "pull_request_id: ${pull_request_id}"
           echo "github_tag: ${github_tag}"
           # output to summary
           # shellcheck disable=SC2129
           echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
           echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "log_level: ${log_level}"  >> "$GITHUB_STEP_SUMMARY"
           echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "pull_request_id: ${pull_request_id}"  >> "$GITHUB_STEP_SUMMARY"
           echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
 
       - name: ${{github.event.inputs.id}}
         env:
           ID: ${{github.event.inputs.id}}
           ENV: ${{ inputs.environment }}
-          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
         run: |
-          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"
-          echo run identifier "$ID"-"$ENV"-"$PULL_REQUEST_ID"  >> "$GITHUB_STEP_SUMMARY"
+          echo run identifier "$ID"-"$ENV"
+          echo run identifier "$ID"-"$ENV"  >> "$GITHUB_STEP_SUMMARY"
 
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -98,18 +101,17 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: make install
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.0.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
       - name: Regression Tests
         id: tests
-        continue-on-error: true
         env:
           ENVIRONMENT: ${{ inputs.environment }}
-          PULL_REQUEST_ID: ${{ inputs.pull_request_id }}
+          LOG_LEVEL: ${{ inputs.log_level }}
           INPUT_TAG: ${{ inputs.tags }}
-        run: echo Coming Soon!
-#        run: make run-tests
-
-      - name: force error on failure
-        if: steps.tests.outcome != 'success'
         run: |
-          echo The regression tests step failed, this likely means there are test failures.
-          exit 1
+          make run-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
