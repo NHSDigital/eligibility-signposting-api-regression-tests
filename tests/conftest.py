@@ -1,18 +1,14 @@
 import logging
 import os
-from pathlib import Path
 
 import pytest
 from dotenv import load_dotenv
 
 from utils.eligibility_api_client import EligibilityApiClient
-from utils.s3_config_manager import upload_configs_to_s3, delete_all_configs_from_s3
+from utils.s3_config_manager import upload_configs_to_s3
 
 load_dotenv()
 
-# Resolve test data path robustly
-BASE_DIR = Path(__file__).resolve().parent.parent
-DYNAMO_DATA_PATH = BASE_DIR / "data" / "dynamoDB" / "test_data.json"
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +71,7 @@ def eligibility_client():
     return EligibilityApiClient(cert_dir="certs")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def get_scenario_params(request):
     _ = request
 
@@ -86,7 +82,6 @@ def get_scenario_params(request):
         query_params = scenario.get("query_params", {})
         expected_response_code = scenario["expected_response_code"]
 
-        delete_all_configs_from_s3()
         upload_configs_to_s3(config_filenames, config_path)
 
         return (

@@ -4,7 +4,7 @@ project_name = eligibility-signposting-api-regression-tests
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
-		echo "Environment variable $* not set"; \
+		echo "Parameter $* needed!"; \
 		exit 1; \
 	fi
 
@@ -53,10 +53,6 @@ lint-flake8:
 	poetry run flake8 .
 
 lint: lint-black lint-pyright lint-flake8
-
-run-tests-old: guard-env
-	echo "Running Regression Tests"
-	poetry run python ./runner.py --env=$(env) --tags=$(tags)
 
 check-licenses:
 	scripts/check_python_licenses.sh
