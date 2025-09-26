@@ -19,7 +19,7 @@ on:
         required: false
         default: "INFO"
       id:
-        description: 'Unique run identifier (Do not change this)'
+        description: "Run identifier (Don't change - Only used for CI)"
         required: true
         default: "Manually Triggered Run"
       github_tag:
