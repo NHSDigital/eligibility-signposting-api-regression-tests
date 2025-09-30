@@ -1,6 +1,6 @@
 [![Regression Tests](https://github.com/NHSDigital/eligibility-signposting-api-regression-tests/actions/workflows/regression_tests.yml/badge.svg?branch=main)](https://github.com/NHSDigital/eligibility-signposting-api-regression-tests/actions/workflows/regression_tests.yml)
 
-# Regression Tests
+# Regression Tests Adam
 These tests will automate End-to-End regression testing for:
 * [Eligibility Signposting API](https://github.com/NHSDigital/eligibility-signposting-api)
 
