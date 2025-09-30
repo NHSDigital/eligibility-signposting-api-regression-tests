@@ -88,5 +88,5 @@ def _resolve_age_placeholder(today: datetime, years_back: int, format_type: str)
 
 def _format_date(date: datetime, format_type: str) -> str:
     return (
-        date.strftime("%Y%m%d") if format_type == "DATE" else date.strftime("%d %B %Y")
+        date.strftime("%Y%m%d") if format_type == "DATE" else date.strftime("%-d %B %Y")
     )

@@ -37,8 +37,8 @@
         "ApprovalMaximum": 0,
         "Type": "O",
         "StatusText": {
-          "Actionable": "CUSTOM1 - You should have the RSV Vaccine and you have an appointment on [[TARGET.RSV.BOOKED_APPOINTMENT_DATE:DATE(%d %B %Y)]]",
-          "NotActionable": "CUSTOM2 - You had the RSV Vaccine on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%d %B %Y)]]",
+          "Actionable": "CUSTOM1 - You should have the RSV Vaccine and you have an appointment on [[TARGET.RSV.BOOKED_APPOINTMENT_DATE:DATE(%-d %B %Y)]]",
+          "NotActionable": "CUSTOM2 - You had the RSV Vaccine on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
           "NotEligible": "CUSTOM3 - We do not believe you should have it as you were born on [[TARGET.PERSON.DATE_OF_BIRTH]] and your postcode is [[TARGET.PERSON.POSTCODE]]"
         },
         "IterationCohorts": [

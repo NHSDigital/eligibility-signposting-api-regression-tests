@@ -49,7 +49,7 @@
           {
             "Type": "S",
             "Name": "Target Substitution LAST_SUCCESSFUL_DATE",
-            "Description": "Target Substitution LAST_SUCCESSFUL_DATE [[tARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%d %B %Y)]]",
+            "Description": "Target Substitution LAST_SUCCESSFUL_DATE [[tARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
             "Priority": 1,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "RSV",
@@ -60,7 +60,7 @@
           {
             "Type": "S",
             "Name": "Target Substitution BOOKED_APPOINTMENT_DATE",
-            "Description": "Target Substitution BOOKED_APPOINTMENT_DATE [[TARGET.cOVID.BOOKED_APPOINTMENT_DATE:DATE(%d %B %Y)]]",
+            "Description": "Target Substitution BOOKED_APPOINTMENT_DATE [[TARGET.cOVID.BOOKED_APPOINTMENT_DATE:DATE(%-d %B %Y)]]",
             "Priority": 2,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "COVID",
@@ -93,7 +93,7 @@
           {
             "Type": "S",
             "Name": "Target Substitution LAST_INVITE_DATE",
-            "Description": "Target Substitution LAST_INVITE_DATE [[TARGET.RSV.LAST_INVITE_DATE:dATE(%d %B %Y)]]",
+            "Description": "Target Substitution LAST_INVITE_DATE [[TARGET.RSV.LAST_INVITE_DATE:dATE(%-d %B %Y)]]",
             "Priority": 5,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "RSV",
@@ -137,7 +137,7 @@
           {
             "Type": "S",
             "Name": "Person Substitution DATE_OF_BIRTH",
-            "Description": "Target Substitution DATE_OF_BIRTH [[pERSON.DATE_OF_BIRTH:DATE(%d %B %Y)]]",
+            "Description": "Target Substitution DATE_OF_BIRTH [[pERSON.DATE_OF_BIRTH:DATE(%-d %B %Y)]]",
             "Priority": 9,
             "AttributeLevel": "PERSON",
             "AttributeName": "DATE_OF_BIRTH",

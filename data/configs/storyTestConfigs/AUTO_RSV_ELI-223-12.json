@@ -49,7 +49,7 @@
           {
             "Type": "S",
             "Name": "Already Vaccinated",
-            "Description": "We believe you had the RSV vaccination on [[PERSON.POSTCODE:DATE(%d %B %Y)]]",
+            "Description": "We believe you had the RSV vaccination on [[PERSON.POSTCODE:DATE(%-d %B %Y)]]",
             "Priority": 200,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "RSV",

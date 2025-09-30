@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "lastUpdated": "2025-07-28T15:48:45.576609+00:00"
+  },
+  "processedSuggestions": [
+    {
+      "actions": [
+        {
+          "actionCode": "AlreadyVaccinatedInfo",
+          "actionType": "InfoText",
+          "description": "### If you think this is incorrect\n\nIf you believe you've not been vaccinated against RSV, speak to your healthcare professional.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+          "urlLabel": "",
+          "urlLink": ""
+        }
+      ],
+      "condition": "RSV",
+      "eligibilityCohorts": [],
+      "status": "NotActionable",
+      "statusText": "You should have the RSV vaccine",
+      "suitabilityRules": [
+        {
+          "ruleCode": "AlreadyVaccinated",
+          "ruleText": "## You've had your RSV vaccination\n\nWe believe you were vaccinated against RSV on <<RDATE_DAY_-7>>.",
+          "ruleType": "S"
+        }
+      ]
+    }
+  ],
+  "responseId": "24041024-19c7-45ca-a564-0394e15f634c"
+}

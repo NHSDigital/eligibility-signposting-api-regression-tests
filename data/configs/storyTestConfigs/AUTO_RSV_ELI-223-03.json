@@ -49,7 +49,7 @@
           {
             "Type": "S",
             "Name": "Already Vaccinated",
-            "Description": "We believe you had the RSV vaccination on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%d %B %Y)]] and a COVID vaccination on [[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%d %B %Y)]].You also have a Flu Vaccination Booking on [[TARGET.FLU.BOOKED_APPOINTMENT_DATE:DATE(%Y/%m/%d)]] and your date of birth is [[PERSON.DATE_OF_BIRTHS]]",
+            "Description": "We believe you had the RSV vaccination on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]] and a COVID vaccination on [[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]].You also have a Flu Vaccination Booking on [[TARGET.FLU.BOOKED_APPOINTMENT_DATE:DATE(%Y/%m/%d)]] and your date of birth is [[PERSON.DATE_OF_BIRTHS]]",
             "Priority": 200,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "RSV",

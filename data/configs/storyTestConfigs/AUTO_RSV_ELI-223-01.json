@@ -49,7 +49,7 @@
           {
             "Type": "S",
             "Name": "Already Vaccinated",
-            "Description": "## You've had your RSV vaccination\\n\\nWe believe you had the RSV vaccination on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%d %B %Y)]]",
+            "Description": "## You've had your RSV vaccination\\n\\nWe believe you had the RSV vaccination on [[TARGET.RSV.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
             "Priority": 200,
             "AttributeLevel": "TARGET",
             "AttributeTarget": "RSV",
