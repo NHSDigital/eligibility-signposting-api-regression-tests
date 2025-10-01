@@ -42,16 +42,14 @@
                         "CohortGroup": "rsv_age",
                         "PositiveDescription": "are aged between 75 and 79",
                         "NegativeDescription": "are not aged 75 to 79",
-                        "Priority": 0,
-                        "Virtual": "N"
+                        "Priority": 0
                     },
                     {
                         "CohortLabel": "rsv_80_2024_plus1day",
                         "CohortGroup": "rsv_age_catchup",
                         "PositiveDescription": "turned 80 after 1st September 2024",
                         "NegativeDescription": "did not turn 80 after 1 September 2024",
-                        "Priority": 10,
-                        "Virtual": "N"
+                        "Priority": 10
                     },
                     {
                         "CohortLabel": "elid_all_people",
