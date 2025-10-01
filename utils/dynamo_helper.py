@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 load_dotenv()
+
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME")
 
@@ -70,7 +71,7 @@ class DynamoDBHelper:
             logger.exception(
                 "Failed to delete item: %s", e.response["Error"]["Message"]
             )
-            raise
+            raise e
         else:
             return response
 
@@ -131,6 +132,40 @@ class DynamoDBHelper:
         logger.info(f"Table '{self.table_name}' successfully deleted.")
 
 
+def restore_tags_to_table(dynamo_db_table: DynamoDBHelper, table_arn, tags):
+    if table_arn is None:
+        logger.warning(
+            "Unable to find TableArn, attempting to load from backup file..."
+        )
+        table_description = load_from_file("data/dynamoDB/temp/description.json")
+        table_arn = table_description["Table"]["TableArn"]
+        logger.warning(f"TableArn loaded from backup file: : {table_arn}")
+    if tags is None:
+        logger.warning("Unable to add tags, attempting to load from backup file...")
+        try:
+            tags = load_from_file("data/dynamoDB/temp/tags.json")
+            logger.warning(f"tags loaded from backup file: {tags}")
+
+            logger.debug(f"TableArn: {table_arn}")
+            dynamo_db_table.set_table_tags(table_arn, tags)
+        except FileNotFoundError:
+            logger.error("Failed to restore tags and no backup file was found.")
+
+
+def get_attribute_definitions_and_key_schema_from_file(
+    attribute_definitions: str | int | bytes, key_schema: str | int | bytes
+) -> tuple[str | int | bytes, str | int | bytes]:
+    table_description = load_from_file("data/dynamoDB/temp/description.json")
+    key_schema = table_description["Table"]["KeySchema"]
+    logger.warning(f"KeySchema loaded from backup file: {key_schema}")
+
+    attribute_definitions = table_description["Table"]["AttributeDefinitions"]
+    logger.warning(
+        f"attribute_definitions loaded from backup file: {attribute_definitions}"
+    )
+    return attribute_definitions, key_schema
+
+
 def reset_dynamo_tables():
     logger.info("Resetting DynamoDB. This may take a few moments, please be patient.")
     if ENVIRONMENT not in ["dev", "test"]:
@@ -139,7 +174,7 @@ def reset_dynamo_tables():
         )
         return
     dynamo_db_table = DynamoDBHelper(DYNAMODB_TABLE_NAME)
-    table_name = dynamo_db_table.table_name
+    table_name = DYNAMODB_TABLE_NAME
 
     # --- Step 1: Fetch table information ---
     table_description = dynamo_db_table.describe_table()
@@ -175,13 +210,10 @@ def reset_dynamo_tables():
             "Attempting to load from backup file..."
         )
         try:
-            table_description = load_from_file("data/dynamoDB/temp/description.json")
-            key_schema = table_description["Table"]["KeySchema"]
-            logger.warning(f"KeySchema loaded from backup file: {key_schema}")
-
-            attribute_definitions = table_description["Table"]["AttributeDefinitions"]
-            logger.warning(
-                f"attribute_definitions loaded from backup file: {attribute_definitions}"
+            attribute_definitions, key_schema = (
+                get_attribute_definitions_and_key_schema_from_file(
+                    attribute_definitions, key_schema
+                )
             )
         except FileNotFoundError as e:
             logger.exception(
@@ -192,25 +224,7 @@ def reset_dynamo_tables():
 
     # --- Step 4: Restore the tags ---
     logger.debug(f"Adding tags to table '{dynamo_db_table.table_name}'...")
-    if table_arn is None:
-        logger.warning(
-            "Unable to find TableArn, attempting to load from backup file..."
-        )
-        table_description = load_from_file("data/dynamoDB/temp/description.json")
-        table_arn = table_description["Table"]["TableArn"]
-        logger.warning(f"TableArn loaded from backup file: : {table_arn}")
-    if tags is None:
-        logger.warning("Unable to add tags, attempting to load from backup file...")
-        try:
-            tags = load_from_file("data/dynamoDB/temp/tags.json")
-            logger.warning(f"tags loaded from backup file: {tags}")
-
-            logger.debug(f"TableArn: {table_arn}")
-            dynamo_db_table.set_table_tags(table_arn, tags)
-        except FileNotFoundError:
-            logger.error(
-                "Failed to load table information and no backup file was found."
-            )
+    restore_tags_to_table(dynamo_db_table, table_arn, tags)
 
 
 def insert_into_dynamo(data):
