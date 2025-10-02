@@ -34,7 +34,6 @@ def resolve_placeholders(value, context=None, file_name=None):
 
 def _resolve_placeholder_value(placeholder: str) -> str:
     placeholder_parts_length = 3
-    # RDATE
     valid_placeholder_types = ["DATE", "RDATE", "IGNORE"]
     result = f"<<{placeholder}>>"  # Default fallback
 
@@ -53,7 +52,7 @@ def _resolve_placeholder_value(placeholder: str) -> str:
 
     try:
         if date_type == "AGE":
-            result = _resolve_age_placeholder(today, int(arg), parts[0])
+            result = _resolve_age_placeholder(today, arg, parts[0])
         elif date_type == "DAY":
             result = _format_date(today + timedelta(days=int(arg)), parts[0])
         elif date_type == "WEEK":
@@ -68,8 +67,26 @@ def _resolve_placeholder_value(placeholder: str) -> str:
     return result
 
 
-def _resolve_age_placeholder(today: datetime, years_back: int, format_type: str) -> str:
-    target_year = today.year - years_back
+def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) -> str:
+    """
+    Resolve placeholders like:
+      - DATE_AGE_75
+      - DATE_AGE_75-TOMORROW
+      - DATE_AGE_75-YESTERDAY
+    """
+
+    offset_days = 0
+
+    if age_str.endswith("-TOMORROW"):
+        age = int(age_str.replace("-TOMORROW", ""))
+        offset_days = 1
+    elif age_str.endswith("-YESTERDAY"):
+        age = int(age_str.replace("-YESTERDAY", ""))
+        offset_days = -1
+    else:
+        age = int(age_str)
+
+    target_year = today.year - age
     february = 2
     leap_year_day = 29
     try:
@@ -83,6 +100,10 @@ def _resolve_age_placeholder(today: datetime, years_back: int, format_type: str)
             result_date = datetime(target_year, 2, 28, tzinfo=UTC)
         else:
             raise
+
+    if offset_days:
+        result_date = result_date + timedelta(days=offset_days)
+
     return _format_date(result_date, format_type)
 
 
