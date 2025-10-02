@@ -1,0 +1,20 @@
+{
+	"status": "pass",
+	"version": "",
+	"revision": "",
+	"releaseId": "",
+	"commitId": "",
+	"checks": {
+		"healthcheckService:status": [
+			{
+				"status": "pass",
+				"timeout": false,
+				"responseCode": 200,
+				"outcome": "<html><h1>Ok</h1></html>",
+				"links": {
+					"self": "https://eligibility-signposting-api.nhs.uk/patient-check/_status"
+				}
+			}
+		]
+	}
+}
