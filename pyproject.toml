@@ -27,7 +27,7 @@ requests-oauthlib = "^2.0.0"
 pre-commit = "^4.2.0"
 boto3 = "^1.40.42"
 faker = "^37.5.3"
-pyright = "^1.1.405"
+pyright = "^1.1.406"
 pyflakes = "^3.4.0"
 
 [tool.poetry.group.dev.dependencies]
