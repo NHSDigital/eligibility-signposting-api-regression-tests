@@ -70,9 +70,9 @@ def _resolve_placeholder_value(placeholder: str) -> str:
 def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) -> str:
     """
     Resolve placeholders like:
-      - RDATE_AGE_65
-      - RDATE_AGE_65-TOMORROW
-      - RDATE_AGE_65-YESTERDAY
+      - DATE_AGE_75
+      - DATE_AGE_75-TOMORROW
+      - DATE_AGE_75-YESTERDAY
     """
 
     offset_days = 0
