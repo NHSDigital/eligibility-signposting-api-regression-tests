@@ -1,16 +1,16 @@
 from pathlib import Path
 
 
-def save_to_file(file_name, data, directory=None):
+def save_to_file(file_name: str, data, directory: str = None):
     if directory is not None:
-        Path.mkdir(directory, parents=True, exist_ok=True)
+        Path.mkdir(Path(directory), parents=True, exist_ok=True)
     else:
         directory = Path.cwd()
 
-    with Path.open(directory / file_name, "w", encoding="utf-8") as f:
+    with Path.open(Path(directory) / file_name, "w") as f:
         f.write(data)
 
 
 def load_from_file(file_name):
-    with Path.open(file_name, "r", encoding="utf-8") as f:
+    with Path.open(file_name, "r") as f:
         return f.read()

@@ -255,3 +255,4 @@ vscode
 # Node Modules
 node_modules
 /certs/
+/data/dynamoDB/temp/

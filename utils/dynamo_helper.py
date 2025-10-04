@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -9,9 +10,6 @@ from dotenv import load_dotenv
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-ENVIRONMENT = os.getenv("ENVIRONMENT")
-DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME")
-
 
 class DynamoDBHelper:
     def __init__(self, table_name):
@@ -20,6 +18,10 @@ class DynamoDBHelper:
         self.dynamodb_client = boto3.client("dynamodb", "eu-west-2")
         self.dynamodb_resource = boto3.resource("dynamodb", "eu-west-2")
         self.table = self.dynamodb_resource.Table(table_name)
+        self.table_arn = None
+        self.attribute_definitions = None
+        self.key_schema = None
+        self.tags = None
 
     def insert_item(self, item: dict):
         """
@@ -80,32 +82,43 @@ class DynamoDBHelper:
         try:
             table_description = self.dynamodb_client.describe_table(
                 TableName=self.table_name
-            )
+            )["Table"]
         except ClientError as e:
             logger.exception(
                 f"Failed to get table information: {e.response["Error"]["Message"]}"
             )
             raise
+        self.table_arn = table_description["TableArn"]
+        save_to_file("table_arn.json", self.table_arn, directory="data/dynamoDB/temp")
+        self.attribute_definitions = table_description["attribute_definitions"]
         save_to_file(
-            "description.json", table_description, directory="data/dynamoDB/temp"
+            "attribute_definitions.json",
+            self.attribute_definitions,
+            directory="data/dynamoDB/temp",
         )
-        return table_description
+        self.key_schema = table_description["key_schema"]
+        save_to_file("key_schema.json", self.key_schema, directory="data/dynamoDB/temp")
 
-    def get_table_tags(self, table_arn):
-        tags = self.dynamodb_client.list_tags_of_resource(ResourceArn=table_arn)
-        save_to_file("tags.json", tags, directory="data/dynamoDB/temp")
-        return tags
+        return self.table_arn, self.attribute_definitions, self.key_schema
 
-    def set_table_tags(self, table_arn, tags):
-        self.dynamodb_client.tag_resource(ResourceArn=table_arn, Tags=tags["Tags"])
+    def get_table_tags(self):
+        self.tags = self.dynamodb_client.list_tags_of_resource(
+            ResourceArn=self.table_arn
+        )["Tags"]
+        logger.debug(f"tags: {self.tags}")
+        save_to_file("tags.json", self.tags, directory="data/dynamoDB/temp")
+        return self.tags
 
-    def create_table(self, attribute_definitions, key_schema):
+    def set_table_tags(self):
+        self.dynamodb_client.tag_resource(ResourceArn=self.table_arn, Tags=self.tags)
+
+    def create_table(self):
         logger.info(f"Creating table '{self.table_name}'...")
         try:
             self.dynamodb_client.create_table(
                 TableName=self.table_name,
-                KeySchema=key_schema,
-                AttributeDefinitions=attribute_definitions,
+                KeySchema=self.key_schema,
+                AttributeDefinitions=self.attribute_definitions,
                 BillingMode="PAY_PER_REQUEST",
             )
 
@@ -132,22 +145,27 @@ class DynamoDBHelper:
         logger.info(f"Table '{self.table_name}' successfully deleted.")
 
 
-def restore_tags_to_table(dynamo_db_table: DynamoDBHelper, table_arn, tags):
-    if table_arn is None:
+def restore_tags_to_table(dynamo_db_table: DynamoDBHelper):
+    if dynamo_db_table.table_arn is None:
         logger.warning(
             "Unable to find TableArn, attempting to load from backup file..."
         )
-        table_description = load_from_file("data/dynamoDB/temp/description.json")
-        table_arn = table_description["Table"]["TableArn"]
-        logger.warning(f"TableArn loaded from backup file: : {table_arn}")
-    if tags is None:
+        dynamo_db_table.table_arn = json.loads(
+            load_from_file("data/dynamoDB/temp/table_arn.json")
+        )
+        logger.warning(
+            f"TableArn loaded from backup file: : {dynamo_db_table.table_arn}"
+        )
+    if dynamo_db_table.tags is None:
         logger.warning("Unable to add tags, attempting to load from backup file...")
         try:
-            tags = load_from_file("data/dynamoDB/temp/tags.json")
-            logger.warning(f"tags loaded from backup file: {tags}")
+            dynamo_db_table.tags = json.loads(
+                load_from_file("data/dynamoDB/temp/tags.json")
+            )
+            logger.warning(f"tags loaded from backup file: {dynamo_db_table.tags}")
 
-            logger.debug(f"TableArn: {table_arn}")
-            dynamo_db_table.set_table_tags(table_arn, tags)
+            logger.debug(f"TableArn: {dynamo_db_table.table_arn}")
+            dynamo_db_table.set_table_tags()
         except FileNotFoundError:
             logger.error("Failed to restore tags and no backup file was found.")
 
@@ -156,39 +174,68 @@ def get_attribute_definitions_and_key_schema_from_file(
     attribute_definitions: str | int | bytes, key_schema: str | int | bytes
 ) -> tuple[str | int | bytes, str | int | bytes]:
     table_description = load_from_file("data/dynamoDB/temp/description.json")
-    key_schema = table_description["Table"]["KeySchema"]
+    key_schema = table_description["KeySchema"]
     logger.warning(f"KeySchema loaded from backup file: {key_schema}")
 
-    attribute_definitions = table_description["Table"]["AttributeDefinitions"]
+    attribute_definitions = table_description["AttributeDefinitions"]
     logger.warning(
         f"attribute_definitions loaded from backup file: {attribute_definitions}"
     )
     return attribute_definitions, key_schema
 
 
+def file_backup_exists():
+    try:
+        load_from_file("data/dynamoDB/temp/tags.json")
+        load_from_file("data/dynamoDB/temp/attributeDefinition.json")
+        load_from_file("data/dynamoDB/temp/keySchema.json")
+        load_from_file("data/dynamoDB/temp/tableArn.json")
+        return True
+    except FileNotFoundError:
+        return False
+
+
 def reset_dynamo_tables():
+    environment = os.getenv("ENVIRONMENT")
+    dynamodb_table_name = os.getenv("DYNAMODB_TABLE_NAME")
+
     logger.info("Resetting DynamoDB. This may take a few moments, please be patient.")
-    if ENVIRONMENT not in ["dev", "test"]:
+    if environment not in ["dev", "test"]:
         logger.warning(
-            f"{ENVIRONMENT} is not supported. Resetting DynamoDB is only supported in dev or test."
+            f"{environment} is not supported. Resetting DynamoDB is only supported in dev or test."
         )
         return
-    dynamo_db_table = DynamoDBHelper(DYNAMODB_TABLE_NAME)
-    table_name = DYNAMODB_TABLE_NAME
+    dynamo_db_table = DynamoDBHelper(dynamodb_table_name)
+    table_name = dynamodb_table_name
 
     # --- Step 1: Fetch table information ---
-    table_description = dynamo_db_table.describe_table()
-    table_arn = table_description["Table"]["TableArn"]
-    logger.debug(f"TableArn: {table_arn}")
+    try:
+        table_arn, attribute_definitions, key_schema = dynamo_db_table.describe_table()
+        logger.debug(f"TableArn: {table_arn}")
+        logger.debug(f"Attribute Definitions: {attribute_definitions}")
+        logger.debug(f"Key Schema: {key_schema}")
 
-    key_schema = table_description["Table"]["KeySchema"]
-    logger.debug(f"KeySchema: {key_schema}")
+        dynamo_db_table.tags = dynamo_db_table.get_table_tags()
+    except ClientError as e:
+        logger.warning(f"Error describing table: {e}")
+        if not file_backup_exists():
+            logger.exception(
+                f"FATAL! Unable to get table information and no backup present: {e}"
+            )
+            raise e
+        else:
+            logger.warning("Table information taken from backup files")
+            dynamo_db_table.tags = load_from_file("data/dynamoDB/temp/tags.json")
+            dynamo_db_table.attribute_definitions = load_from_file(
+                "data/dynamoDB/temp/attributeDefinition.json"
+            )
+            dynamo_db_table.key_schema = load_from_file(
+                "data/dynamoDB/temp/keySchema.json"
+            )
+            dynamo_db_table.table_arn = load_from_file(
+                "data/dynamoDB/temp/tableArn.json"
+            )
 
-    attribute_definitions = table_description["Table"]["AttributeDefinitions"]
-    logger.debug(f"attribute_definitions: {attribute_definitions}")
-
-    tags = dynamo_db_table.get_table_tags(table_arn)
-    logger.debug(f"tags: {tags}")
     # --- Step 2: Delete the table ---
     try:
         dynamo_db_table.delete_table(table_name)
@@ -204,32 +251,17 @@ def reset_dynamo_tables():
             raise e
 
     # --- Step 3: Recreate the table ---
-    if attribute_definitions is None or key_schema is None:
-        logger.warning(
-            "Unable to create table because AttributeDefinitions or KeySchema are not defined. "
-            "Attempting to load from backup file..."
-        )
-        try:
-            attribute_definitions, key_schema = (
-                get_attribute_definitions_and_key_schema_from_file(
-                    attribute_definitions, key_schema
-                )
-            )
-        except FileNotFoundError as e:
-            logger.exception(
-                "Failed to load table information and no backup file was found."
-            )
-            raise e
-    dynamo_db_table.create_table(attribute_definitions, key_schema)
+    dynamo_db_table.create_table()
 
     # --- Step 4: Restore the tags ---
     logger.debug(f"Adding tags to table '{dynamo_db_table.table_name}'...")
-    restore_tags_to_table(dynamo_db_table, table_arn, tags)
+    restore_tags_to_table(dynamo_db_table)
 
 
 def insert_into_dynamo(data):
     logger.debug("Inserting into Dynamo: %s", data)
-    table = DynamoDBHelper(DYNAMODB_TABLE_NAME)
+    dynamodb_table_name = os.getenv("DYNAMODB_TABLE_NAME")
+    table = DynamoDBHelper(dynamodb_table_name)
     for item in data:
         try:
             table.insert_item(item)
