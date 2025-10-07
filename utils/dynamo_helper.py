@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 load_dotenv()
+dynamo_temp_location = "data/dynamoDB/temp/"
 
 
 class DynamoDBHelper:
@@ -163,10 +164,10 @@ def restore_tags_to_table(dynamo_db_table: DynamoDBHelper):
 
 def file_backup_exists():
     try:
-        json.loads(load_from_file("data/dynamoDB/temp/tags.json"))
-        json.loads(load_from_file("data/dynamoDB/temp/attribute_definitions.json"))
-        json.loads(load_from_file("data/dynamoDB/temp/key_schema.json"))
-        load_from_file("data/dynamoDB/temp/table_arn.json")
+        json.loads(load_from_file(f"{dynamo_temp_location}tags.json"))
+        json.loads(load_from_file(f"{dynamo_temp_location}attribute_definitions.json"))
+        json.loads(load_from_file(f"{dynamo_temp_location}key_schema.json"))
+        load_from_file(f"{dynamo_temp_location}table_arn.json")
         return True
     except FileNotFoundError:
         return False
@@ -226,14 +227,16 @@ def reset_dynamo_tables():
 
 def load_information_from_backup_files(dynamo_db_table: DynamoDBHelper):
     logger.warning("Table information taken from backup files")
-    dynamo_db_table.tags = json.loads(load_from_file("data/dynamoDB/temp/tags.json"))
+    dynamo_db_table.tags = json.loads(
+        load_from_file(f"{dynamo_temp_location}tags.json")
+    )
     dynamo_db_table.attribute_definitions = json.loads(
-        load_from_file("data/dynamoDB/temp/attribute_definitions.json")
+        load_from_file(f"{dynamo_temp_location}attribute_definitions.json")
     )
     dynamo_db_table.key_schema = json.loads(
-        load_from_file("data/dynamoDB/temp/key_schema.json")
+        load_from_file(f"{dynamo_temp_location}key_schema.json")
     )
-    dynamo_db_table.table_arn = load_from_file("data/dynamoDB/temp/table_arn.json")
+    dynamo_db_table.table_arn = load_from_file(f"{dynamo_temp_location}table_arn.json")
 
 
 def insert_into_dynamo(data):
