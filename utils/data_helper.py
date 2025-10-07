@@ -4,7 +4,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .dynamo_helper import insert_into_dynamo, reset_dynamo_tables
+from .dynamo_helper import insert_into_dynamo
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
 
@@ -17,7 +17,6 @@ def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
 
-    reset_dynamo_tables()
     logger.info("Adding data into Dynamo")
     for scenario in all_data.values():
         insert_into_dynamo(scenario["dynamo_items"])
