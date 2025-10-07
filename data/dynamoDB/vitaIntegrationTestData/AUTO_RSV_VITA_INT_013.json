@@ -4,7 +4,7 @@
     "nhs-login-nhs-number": "9466447939"
   },
   "config_filenames": [
-    "vita_integration_test_config.json"
+    "RSV_Config_v0_12.json"
   ],
   "data": [
     {
