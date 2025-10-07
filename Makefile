@@ -72,7 +72,10 @@ deep-clean-install:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-run-tests: guard-env guard-log_level
+clear-db: guard-env guard-log_level
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_reset_db.py
+
+run-tests: guard-env guard-log_level clear-db
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_story_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_error_scenario_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py
