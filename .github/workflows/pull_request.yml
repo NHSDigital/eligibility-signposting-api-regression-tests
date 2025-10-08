@@ -24,3 +24,4 @@ jobs:
       tags: '@regression'
       id: 'Run during opened pull request'
       github_tag: ${{ github.event.pull_request.head.ref }}
+    secrets: inherit
