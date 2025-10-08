@@ -41,6 +41,8 @@ exclude = ["**/.*",
     "**/.venv",
     "**/node_modules"
 ]
+venvPath = "."
+venv = ".venv"
 defineConstant = { DEBUG = true }
 reportArgumentType = false
 reportReturnType = false
