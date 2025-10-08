@@ -94,19 +94,19 @@ class DynamoDBHelper:
         save_to_file(
             f"table_arn-{self.environment}.json",
             self.table_arn,
-            directory="data/dynamoDB/temp",
+            directory=DYNAMO_TEMP_LOCATION,
         )
         self.attribute_definitions = table_description["AttributeDefinitions"]
         save_to_file(
             f"attribute_definitions-{self.environment}.json",
             json.dumps(self.attribute_definitions),
-            directory="data/dynamoDB/temp",
+            directory=DYNAMO_TEMP_LOCATION,
         )
         self.key_schema = table_description["KeySchema"]
         save_to_file(
             f"key_schema-{self.environment}.json",
             json.dumps(self.key_schema),
-            directory="data/dynamoDB/temp",
+            directory=DYNAMO_TEMP_LOCATION,
         )
 
         return self.table_arn, self.attribute_definitions, self.key_schema
@@ -119,7 +119,7 @@ class DynamoDBHelper:
         save_to_file(
             f"tags-{self.environment}.json",
             json.dumps(self.tags),
-            directory="data/dynamoDB/temp",
+            directory=DYNAMO_TEMP_LOCATION,
         )
         return self.tags
 
