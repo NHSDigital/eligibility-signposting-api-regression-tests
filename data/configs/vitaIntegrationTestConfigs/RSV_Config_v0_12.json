@@ -173,39 +173,6 @@
 						"CohortLabel": "rsv_75to79_plus1day",
 						"Priority": 190
 					},
-                    {
-                        "Type": "S",
-                        "Name": "Not Available",
-                        "Description": "##RSV vaccinations are not currently available\n\nPlease try again soon.",
-                        "Priority": 195,
-                        "AttributeLevel": "PERSON",
-                        "AttributeName": "NHS_NUMBER",
-                        "Operator": "=",
-                        "Comparator": "9658218997",
-                        "RuleStop": "Y"
-                    },
-                    {
-                        "Type": "S",
-                        "Name": "NotYetDue",
-                        "Description": "##Your RSV vaccination is not yet due\\n\\nYour next dose will be due in 3 months.",
-                        "Priority": 196,
-                        "AttributeLevel": "PERSON",
-                        "AttributeName": "NHS_NUMBER",
-                        "Operator": "=",
-                        "Comparator": "9658219012",
-                        "RuleStop": "Y"
-                    },
-                    {
-                        "Type": "S",
-                        "Name": "TooClose",
-                        "Description": "##You have recently have the RSV vaccination\n\nYou must leave 90 days between doses of the RSV vaccine. Please try again soon.",
-                        "Priority": 197,
-                        "AttributeLevel": "PERSON",
-                        "AttributeName": "NHS_NUMBER",
-                        "Operator": "=",
-                        "Comparator": "9658220142",
-                        "RuleStop": "Y"
-                    },
 					{
 						"Type": "S",
 						"Name": "AlreadyVaccinated",
@@ -482,7 +449,7 @@
 					},
 					"CHECK_CORRECT_OTHER_SETTING": {
 						"ExternalRoutingCode": "ManagedSettingInfo",
-						"ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page] (https://www.nhs.uk/nhs-app/nhs-app-help-and-support/vaccinations/check-and-book-an-rsv-vaccination).",
+						"ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/vaccinations/check-and-book-an-rsv-vaccination).",
 						"ActionType": "InfoText",
 						"UrlLink": null,
 						"UrlLabel": ""
