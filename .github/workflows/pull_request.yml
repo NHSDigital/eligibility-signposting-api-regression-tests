@@ -15,3 +15,12 @@ jobs:
 
   pr_title_format_check:
     uses: ./.github/workflows/pr_title_check.yml
+
+  regression_tests:
+    uses: ./.github/workflows/regression_tests.yml
+    with:
+      environment: 'dev'
+      log_level: 'INFO'
+      tags: '@regression'
+      id: 'Run during opened pull request'
+      github_tag: ${BRANCH_NAME}
