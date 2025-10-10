@@ -1,5 +1,5 @@
 [![Regression Tests](https://github.com/NHSDigital/eligibility-signposting-api-regression-tests/actions/workflows/regression_tests.yml/badge.svg?branch=main)](https://github.com/NHSDigital/eligibility-signposting-api-regression-tests/actions/workflows/regression_tests.yml)
-
+[![AI Code Assurance](https://sonarcloud.io/api/project_badges/ai_code_assurance?project=NHSDigital_eligibility-signposting-api-regression-tests)](https://sonarcloud.io/summary/new_code?id=NHSDigital_eligibility-signposting-api-regression-tests)
 # Regression Tests
 These tests will automate End-to-End regression testing for:
 * [Eligibility Signposting API](https://github.com/NHSDigital/eligibility-signposting-api)
