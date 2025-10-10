@@ -10,7 +10,8 @@ env:
 jobs:
   quality_checks:
     uses: ./.github/workflows/quality-checks.yml
-    secrets: inherit
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   pr_title_format_check:
     uses: ./.github/workflows/pr_title_check.yml

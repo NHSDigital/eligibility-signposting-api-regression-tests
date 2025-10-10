@@ -4,7 +4,7 @@ on:
   workflow_call:
     secrets:
       SONAR_TOKEN:
-        required: false
+        required: true
 
 jobs:
   quality_checks:
