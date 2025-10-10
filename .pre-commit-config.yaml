@@ -26,7 +26,7 @@ repos:
     hooks:
       - id: lint-githubactions
         name: Lint github actions
-        entry: actionlint
+        entry: scripts/lint-githubactions.sh
         language: system
         files: ^.github
         types_or: [yaml]
