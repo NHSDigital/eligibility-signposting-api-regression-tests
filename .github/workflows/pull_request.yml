@@ -1,8 +1,5 @@
 name: Pull Request
 
-concurrency:
-  group: ${{ github.workflow }}
-
 on:
   pull_request:
     branches: [main]
