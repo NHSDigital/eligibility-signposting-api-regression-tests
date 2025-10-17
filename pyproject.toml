@@ -13,7 +13,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-pytest-nhsd-apim = "^5.0.5"
+pytest-nhsd-apim = "^5.0.13"
 pytest = "^8.4.1"
 nhs-number-generator = {git = "https://github.com/Iain-S/nhs_number_generator.git"}
 flake8 = "^7.3.0"
