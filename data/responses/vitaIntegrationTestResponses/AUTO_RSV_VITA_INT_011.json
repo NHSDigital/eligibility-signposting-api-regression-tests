@@ -26,7 +26,7 @@
       "suitabilityRules": [
         {
           "ruleCode": "OtherSetting",
-          "ruleText": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the RSV vaccine.",
+          "ruleText": "### Getting the vaccine\n\nWe believe you're living in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the RSV vaccine.",
           "ruleType": "S"
         }
       ]
