@@ -1,0 +1,40 @@
+{
+    "scenario_name": "RSV - NotActionable - RulesMapper - RuleCode but null RuleText",
+    "request_headers": {
+        "nhs-login-nhs-number": "9900031604"
+    },
+    "config_filenames": [
+        "AUTO_RSV_ELI-316-01.json"
+    ],
+    "data": [
+        {
+            "NHS_NUMBER": "9900031604",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_80_2024_plus1day",
+                    "DATE_JOINED": "20240115"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9900031604",
+            "ATTRIBUTE_TYPE": "PERSON",
+            "13Q_FLAG": "Y",
+            "CARE_HOME_FLAG": null,
+            "COMMISSIONING_REGION": null,
+            "DATE_OF_BIRTH": "19490801",
+            "DE_FLAG": null,
+            "GENDER": null,
+            "GP_PRACTICE_CODE": null,
+            "ICB": null,
+            "LOCAL_AUTHORITY": null,
+            "LSOA": null,
+            "MSOA": null,
+            "PCN": null,
+            "POSTCODE": null,
+            "POSTCODE_OUTCODE": null,
+            "POSTCODE_SECTOR": null
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-05T14:59:45.320136+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged between 75 and 79"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Other Setting Mapper No RuleCode and No Rule Code",
+                    "ruleText": "Mapper:RuleText:Other Setting Mapper No RuleCode and No Rule Code",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "b77ca4e8-5f8e-4066-8558-0c07d7334f4b"
+}
