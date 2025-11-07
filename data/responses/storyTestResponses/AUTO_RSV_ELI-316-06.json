@@ -1,0 +1,43 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-05T15:52:02.261149+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age_catchup",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "turned 80 after 1st September 2024"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Mapper:RuleCode:AlreadyVaccinated",
+                    "ruleText": "Mapper:RuleText:This is the AlreadyVaccinated RulesMapper RuleText",
+                    "ruleType": "S"
+                },
+                {
+                    "ruleCode": "OtherSettingFallback",
+                    "ruleText": "This is the Other Setting Fallback Description",
+                    "ruleType": "S"
+                },
+                {
+                    "ruleCode": "OtherSettingMapperNullRuleCodeFallbackToRule_Code",
+                    "ruleText": "Mapper:RuleText:Other Setting Mapper Null RuleCode Fall back to Rule Code Description",
+                    "ruleType": "S"
+                },
+                {
+                    "ruleCode": "Mapper:RuleCode:OtherSettingMapperNullRuleTextFallbacktoRuleName",
+                    "ruleText": "Other Setting Mapper Null RuleText Fall back to Rule Description description",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "acb19e82-a774-403c-9eff-baaf92dc6f41"
+}

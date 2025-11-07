@@ -1,0 +1,52 @@
+{
+    "scenario_name": "RSV - NotActionable - RulesMapper - No RuleStop",
+    "request_headers": {
+        "nhs-login-nhs-number": "9900031606"
+    },
+    "config_filenames": [
+        "AUTO_RSV_ELI-316-02.json"
+    ],
+    "data": [
+        {
+            "NHS_NUMBER": "9900031606",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_80_2024_plus1day",
+                    "DATE_JOINED": "20240115"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9900031606",
+            "ATTRIBUTE_TYPE": "PERSON",
+            "13Q_FLAG": "Y",
+            "CARE_HOME_FLAG": "Y",
+            "COMMISSIONING_REGION": null,
+            "DATE_OF_BIRTH": "19490801",
+            "DE_FLAG": "Y",
+            "GENDER": null,
+            "GP_PRACTICE_CODE": null,
+            "ICB": null,
+            "LOCAL_AUTHORITY": null,
+            "LSOA": null,
+            "MSOA": null,
+            "PCN": null,
+            "POSTCODE": null,
+            "POSTCODE_OUTCODE": null,
+            "POSTCODE_SECTOR": null
+        },
+        {
+            "NHS_NUMBER": "9900031606",
+            "ATTRIBUTE_TYPE": "RSV",
+            "BOOKED_APPOINTMENT_DATE": null,
+            "BOOKED_APPOINTMENT_PROVIDER": null,
+            "INVALID_DOSES_COUNT": null,
+            "LAST_INVITE_DATE": null,
+            "LAST_INVITE_STATUS": null,
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-12>>",
+            "LAST_VALID_DOSE_DATE": null,
+            "VALID_DOSES_COUNT": null
+        }
+    ]
+}
