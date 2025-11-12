@@ -1,0 +1,40 @@
+{
+  "scenario_name": "ELI-372 - Not Actionable - Suppressed as part of cohort_1",
+  "request_headers": {
+    "nhs-login-nhs-number": "9000037205"
+  },
+  "config_filenames": [
+    "AUTO_RSV_ELI-372.json"
+  ],
+  "data": [
+    {
+      "NHS_NUMBER": "9000037205",
+      "ATTRIBUTE_TYPE": "COHORTS",
+      "COHORT_MEMBERSHIPS": [
+        {
+          "COHORT_LABEL": "cohort_1",
+          "DATE_JOINED": "20231020"
+        }
+      ]
+    },
+    {
+      "NHS_NUMBER": "9000037205",
+      "ATTRIBUTE_TYPE": "PERSON",
+      "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
+      "GENDER": "0",
+      "POSTCODE": "SG8 6EG",
+      "POSTCODE_SECTOR": "SG86",
+      "POSTCODE_OUTCODE": "SG8",
+      "MSOA": "E02003793",
+      "LSOA": "E01018267",
+      "LOCAL_AUTHORITY": "E08000012",
+      "GP_PRACTICE_CODE": "D81046",
+      "PCN": "U75549",
+      "ICB": "QUE",
+      "COMMISSIONING_REGION": "Y61",
+      "13Q_FLAG": "N",
+      "CARE_HOME_FLAG": "N",
+      "DE_FLAG": "N"
+    }
+  ]
+}

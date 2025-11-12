@@ -1,0 +1,166 @@
+{
+	"CampaignConfig": {
+		"ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d0",
+		"Version": 1,
+		"Name": "EliD RSV example config",
+		"Type": "V",
+		"Target": "RSV",
+		"Manager": ["example@nhs.net"],
+		"Approver": ["example@nhs.net"],
+		"Reviewer": ["example@nhs.net"],
+		"IterationFrequency": "X",
+		"IterationType": "O",
+		"IterationTime": "07:00:00",
+		"StartDate": "20250717",
+		"EndDate": "20350717",
+		"ApprovalMinimum": 0,
+		"ApprovalMaximum": 0,
+		"DefaultCommsRouting": "PLACEHOLDER_COMMS_ROUTING",
+		"Iterations": [
+			{
+				"ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d1",
+				"DefaultCommsRouting": "BOOK_NBS_INFO",
+				"DefaultNotActionableRouting": "DEFAULT_X",
+				"DefaultNotEligibleRouting": "DEFAULT_Y",
+				"Version": 1,
+				"Name": "EliD RSV example config",
+				"IterationDate": "20250717",
+				"IterationNumber": 1,
+				"CommsType": "I",
+				"ApprovalMinimum": 0,
+				"ApprovalMaximum": 0,
+				"Type": "O",
+				"IterationCohorts": [
+					{
+						"CohortLabel": "cohort_1",
+						"CohortGroup": "age",
+						"PositiveDescription": "are aged between 75 and 79",
+						"NegativeDescription": "are not aged 75 to 79",
+						"Priority": 0,
+                        "Virtual": "N"
+					},
+					{
+						"CohortLabel": "cohort_2",
+						"CohortGroup": "age_catchup",
+						"PositiveDescription": "turned 80 after 1st September 2024",
+						"NegativeDescription": "did not turn 80 after 1 September 2024",
+						"Priority": 10,
+                        "Virtual": "N"
+					},
+                    {
+                        "CohortLabel": "cohort_3",
+                        "CohortGroup": "other_cohort_group",
+                        "PositiveDescription": "you are in other_cohort_group",
+                        "NegativeDescription": "you are not in other_cohort_group",
+                        "Priority": 20,
+                        "Virtual": "N"
+                    }
+				],
+				"IterationRules": [
+					{
+						"Type": "F",
+						"Name": "Filter 1 with CohortLabel = cohort_1,cohort_2",
+						"Description": "Filter 1 with CohortLabel = cohort_1,cohort_2 description",
+						"Operator": "=",
+						"Comparator": "E08000011",
+						"AttributeLevel": "PERSON",
+						"AttributeName": "LOCAL_AUTHORITY",
+						"CohortLabel": "cohort_1, cohort_2",
+						"Priority": 100
+					},
+                    {
+						"Type": "S",
+						"Name": "Suppression 1 with CohortLabel = cohort_1,cohort_2",
+						"Description": "Suppression 1 with CohortLabel = cohort_1,cohort_2 description",
+						"Operator": "=",
+						"Comparator": "E02003793",
+						"AttributeLevel": "PERSON",
+						"AttributeName": "MSOA",
+						"CohortLabel": "cohort_1, cohort_2",
+						"Priority": 200
+					},
+					{
+						"Type": "R",
+						"Name": "Actionable Future Booked NBS Appointment",
+						"Description": "Amend NBS future booking",
+						"Priority": 1000,
+						"Operator": "=",
+						"Comparator": "E01018999",
+						"AttributeLevel": "PERSON",
+						"AttributeName": "LSOA",
+						"CohortLabel": "cohort_1, cohort_2",
+						"CommsRouting": "R_RULE_TEST"
+					},
+					{
+						"Type": "X",
+						"Name": "Actionable Future Booked NBS Appointment",
+						"Description": "Amend NBS future booking",
+						"Priority": 1000,
+						"Operator": "=",
+						"Comparator": "E01018999",
+						"AttributeLevel": "PERSON",
+						"AttributeName": "LSOA",
+						"CohortLabel": "cohort_1, cohort_2",
+						"CommsRouting": "X_RULE_TEST"
+					},
+					{
+						"Type": "Y",
+						"Name": "Actionable Future Booked NBS Appointment",
+						"Description": "Amend NBS future booking",
+						"Priority": 1000,
+						"Operator": "=",
+						"Comparator": "E01018999",
+						"AttributeLevel": "PERSON",
+						"AttributeName": "LSOA",
+						"CohortLabel": "cohort_1, cohort_2",
+						"CommsRouting": "Y_RULE_TEST"
+					}
+                ],
+				"ActionsMapper": {
+					"BOOK_NBS_INFO": {
+						"ExternalRoutingCode": "BookNBSInfoText",
+						"ActionDescription": "### Book an appointment online at a pharmacy\n\nYou can book an appointment online at a pharmacy that offers the RSV vaccination. You need to be registered with a GP to do this.",
+						"ActionType": "ButtonWithAuthLinkWithInfoText",
+						"UrlLink": "https://www.nhswebsite-staging.nhs.uk/nbs/nhs-app/vita/rsv",
+						"UrlLabel": "Continue to booking"
+					},
+                    "DEFAULT_X": {
+						"ExternalRoutingCode": "DEFAULTX",
+						"ActionDescription": "This is the default Not Actionable Action",
+						"ActionType": "NotActionableInfoText",
+						"UrlLink": null,
+						"UrlLabel": null
+					},
+                    "DEFAULT_Y": {
+						"ExternalRoutingCode": "DEFAULTY",
+						"ActionDescription": "This is the default Not Eligible Action",
+						"ActionType": "NotEligibleInfoText",
+						"UrlLink": null,
+						"UrlLabel": null
+					},
+                    "R_RULE_TEST": {
+						"ExternalRoutingCode": "R-RuleTest",
+						"ActionDescription": "This the Test to check that R rules do not consider CohortLabel ",
+						"ActionType": "Actionable-R-Rule",
+						"UrlLink": null,
+						"UrlLabel": null
+					},
+                    "X_RULE_TEST": {
+						"ExternalRoutingCode": "X-RuleTest",
+						"ActionDescription": "This the Test to check that X rules do not consider CohortLabel ",
+						"ActionType": "NotEligible-X-Rule",
+						"UrlLink": null,
+						"UrlLabel": null
+					},
+                    "Y_RULE_TEST": {
+						"ExternalRoutingCode": "Y-RuleTest",
+						"ActionDescription": "This the Test to check that Y rules do not consider CohortLabel ",
+						"ActionType": "NotActionable-Y-Rule",
+						"UrlLink": null,
+						"UrlLabel": null
+					}
+				}
+			}
+		]
+	}
+}

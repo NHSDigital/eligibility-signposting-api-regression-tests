@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-12T11:04:26.825077+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DEFAULTX",
+                    "actionType": "NotActionableInfoText",
+                    "description": "This is the default Not Actionable Action",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "age",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged between 75 and 79"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Suppression 1 with CohortLabel = cohort_1,cohort_2",
+                    "ruleText": "Suppression 1 with CohortLabel = cohort_1,cohort_2 description",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "6f193c8a-3811-411d-96a5-352faecd0730"
+}
