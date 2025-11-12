@@ -94,7 +94,8 @@ def load_all_test_scenarios(folder_path):
     all_data = {}
     dto = PlaceholderDTO()  # Shared across all files
 
-    for path in Path(folder_path).iterdir():
+    # Sort files alphabetically by filename
+    for path in sorted(Path(folder_path).iterdir(), key=lambda p: p.name.lower()):
         if path.suffix != ".json":
             continue
 

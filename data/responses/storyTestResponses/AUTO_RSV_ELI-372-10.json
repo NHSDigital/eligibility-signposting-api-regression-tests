@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-12T13:49:29.755198+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "Y-RuleTest",
+                    "actionType": "NotActionable-Y-Rule",
+                    "description": "This the Test to check that Y rules do not consider CohortLabel ",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "age",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged between 75 and 79"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Suppression 1 with CohortLabel = cohort_1,cohort_2",
+                    "ruleText": "Suppression 1 with CohortLabel = cohort_1,cohort_2 description",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "b3966c5a-b8d0-40f5-ac97-b6da2aa468b8"
+}
