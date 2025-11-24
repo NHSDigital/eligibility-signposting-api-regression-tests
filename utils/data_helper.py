@@ -1,6 +1,8 @@
 import json
 import logging
 from pathlib import Path
+import hmac
+import hashlib
 
 from dotenv import load_dotenv
 
@@ -11,6 +13,36 @@ from .placeholder_utils import resolve_placeholders
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
 load_dotenv()
 logger = logging.getLogger(__name__)
+SECRET_KEY = b"thisisadamsecretkey"
+
+
+def encrypt_nhs_numbers(
+    dynamo_items: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    return dynamo_items
+
+
+def encrypt_nhs_numbers_full(
+    dynamo_items: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """
+    Generate HMAC-SHA256 hashed NHS_NUMBER
+
+    Args:
+        dynamo_items: List of dictionaries containing 'NHS_NUMBER' keys
+
+    Returns:
+        The same list with NHS_NUMBER values replaced by their HMAC hashes
+    """
+
+    def _encrypt_value(value: str) -> str:
+        return hmac.new(SECRET_KEY, value.encode(), hashlib.sha256).hexdigest()
+
+    for item in dynamo_items:
+        if "NHS_NUMBER" in item:
+            item["NHS_NUMBER"] = _encrypt_value(item["NHS_NUMBER"])
+
+    return dynamo_items
 
 
 def initialise_tests(folder):
@@ -19,7 +51,9 @@ def initialise_tests(folder):
 
     logger.info("Adding data into Dynamo")
     for scenario in all_data.values():
-        insert_into_dynamo(scenario["dynamo_items"])
+        dynamo_items = scenario["dynamo_items"]
+        hashed_dynamo_items = encrypt_nhs_numbers(dynamo_items)
+        insert_into_dynamo(hashed_dynamo_items)
     logger.info("Data Added to Dynamo")
     return all_data, dto
 
