@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from copy import deepcopy
 from pathlib import Path
 import hmac
@@ -20,14 +21,22 @@ logger = logging.getLogger(__name__)
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
-    logger.info("Getting Secret")
-    # secret_key = get_secret_key("eligibility-signposting-api-test/hashing_secret", "eu-west-2")
+    # --- Fetch secret with fatal error if missing ---
+    logger.info("Retrieving HMAC secret key from Secrets Manager")
+    try:
+        secret_key = get_secret_key(
+            f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret",
+            "eu-west-2",
+        )
+    except RuntimeError as e:
+        logger.critical("Cannot continue without HMAC secret key: %s", e)
+        raise SystemExit(1)
 
-    logger.info("Adding data into Dynamo")
+    # --- Encrypt NHS numbers and insert into DynamoDB ---
+    logger.info("Encrypting NHS numbers and inserting data into DynamoDB")
     for scenario in all_data.values():
         dynamo_items = scenario["dynamo_items"]
-        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items)
-        # hashed_dynamo_items = _encrypt_nhs_numbers_full(dynamo_items, secret_key)
+        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items, secret_key)
         insert_into_dynamo(hashed_dynamo_items)
     logger.info("Data Added to Dynamo")
     return all_data, dto
@@ -180,12 +189,6 @@ def _mask_volatile_fields(data, keys_to_mask, placeholder="<ignored>"):
 
 
 def _encrypt_nhs_numbers(
-    dynamo_items: list[dict[str, object]],
-) -> list[dict[str, object]]:
-    return dynamo_items
-
-
-def _encrypt_nhs_numbers_full(
     dynamo_items: list[dict[str, object]], secret_key: bytes
 ) -> list[dict[str, object]]:
     encrypted_items = deepcopy(dynamo_items)
@@ -194,19 +197,28 @@ def _encrypt_nhs_numbers_full(
         if "NHS_NUMBER" in item:
             nhs_number = str(item["NHS_NUMBER"])
             item["NHS_NUMBER"] = hmac.new(
-                secret_key, nhs_number.encode(), hashlib.sha512  # ← CHANGED FROM sha256
+                secret_key, nhs_number.encode(), hashlib.sha512
             ).hexdigest()
 
     return encrypted_items
 
 
-def get_secret_key(secret_name, region):
-    secrets_client = boto3.client("secretsmanager", region_name=region)
-    response = secrets_client.get_secret_value(SecretId=secret_name)
+def get_secret_key(secret_name: str, region: str) -> bytes:
+    """
+    Fetches a secret from AWS Secrets Manager and returns it as bytes.
+    Raises a RuntimeError if the secret cannot be retrieved.
+    """
+    try:
+        secrets_client = boto3.client("secretsmanager", region_name=region)
+        response = secrets_client.get_secret_value(SecretId=secret_name)
+    except Exception as e:
+        logger.exception("Failed to fetch secret '%s': %s", secret_name, e)
+        raise RuntimeError(f"Failed to fetch secret '{secret_name}'") from e
 
-    if "SecretString" in response:
-        secret_key = response["SecretString"].encode()
+    if "SecretString" in response and response["SecretString"] is not None:
+        return response["SecretString"].encode()
+    elif "SecretBinary" in response and response["SecretBinary"] is not None:
+        return response["SecretBinary"]
     else:
-        secret_key = response["SecretBinary"]
-
-    return secret_key
+        logger.error("No usable secret found for '%s'", secret_name)
+        raise RuntimeError(f"No usable secret found for '{secret_name}'")
