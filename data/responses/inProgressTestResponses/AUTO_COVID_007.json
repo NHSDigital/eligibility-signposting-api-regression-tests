@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-24T16:26:47.995555+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "ManagedSettingInfo",
+                    "actionType": "InfoText",
+                    "description": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "covid_clinical_risk",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged under 16 and immunosuppressed"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "OtherSetting",
+                    "ruleText": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "5e1de112-30f8-4e5c-86da-3d0e9918728e"
+}

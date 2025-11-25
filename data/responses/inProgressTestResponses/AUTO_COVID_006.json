@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-24T16:15:55.057985+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "AlreadyVaccinatedInfo",
+                    "actionType": "InfoText",
+                    "description": "### If you think this is incorrect\n\nIf you believe you've not been vaccinated against COVID-19, speak to your healthcare professional.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "AlreadyVaccinated",
+                    "ruleText": "## You've had your COVID-19 vaccination\n\nWe believe you were vaccinated against COVID-19 on 1 October 2025",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "e1479e1f-e9b7-4791-950b-0e6b05cd243e"
+}

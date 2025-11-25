@@ -1,0 +1,35 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-24T15:33:48.787272+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "HealthcareProInfo",
+                    "actionType": "InfoText",
+                    "description": "### If this applies to you\n\nSpeak to your healthcare professional if you think you should be offered this vaccine.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "covid_age",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "are not aged 75 or over by 31 January 2026"
+                },
+                {
+                    "cohortCode": "covid_clinical_risk",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "are not aged 16 or over and immunosuppressed"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "87f7245f-c7ee-401b-8abd-8fbbcab720bd"
+}

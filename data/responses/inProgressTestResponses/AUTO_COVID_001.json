@@ -1,0 +1,51 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-24T15:29:42.763583+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "ContactGP",
+                    "actionType": "InfoText",
+                    "description": "### Get vaccinated at your GP surgery\n\nContact your GP surgery to book an appointment.",
+                    "urlLabel": "",
+                    "urlLink": ""
+                },
+                {
+                    "actionCode": "BookNBSInfoText",
+                    "actionType": "ButtonWithAuthLinkWithInfoText",
+                    "description": "### Book an appointment online at a pharmacy\n\nYou can book an appointment online at a pharmacy that offers the COVID-19 vaccination. You need to be registered with a GP to do this.",
+                    "urlLabel": "Continue to booking",
+                    "urlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/book-covid-19-vaccination/"
+                },
+                {
+                    "actionCode": "WalkIn",
+                    "actionType": "ActionLinkWithInfoText",
+                    "description": "### Get vaccinated without an appointment\n\nYou can get an COVID-19 vaccination at some pharmacies without needing an appointment.\n\nYou do not need to be registered with a GP to do this.",
+                    "urlLabel": "Find a pharmacy where you can get a free COVID-19 vaccination",
+                    "urlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/find-a-walk-in-covid-19-vaccination-site/"
+                },
+                {
+                    "actionCode": "HelpSupportInfo",
+                    "actionType": "InfoText",
+                    "description": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "covid_age",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "are aged 75 or over (including those who will be 75 by 31 January 2026)"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "58a5364e-e99a-4b56-879f-4c0a479ce166"
+}

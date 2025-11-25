@@ -1,0 +1,24 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-24T16:06:24.394156+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "ManageLocal",
+                    "actionType": "CardWithText",
+                    "description": "## You have an COVID-19 vaccination appointment booked\n\nTo change or cancel your appointment, contact the provider you booked with.",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [],
+            "status": "Actionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "65cc521d-5a1f-430b-b3dc-f23f651a83ef"
+}

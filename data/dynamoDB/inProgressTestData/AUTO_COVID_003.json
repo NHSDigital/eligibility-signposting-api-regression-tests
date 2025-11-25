@@ -1,0 +1,45 @@
+{
+  "scenario_name": "COVID - Actionable - In covid_75+_AutumnWinter2025 and booked Local",
+  "request_headers": {
+    "nhs-login-nhs-number": "9990049703"
+  },
+  "config_filenames": [
+    "COVID_Config_v0.4WIP.json"
+  ],
+  "data": [
+    {
+      "NHS_NUMBER": "9990049703",
+      "ATTRIBUTE_TYPE": "COHORTS",
+      "COHORT_MEMBERSHIPS": [
+        {
+          "COHORT_LABEL": "covid_75+_AutumnWinter2025",
+          "DATE_JOINED": "20231020"
+        }
+      ]
+    },
+    {
+      "NHS_NUMBER": "9990049703",
+      "ATTRIBUTE_TYPE": "PERSON",
+      "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
+      "GENDER": "2",
+      "POSTCODE": "CB3 8DX",
+      "POSTCODE_SECTOR": "CB38",
+      "POSTCODE_OUTCODE": "CB3",
+      "MSOA": "E02007085",
+      "LSOA": "E01018223",
+      "GP_PRACTICE_CODE": "D81046",
+      "PCN": "U75549",
+      "ICB": "QUE",
+      "COMMISSIONING_REGION": "Y61",
+      "13Q_FLAG": "N",
+      "CARE_HOME_FLAG": "N",
+      "DE_FLAG": "N"
+    },
+      {
+            "NHS_NUMBER": "9990049703",
+            "ATTRIBUTE_TYPE": "COVID",
+            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_7>>",
+            "BOOKED_APPOINTMENT_PROVIDER": "ACC"
+        }
+  ]
+}
