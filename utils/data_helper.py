@@ -1,9 +1,11 @@
 import json
 import logging
+from copy import deepcopy
 from pathlib import Path
 import hmac
 import hashlib
 
+import boto3
 from dotenv import load_dotenv
 
 from .dynamo_helper import insert_into_dynamo
@@ -13,46 +15,19 @@ from .placeholder_utils import resolve_placeholders
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
 load_dotenv()
 logger = logging.getLogger(__name__)
-SECRET_KEY = b"thisisadamsecretkey"
-
-
-def encrypt_nhs_numbers(
-    dynamo_items: list[dict[str, object]],
-) -> list[dict[str, object]]:
-    return dynamo_items
-
-
-def encrypt_nhs_numbers_full(
-    dynamo_items: list[dict[str, object]],
-) -> list[dict[str, object]]:
-    """
-    Generate HMAC-SHA256 hashed NHS_NUMBER
-
-    Args:
-        dynamo_items: List of dictionaries containing 'NHS_NUMBER' keys
-
-    Returns:
-        The same list with NHS_NUMBER values replaced by their HMAC hashes
-    """
-
-    def _encrypt_value(value: str) -> str:
-        return hmac.new(SECRET_KEY, value.encode(), hashlib.sha256).hexdigest()
-
-    for item in dynamo_items:
-        if "NHS_NUMBER" in item:
-            item["NHS_NUMBER"] = _encrypt_value(item["NHS_NUMBER"])
-
-    return dynamo_items
 
 
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
+    logger.info("Getting Secret")
+    # secret_key = get_secret_key("eligibility-signposting-api-test/hashing_secret", "eu-west-2")
 
     logger.info("Adding data into Dynamo")
     for scenario in all_data.values():
         dynamo_items = scenario["dynamo_items"]
-        hashed_dynamo_items = encrypt_nhs_numbers(dynamo_items)
+        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items)
+        # hashed_dynamo_items = _encrypt_nhs_numbers_full(dynamo_items, secret_key)
         insert_into_dynamo(hashed_dynamo_items)
     logger.info("Data Added to Dynamo")
     return all_data, dto
@@ -202,3 +177,36 @@ def _mask_volatile_fields(data, keys_to_mask, placeholder="<ignored>"):
     if isinstance(data, list):
         return [_mask_volatile_fields(item, keys_to_mask, placeholder) for item in data]
     return data
+
+
+def _encrypt_nhs_numbers(
+    dynamo_items: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    return dynamo_items
+
+
+def _encrypt_nhs_numbers_full(
+    dynamo_items: list[dict[str, object]], secret_key: bytes
+) -> list[dict[str, object]]:
+    encrypted_items = deepcopy(dynamo_items)
+
+    for item in encrypted_items:
+        if "NHS_NUMBER" in item:
+            nhs_number = str(item["NHS_NUMBER"])
+            item["NHS_NUMBER"] = hmac.new(
+                secret_key, nhs_number.encode(), hashlib.sha512  # ← CHANGED FROM sha256
+            ).hexdigest()
+
+    return encrypted_items
+
+
+def get_secret_key(secret_name, region):
+    secrets_client = boto3.client("secretsmanager", region_name=region)
+    response = secrets_client.get_secret_value(SecretId=secret_name)
+
+    if "SecretString" in response:
+        secret_key = response["SecretString"].encode()
+    else:
+        secret_key = response["SecretBinary"]
+
+    return secret_key
