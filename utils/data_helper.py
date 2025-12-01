@@ -5,6 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 import hmac
 import hashlib
+from typing import Optional
 
 import boto3
 from dotenv import load_dotenv
@@ -222,3 +223,40 @@ def get_secret_key(secret_name: str, region: str) -> bytes:
     else:
         logger.error("No usable secret found for '%s'", secret_name)
         raise RuntimeError(f"No usable secret found for '{secret_name}'")
+
+
+def get_secret_key_new(
+    secret_name: str,
+    region: str,
+    version_stage: Optional[str] = "$AWSCURRENT",  # Default to current
+    version_id: Optional[str] = None,  # Optional specific Version ID
+) -> bytes:
+    try:
+        secrets_client = boto3.client("secretsmanager", region_name=region)
+
+        # Build the request arguments
+        request_args = {
+            "SecretId": secret_name,
+        }
+
+        # If a specific Version ID is provided, use it
+        if version_id:
+            request_args["VersionId"] = version_id
+        # Otherwise, use the Version Stage (which defaults to $AWSCURRENT)
+        elif version_stage:
+            request_args["VersionStage"] = version_stage
+
+        response = secrets_client.get_secret_value(**request_args)
+
+    except Exception as e:
+        logger.exception("Failed to fetch secret '%s' version: %s", secret_name, e)
+        raise RuntimeError(f"Failed to fetch secret '{secret_name}'") from e
+
+    if "SecretString" in response and response["SecretString"] is not None:
+        # **Note:** Keeping your original logic to return bytes for both SecretString and SecretBinary
+        return response["SecretString"].encode("utf-8")
+    elif "SecretBinary" in response and response["SecretBinary"] is not None:
+        return response["SecretBinary"]
+    else:
+        logger.error("No usable secret found for version of '%s'", secret_name)
+        raise RuntimeError(f"No usable secret found for version of '{secret_name}'")
