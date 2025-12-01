@@ -16,28 +16,30 @@ from .placeholder_utils import resolve_placeholders
 
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
 load_dotenv()
+AWS_REGION = "eu-west-2"
 logger = logging.getLogger(__name__)
 
 
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
-    # --- Fetch secret with fatal error if missing ---
-    logger.info("Retrieving HMAC secret key from Secrets Manager")
-    try:
-        secret_key = get_secret_key(
-            f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret",
-            "eu-west-2",
-        )
-    except RuntimeError as e:
-        logger.critical("Cannot continue without HMAC secret key: %s", e)
-        raise SystemExit(1)
+    secret_keys = get_secret_key_versions(
+        secret_name=f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret",
+        region=AWS_REGION,
+    )
 
     # --- Encrypt NHS numbers and insert into DynamoDB ---
     logger.info("Encrypting NHS numbers and inserting data into DynamoDB")
     for scenario in all_data.values():
+        # get the data items to be stored in dynamo
         dynamo_items = scenario["dynamo_items"]
-        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items, secret_key)
+        # get the version of the secret used in hashing the NHS_NUMBER
+        secret = _get_scenario_secret_for_hashing(
+            secret_keys, scenario["secret_version"]
+        )
+        # hash the NHS_NUMBER in the data items
+        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items, secret)
+        # insert them into dynamo
         insert_into_dynamo(hashed_dynamo_items)
     logger.info("Data Added to Dynamo")
     return all_data, dto
@@ -128,6 +130,7 @@ def load_all_test_scenarios(folder_path):
         request_headers = raw_json.get("request_headers")
         expected_response_code = raw_json.get("expected_response_code")
         query_params = raw_json.get("query_params")
+        secret_version = raw_json.get("secret_version")
 
         # Resolve placeholders with shared DTO
         resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)
@@ -144,6 +147,7 @@ def load_all_test_scenarios(folder_path):
             "request_headers": request_headers,
             "query_params": query_params,
             "scenario_name": scenario_name,
+            "secret_version": secret_version,
         }
 
     return all_data, dto
@@ -204,59 +208,51 @@ def _encrypt_nhs_numbers(
     return encrypted_items
 
 
-def get_secret_key(secret_name: str, region: str) -> bytes:
-    """
-    Fetches a secret from AWS Secrets Manager and returns it as bytes.
-    Raises a RuntimeError if the secret cannot be retrieved.
-    """
-    try:
-        secrets_client = boto3.client("secretsmanager", region_name=region)
-        response = secrets_client.get_secret_value(SecretId=secret_name)
-    except Exception as e:
-        logger.exception("Failed to fetch secret '%s': %s", secret_name, e)
-        raise RuntimeError(f"Failed to fetch secret '{secret_name}'") from e
+def get_secret_key_versions(
+    secret_name: str, region: str
+) -> dict[str, Optional[bytes]]:
+    stages = ["AWSCURRENT", "AWSPREVIOUS"]
+    secrets_client = boto3.client("secretsmanager", region_name=region)
 
-    if "SecretString" in response and response["SecretString"] is not None:
-        return response["SecretString"].encode()
-    elif "SecretBinary" in response and response["SecretBinary"] is not None:
-        return response["SecretBinary"]
-    else:
-        logger.error("No usable secret found for '%s'", secret_name)
-        raise RuntimeError(f"No usable secret found for '{secret_name}'")
+    results: dict[str, Optional[bytes]] = {"AWSCURRENT": None, "AWSPREVIOUS": None}
+
+    for stage in stages:
+        try:
+            response = secrets_client.get_secret_value(
+                SecretId=secret_name, VersionStage=stage
+            )
+
+            if "SecretString" in response and response["SecretString"] is not None:
+                results[stage] = response["SecretString"].encode()
+            elif "SecretBinary" in response and response["SecretBinary"] is not None:
+                results[stage] = response["SecretBinary"]
+            else:
+                logger.warning(
+                    "Secret '%s' (%s) has no usable value", secret_name, stage
+                )
+
+        except secrets_client.exceptions.ResourceNotFoundException:
+            logger.warning("Secret '%s' with stage '%s' not found", secret_name, stage)
+        except Exception as e:
+            logger.exception("Error retrieving '%s' (%s): %s", secret_name, stage, e)
+
+    # Fatal error if both missing
+    if results["AWSCURRENT"] is None and results["AWSPREVIOUS"] is None:
+        logger.critical(
+            "Fatal: Unable to fetch either AWSCURRENT or AWSPREVIOUS for secret '%s'",
+            secret_name,
+        )
+        raise RuntimeError(
+            f"Neither AWSCURRENT nor AWSPREVIOUS exists for secret '{secret_name}'."
+        )
+
+    return results
 
 
-def get_secret_key_new(
-    secret_name: str,
-    region: str,
-    version_stage: Optional[str] = "$AWSCURRENT",  # Default to current
-    version_id: Optional[str] = None,  # Optional specific Version ID
+def _get_scenario_secret_for_hashing(
+    secret_keys: dict[str, bytes], secret_version: Optional[str]
 ) -> bytes:
-    try:
-        secrets_client = boto3.client("secretsmanager", region_name=region)
+    if not secret_version:
+        return secret_keys["AWSCURRENT"]
 
-        # Build the request arguments
-        request_args = {
-            "SecretId": secret_name,
-        }
-
-        # If a specific Version ID is provided, use it
-        if version_id:
-            request_args["VersionId"] = version_id
-        # Otherwise, use the Version Stage (which defaults to $AWSCURRENT)
-        elif version_stage:
-            request_args["VersionStage"] = version_stage
-
-        response = secrets_client.get_secret_value(**request_args)
-
-    except Exception as e:
-        logger.exception("Failed to fetch secret '%s' version: %s", secret_name, e)
-        raise RuntimeError(f"Failed to fetch secret '{secret_name}'") from e
-
-    if "SecretString" in response and response["SecretString"] is not None:
-        # **Note:** Keeping your original logic to return bytes for both SecretString and SecretBinary
-        return response["SecretString"].encode("utf-8")
-    elif "SecretBinary" in response and response["SecretBinary"] is not None:
-        return response["SecretBinary"]
-    else:
-        logger.error("No usable secret found for version of '%s'", secret_name)
-        raise RuntimeError(f"No usable secret found for version of '{secret_name}'")
+    return secret_keys[secret_version]
