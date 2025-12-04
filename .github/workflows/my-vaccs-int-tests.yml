@@ -1,0 +1,26 @@
+name: my-vaccs-int-tests.yml
+on:
+  workflow_dispatch:
+
+jobs:
+  run-preprod-tests:
+    runs-on: ubuntu-22.04
+    environment: preprod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
+      - name: Install Dependencies
+        run: make install
+
+      - name: Run Integration Tests
+        env:
+          ENVIRONMENT: preprod
+        run: make run-vita-int-tests env="preprod" log_level="$LOG_LEVEL"
