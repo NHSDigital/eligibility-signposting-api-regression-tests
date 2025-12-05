@@ -79,3 +79,6 @@ run-tests: guard-env guard-log_level clear-db
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_story_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_error_scenario_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py
+
+run-vita-preprod-tests:
+	poetry run pytest --env=preprod --log-cli-level=info -s tests/test_vita_integration_tests.py
