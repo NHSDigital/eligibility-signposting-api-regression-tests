@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from .dynamo_helper import insert_into_dynamo
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
+from .secrets_helper import SecretsManagerClient
 
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
 load_dotenv()
@@ -23,9 +24,9 @@ logger = logging.getLogger(__name__)
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
-    secret_keys = get_secret_key_versions(
-        secret_name=f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret",
-        region=AWS_REGION,
+    secrets_manager = SecretsManagerClient(AWS_REGION)
+    secret_keys = secrets_manager.get_secret_key_versions(
+        f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret"
     )
 
     # --- Encrypt NHS numbers and insert into DynamoDB ---
