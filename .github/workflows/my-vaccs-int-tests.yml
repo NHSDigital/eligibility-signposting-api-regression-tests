@@ -48,7 +48,7 @@ jobs:
         run: make install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@0094301
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
