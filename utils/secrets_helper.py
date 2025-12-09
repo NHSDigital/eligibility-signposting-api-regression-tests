@@ -1,3 +1,5 @@
+import os
+
 import boto3
 from typing import Optional
 import logging
@@ -13,67 +15,7 @@ class SecretsManagerClient:
         self.region = region
         self.client = boto3.client("secretsmanager", region_name=region)
 
-    def get_secret(
-        self, secret_name: str, version_stage: str = "AWSCURRENT"
-    ) -> Optional[bytes]:
-
-        try:
-            response = self.client.get_secret_value(
-                SecretId=secret_name, VersionStage=version_stage
-            )
-
-            if "SecretString" in response:
-                return response["SecretString"].encode()
-            if "SecretBinary" in response:
-                return response["SecretBinary"]
-
-        except self.client.exceptions.ResourceNotFoundException:
-            logger.warning(
-                "Secret '%s' (stage: %s) not found.", secret_name, version_stage
-            )
-            return None
-
-        except Exception as e:
-            logger.exception(
-                "Error retrieving secret '%s' (stage: %s): %s",
-                secret_name,
-                version_stage,
-                e,
-            )
-            raise
-
-        return None
-
-    def set_secret(self, secret_name: str, secret_value: str) -> None:
-        try:
-            # Try update first
-            self.client.put_secret_value(
-                SecretId=secret_name, SecretString=secret_value
-            )
-            logger.info("Updated existing secret '%s'", secret_name)
-
-        except self.client.exceptions.ResourceNotFoundException:
-            # If not exists, create it
-            self.client.create_secret(Name=secret_name, SecretString=secret_value)
-            logger.info("Created new secret '%s'", secret_name)
-
-    def delete_secret(self, secret_name: str, recovery_days: int = 7) -> None:
-
-        try:
-            self.client.delete_secret(
-                SecretId=secret_name, RecoveryWindowInDays=recovery_days
-            )
-            logger.info(
-                "Deleted secret '%s' (recoverable for %d days)",
-                secret_name,
-                recovery_days,
-            )
-
-        except Exception as e:
-            logger.exception("Failed to delete secret '%s': %s", secret_name, e)
-            raise
-
-    def get_secret_key_versions(self, secret_name: str) -> dict[str, Optional[bytes]]:
+    def _get_secret_key_versions(self, secret_name: str) -> dict[str, Optional[bytes]]:
 
         stages = ["AWSCURRENT", "AWSPREVIOUS"]
         results: dict[str, Optional[bytes]] = {
@@ -119,3 +61,84 @@ class SecretsManagerClient:
             )
 
         return results
+
+    def _set_secret_versions(
+        self,
+        secret_name: str,
+        current_value: str,
+        previous_value: str,
+    ) -> None:
+        """
+        Safely set AWSCURRENT and AWSPREVIOUS to specified values.
+        """
+        try:
+            # Fetch existing values
+            existing = self._get_secret_key_versions(secret_name)
+            existing_current_value = (
+                existing["AWSCURRENT"].decode() if existing["AWSCURRENT"] else None
+            )
+            existing_previous_value = (
+                existing["AWSPREVIOUS"].decode() if existing["AWSPREVIOUS"] else None
+            )
+
+            update_current = existing_current_value != current_value
+            update_previous = existing_previous_value != previous_value
+
+            if not update_current and not update_previous:
+                logger.info(
+                    "Secrets for '%s' unchanged; no new versions created", secret_name
+                )
+                return
+
+            # --- CREATE NEW VERSION FOR CURRENT ---
+            if update_current:
+                current_version_id = self.client.put_secret_value(
+                    SecretId=secret_name,
+                    SecretString=current_value,
+                    VersionStages=["AWSCURRENT"],  # attach label explicitly
+                )["VersionId"]
+                logger.info(
+                    "AWSCURRENT updated to version %s for '%s'",
+                    current_version_id,
+                    secret_name,
+                )
+
+            # --- CREATE NEW VERSION FOR PREVIOUS ---
+            if update_previous:
+                previous_version_id = self.client.put_secret_value(
+                    SecretId=secret_name,
+                    SecretString=previous_value,
+                    VersionStages=["AWSPREVIOUS"],  # attach label explicitly
+                )["VersionId"]
+                logger.info(
+                    "AWSPREVIOUS updated to version %s for '%s'",
+                    previous_version_id,
+                    secret_name,
+                )
+
+        except Exception as e:
+            logger.exception(
+                "Failed to set secret versions for '%s': %s", secret_name, e
+            )
+            raise
+
+    def initialise_secret_keys(
+        self,
+        secret_name: str,
+        current_value: Optional[str] = "current_value",
+        previous_value: Optional[str] = "previous_value",
+    ) -> dict[str, Optional[bytes]]:
+
+        if os.getenv("ENVIRONMENT") in ("dev", "test"):
+            logger.info("Setting AWS Secrets")
+            self._set_secret_versions(
+                secret_name=secret_name,
+                current_value=f"{current_value}_{os.getenv('ENVIRONMENT')}",
+                previous_value=f"{previous_value}_{os.getenv('ENVIRONMENT')}",
+            )
+        else:
+            logger.warning(
+                f"{os.getenv("ENVIRONMENT")} is not supported. Using existing AWS secrets instead."
+            )
+
+        return self._get_secret_key_versions(secret_name)

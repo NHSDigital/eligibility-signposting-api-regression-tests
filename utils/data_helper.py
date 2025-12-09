@@ -24,8 +24,10 @@ logger = logging.getLogger(__name__)
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
+
+    # Setup AWS Secrets
     secrets_manager = SecretsManagerClient(AWS_REGION)
-    secret_keys = secrets_manager.get_secret_key_versions(
+    secret_keys = secrets_manager.initialise_secret_keys(
         f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret"
     )
 
