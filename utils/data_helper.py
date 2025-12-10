@@ -36,14 +36,24 @@ def initialise_tests(folder):
     for scenario in all_data.values():
         # get the data items to be stored in dynamo
         dynamo_items = scenario["dynamo_items"]
-        # get the version of the secret used in hashing the NHS_NUMBER
-        secret = _get_scenario_secret_for_hashing(
-            secret_keys, scenario["secret_version"]
-        )
-        # hash the NHS_NUMBER in the data items
-        hashed_dynamo_items = _encrypt_nhs_numbers(dynamo_items, secret)
+        # get the hashing version to be used in the scenario
+        scenario_secret_version = scenario["secret_version"]
+
+        if (
+            scenario_secret_version in ("AWSCURRENT", "AWSPREVIOUS")
+            or scenario_secret_version is None
+        ):
+            secret = _get_scenario_secret_for_hashing(
+                secret_keys, scenario_secret_version
+            )
+            items_to_insert = _encrypt_nhs_numbers(dynamo_items, secret)
+        elif scenario_secret_version == "PLAINTEXT":
+            items_to_insert = dynamo_items
+        else:
+            raise ValueError(f"Unknown secret_version: {scenario_secret_version}")
+
         # insert them into dynamo
-        insert_into_dynamo(hashed_dynamo_items)
+        insert_into_dynamo(items_to_insert)
     logger.info("Data Added to Dynamo")
     return all_data, dto
 
