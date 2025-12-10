@@ -6,7 +6,7 @@
     "config_filenames": [
         "RSV_Config_v1.1.json"
     ],
-    "secret_version": "AWSPREVIOUS",
+    "secret_version": null,
     "data": [
         {
             "NHS_NUMBER": "9686368973",
