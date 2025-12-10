@@ -140,8 +140,6 @@ class SecretsManagerClient:
                 f"{os.getenv("ENVIRONMENT")} is not supported. Using existing AWS secrets instead."
             )
 
-        self._remove_awsprevious(secret_name)
-
         return self._get_secret_key_versions(secret_name)
 
     def _remove_awsprevious(self, secret_name: str) -> None:
