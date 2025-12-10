@@ -63,10 +63,7 @@ class SecretsManagerClient:
         return results
 
     def _set_secret_versions(
-        self,
-        secret_name: str,
-        current_value: str,
-        previous_value: str,
+        self, secret_name: str, current_value: str, previous_value: str
     ) -> None:
         """
         Safely set AWSCURRENT and AWSPREVIOUS to specified values.
@@ -141,4 +138,40 @@ class SecretsManagerClient:
                 f"{os.getenv("ENVIRONMENT")} is not supported. Using existing AWS secrets instead."
             )
 
+        self._remove_awsprevious(secret_name)
+
         return self._get_secret_key_versions(secret_name)
+
+    def _remove_awsprevious(self, secret_name: str) -> None:
+        """
+        Remove the AWSPREVIOUS staging label from a secret version.
+        Safe because AWS does not require AWSPREVIOUS to exist.
+        """
+        meta = self.client.describe_secret(SecretId=secret_name)
+        version_map = meta.get("VersionIdsToStages", {})
+
+        # Find which version currently has AWSPREVIOUS
+        previous_version_id = next(
+            (vid for vid, stages in version_map.items() if "AWSPREVIOUS" in stages),
+            None,
+        )
+
+        if not previous_version_id:
+            logger.info(
+                "No AWSPREVIOUS staging label found for '%s'; nothing to remove",
+                secret_name,
+            )
+            return
+
+        # Remove the label
+        self.client.update_secret_version_stage(
+            SecretId=secret_name,
+            VersionStage="AWSPREVIOUS",
+            RemoveFromVersionId=previous_version_id,
+        )
+
+        logger.info(
+            "Removed AWSPREVIOUS from version %s for '%s'",
+            previous_version_id,
+            secret_name,
+        )
