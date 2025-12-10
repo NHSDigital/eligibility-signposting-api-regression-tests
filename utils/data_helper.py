@@ -7,7 +7,6 @@ import hmac
 import hashlib
 from typing import Optional
 
-import boto3
 from dotenv import load_dotenv
 
 from .dynamo_helper import insert_into_dynamo
@@ -219,47 +218,6 @@ def _encrypt_nhs_numbers(
             ).hexdigest()
 
     return encrypted_items
-
-
-def get_secret_key_versions(
-    secret_name: str, region: str
-) -> dict[str, Optional[bytes]]:
-    stages = ["AWSCURRENT", "AWSPREVIOUS"]
-    secrets_client = boto3.client("secretsmanager", region_name=region)
-
-    results: dict[str, Optional[bytes]] = {"AWSCURRENT": None, "AWSPREVIOUS": None}
-
-    for stage in stages:
-        try:
-            response = secrets_client.get_secret_value(
-                SecretId=secret_name, VersionStage=stage
-            )
-
-            if "SecretString" in response and response["SecretString"] is not None:
-                results[stage] = response["SecretString"].encode()
-            elif "SecretBinary" in response and response["SecretBinary"] is not None:
-                results[stage] = response["SecretBinary"]
-            else:
-                logger.warning(
-                    "Secret '%s' (%s) has no usable value", secret_name, stage
-                )
-
-        except secrets_client.exceptions.ResourceNotFoundException:
-            logger.warning("Secret '%s' with stage '%s' not found", secret_name, stage)
-        except Exception as e:
-            logger.exception("Error retrieving '%s' (%s): %s", secret_name, stage, e)
-
-    # Fatal error if both missing
-    if results["AWSCURRENT"] is None and results["AWSPREVIOUS"] is None:
-        logger.critical(
-            "Fatal: Unable to fetch either AWSCURRENT or AWSPREVIOUS for secret '%s'",
-            secret_name,
-        )
-        raise RuntimeError(
-            f"Neither AWSCURRENT nor AWSPREVIOUS exists for secret '{secret_name}'."
-        )
-
-    return results
 
 
 def _get_scenario_secret_for_hashing(
