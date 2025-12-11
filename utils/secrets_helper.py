@@ -53,11 +53,8 @@ class SecretsManagerClient:
 
         # Fatal error if both missing
         if not results["AWSCURRENT"] and not results["AWSPREVIOUS"]:
-            logger.critical(
-                "Fatal: Neither AWSCURRENT nor AWSPREVIOUS exists for '%s'", secret_name
-            )
-            raise RuntimeError(
-                f"No AWSCURRENT or AWSPREVIOUS secret exists for '{secret_name}'"
+            logger.warning(
+                "Neither AWSCURRENT nor AWSPREVIOUS exists for '%s'", secret_name
             )
 
         return results
@@ -135,6 +132,8 @@ class SecretsManagerClient:
                 current_value=f"{current_value}_{os.getenv('ENVIRONMENT')}",
                 previous_value=f"{previous_value}_{os.getenv('ENVIRONMENT')}",
             )
+            self._remove_awsprevious(secret_name)
+
         else:
             logger.warning(
                 f"{os.getenv("ENVIRONMENT")} is not supported. Using existing AWS secrets instead."
@@ -175,3 +174,47 @@ class SecretsManagerClient:
             previous_version_id,
             secret_name,
         )
+
+    def _remove_awscurrent(self, secret_name: str) -> None:
+        """
+        Remove the AWSPREVIOUS staging label from a secret version.
+        Safe because AWS does not require AWSPREVIOUS to exist.
+        """
+        meta = self.client.describe_secret(SecretId=secret_name)
+        version_map = meta.get("VersionIdsToStages", {})
+
+        # Find which version currently has AWSCURRENT
+        previous_version_id = next(
+            (vid for vid, stages in version_map.items() if "AWSCURRENT" in stages),
+            None,
+        )
+
+        if not previous_version_id:
+            logger.info(
+                "No AWSCURRENT staging label found for '%s'; nothing to remove",
+                secret_name,
+            )
+            return
+
+        # Remove the label
+        self.client.update_secret_version_stage(
+            SecretId=secret_name,
+            VersionStage="AWSCURRENT",
+            RemoveFromVersionId=previous_version_id,
+        )
+
+        logger.info(
+            "Removed AWSCURRENT from version %s for '%s'",
+            previous_version_id,
+            secret_name,
+        )
+
+    def secret_exists(self, secret_name: str) -> bool:
+        try:
+            self.client.describe_secret(SecretId=secret_name)
+            return True
+        except self.client.exceptions.ResourceNotFoundException:
+            return False
+        except Exception:
+            # Unexpected AWS issues should not be swallowed
+            raise

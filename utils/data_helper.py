@@ -30,28 +30,30 @@ def initialise_tests(folder):
         f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret"
     )
 
-    # --- Encrypt NHS numbers and insert into DynamoDB ---
-    logger.info("Encrypting NHS numbers and inserting data into DynamoDB")
+    logger.info("Encrypting NHS numbers (if required) and inserting data into DynamoDB")
     for scenario in all_data.values():
-        # get the data items to be stored in dynamo
+        # get the scenario data items to be stored in dynamo
         dynamo_items = scenario["dynamo_items"]
         # get the hashing version to be used in the scenario
         scenario_secret_version = scenario["secret_version"]
 
+        # Case 1: No secrets exist OR user explicitly requests PLAINTEXT
         if (
-            scenario_secret_version in ("AWSCURRENT", "AWSPREVIOUS")
-            or scenario_secret_version is None
-        ):
+            not secret_keys["AWSCURRENT"] and not secret_keys["AWSPREVIOUS"]
+        ) or scenario_secret_version == "PLAINTEXT":
+            items_to_insert = dynamo_items
+
+        # Case 2: Hash using AWSCURRENT / AWSPREVIOUS / None
+        elif scenario_secret_version in ("AWSCURRENT", "AWSPREVIOUS", None):
             secret = _get_scenario_secret_for_hashing(
                 secret_keys, scenario_secret_version
             )
             items_to_insert = _encrypt_nhs_numbers(dynamo_items, secret)
-        elif scenario_secret_version == "PLAINTEXT":
-            items_to_insert = dynamo_items
+
+        # Case 3: Unknown secret version
         else:
             raise ValueError(f"Unknown secret_version: {scenario_secret_version}")
 
-        # insert them into dynamo
         insert_into_dynamo(items_to_insert)
     logger.info("Data Added to Dynamo")
     return all_data, dto
