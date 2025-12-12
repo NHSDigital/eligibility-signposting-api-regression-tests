@@ -121,6 +121,7 @@ class SecretsManagerClient:
         secret_name: str,
         current_value: Optional[str] = "current_value",
         previous_value: Optional[str] = "previous_value",
+        current_only: Optional[bool] = True,
     ) -> dict[str, Optional[bytes]]:
 
         environment = os.getenv("ENVIRONMENT")
@@ -132,7 +133,8 @@ class SecretsManagerClient:
                 current_value=f"{current_value}_{os.getenv('ENVIRONMENT')}",
                 previous_value=f"{previous_value}_{os.getenv('ENVIRONMENT')}",
             )
-            self._remove_awsprevious(secret_name)
+            if current_only:
+                self._remove_awsprevious(secret_name)
 
         else:
             logger.warning(
