@@ -62,7 +62,7 @@
             "Description": "Test S Rule",
             "Priority": 500,
             "AttributeLevel": "PERSON",
-            "AttributeName": "NHS_NUMBER",
+            "AttributeName": "ICB",
             "Operator": "in",
             "Comparator": "9900029517"
           },

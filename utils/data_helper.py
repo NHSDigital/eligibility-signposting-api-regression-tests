@@ -1,15 +1,22 @@
 import json
 import logging
+import os
+from copy import deepcopy
 from pathlib import Path
+import hmac
+import hashlib
+from typing import Optional
 
 from dotenv import load_dotenv
 
 from .dynamo_helper import insert_into_dynamo
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
+from .secrets_helper import SecretsManagerClient
 
 keys_to_ignore = ["responseId", "lastUpdated", "id"]
 load_dotenv()
+AWS_REGION = "eu-west-2"
 logger = logging.getLogger(__name__)
 
 
@@ -17,9 +24,37 @@ def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
 
-    logger.info("Adding data into Dynamo")
+    # Setup AWS Secrets
+    secrets_manager = SecretsManagerClient(AWS_REGION)
+    secret_keys = secrets_manager.initialise_secret_keys(
+        f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret"
+    )
+
+    logger.info("Encrypting NHS numbers (if required) and inserting data into DynamoDB")
     for scenario in all_data.values():
-        insert_into_dynamo(scenario["dynamo_items"])
+        # get the scenario data items to be stored in dynamo
+        dynamo_items = scenario["dynamo_items"]
+        # get the hashing version to be used in the scenario
+        scenario_secret_version = scenario["secret_version"]
+
+        # Case 1: No secrets exist OR user explicitly requests PLAINTEXT
+        if (
+            not secret_keys["AWSCURRENT"] and not secret_keys["AWSPREVIOUS"]
+        ) or scenario_secret_version == "PLAINTEXT":
+            items_to_insert = dynamo_items
+
+        # Case 2: Hash using AWSCURRENT / AWSPREVIOUS / None
+        elif scenario_secret_version in ("AWSCURRENT", "AWSPREVIOUS", None):
+            secret = _get_scenario_secret_for_hashing(
+                secret_keys, scenario_secret_version
+            )
+            items_to_insert = _encrypt_nhs_numbers(dynamo_items, secret)
+
+        # Case 3: Unknown secret version
+        else:
+            raise ValueError(f"Unknown secret_version: {scenario_secret_version}")
+
+        insert_into_dynamo(items_to_insert)
     logger.info("Data Added to Dynamo")
     return all_data, dto
 
@@ -109,6 +144,7 @@ def load_all_test_scenarios(folder_path):
         request_headers = raw_json.get("request_headers")
         expected_response_code = raw_json.get("expected_response_code")
         query_params = raw_json.get("query_params")
+        secret_version = raw_json.get("secret_version")
 
         # Resolve placeholders with shared DTO
         resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)
@@ -125,6 +161,7 @@ def load_all_test_scenarios(folder_path):
             "request_headers": request_headers,
             "query_params": query_params,
             "scenario_name": scenario_name,
+            "secret_version": secret_version,
         }
 
     return all_data, dto
@@ -168,3 +205,27 @@ def _mask_volatile_fields(data, keys_to_mask, placeholder="<ignored>"):
     if isinstance(data, list):
         return [_mask_volatile_fields(item, keys_to_mask, placeholder) for item in data]
     return data
+
+
+def _encrypt_nhs_numbers(
+    dynamo_items: list[dict[str, object]], secret_key: bytes
+) -> list[dict[str, object]]:
+    encrypted_items = deepcopy(dynamo_items)
+
+    for item in encrypted_items:
+        if "NHS_NUMBER" in item:
+            nhs_number = str(item["NHS_NUMBER"])
+            item["NHS_NUMBER"] = hmac.new(
+                secret_key, nhs_number.encode(), hashlib.sha512
+            ).hexdigest()
+
+    return encrypted_items
+
+
+def _get_scenario_secret_for_hashing(
+    secret_keys: dict[str, bytes], secret_version: Optional[str]
+) -> bytes:
+    if not secret_version:
+        return secret_keys["AWSCURRENT"]
+
+    return secret_keys[secret_version]

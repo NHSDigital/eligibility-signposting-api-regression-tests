@@ -21,7 +21,7 @@ id_list = [
 
 @pytest.mark.vitaintegration
 @pytest.mark.parametrize(("filename", "scenario"), param_list, ids=id_list)
-def test_run_story_test_cases(
+def test_run_vita_integration_test_cases(
     filename, scenario, eligibility_client, get_scenario_params
 ):
     (

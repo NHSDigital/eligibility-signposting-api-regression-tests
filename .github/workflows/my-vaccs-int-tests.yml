@@ -1,4 +1,4 @@
-name: my-vaccs-int-tests.yml
+name: Repopulate My Vaccs Preprod Data
 
 on:
   workflow_dispatch:
