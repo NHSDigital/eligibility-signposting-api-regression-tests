@@ -125,9 +125,8 @@ class SecretsManagerClient:
     ) -> dict[str, Optional[bytes]]:
 
         environment = os.getenv("ENVIRONMENT")
-
+        logger.info("Setting AWS Secrets")
         if environment in ("dev", "test"):
-            logger.info("Setting AWS Secrets")
             self._set_secret_versions(
                 secret_name=secret_name,
                 current_value=f"{current_value}_{os.getenv('ENVIRONMENT')}",
