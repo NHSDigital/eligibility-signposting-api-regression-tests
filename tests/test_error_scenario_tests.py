@@ -81,6 +81,33 @@ def test_check_for_missing_person(eligibility_client):
             },
         },
         {
+            "scenario": "missing nhs number in path - added for ELI-584",
+            "nhs_number": None,
+            "request_headers": {"nhs-login-nhs-number": "9934567890"},
+            "expected_status": http.HTTPStatus.FORBIDDEN,
+            "expected_body": {
+                "resourceType": "OperationOutcome",
+                "id": "<ignored>",
+                "meta": {"lastUpdated": "<ignored>"},
+                "issue": [
+                    {
+                        "severity": "error",
+                        "code": "forbidden",
+                        "details": {
+                            "coding": [
+                                {
+                                    "code": "ACCESS_DENIED",
+                                    "display": "Access has been denied to process this request.",
+                                    "system": "https://fhir.nhs.uk/STU3/ValueSet/Spine-ErrorOrWarningCode-1",
+                                }
+                            ]
+                        },
+                        "diagnostics": "You are not authorised to request information for the supplied NHS Number",
+                    }
+                ],
+            },
+        },
+        {
             "scenario": "incorrect header - NHS number mismatch",
             "nhs_number": "9934567890",
             "request_headers": {"nhs-login-nhs-number": "99345678900"},
@@ -111,7 +138,7 @@ def test_check_for_missing_person(eligibility_client):
             "scenario": "missing header - NHS number required",
             "nhs_number": "1234567890",
             "request_headers": {},
-            "expected_status": http.HTTPStatus.FORBIDDEN,
+            "expected_status": http.HTTPStatus.NOT_FOUND,
             "expected_body": {
                 "resourceType": "OperationOutcome",
                 "id": "<ignored>",
@@ -119,23 +146,26 @@ def test_check_for_missing_person(eligibility_client):
                 "issue": [
                     {
                         "severity": "error",
-                        "code": "forbidden",
+                        "code": "processing",
                         "details": {
                             "coding": [
                                 {
-                                    "code": "ACCESS_DENIED",
-                                    "display": "Access has been denied to process this request.",
                                     "system": "https://fhir.nhs.uk/STU3/ValueSet/Spine-ErrorOrWarningCode-1",
+                                    "code": "REFERENCE_NOT_FOUND",
+                                    "display": "The given NHS number was not found in our datasets. "
+                                    "This could be because the number is incorrect or some other reason we "
+                                    "cannot process that number.",
                                 }
                             ]
                         },
-                        "diagnostics": "You are not authorised to request information for the supplied NHS Number",
+                        "diagnostics": "NHS Number '1234567890' was not recognised by the Eligibility Signposting API",
+                        "location": ["parameters/id"],
                     }
                 ],
             },
         },
     ],
-    ids=["correct-header", "incorrect-header", "missing-header"],
+    ids=["correct-header", "missing-path-number", "incorrect-header", "missing-header"],
 )
 def test_nhs_login_header_handling(eligibility_client, test_case):
     response = eligibility_client.make_request(
