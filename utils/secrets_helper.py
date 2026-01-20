@@ -121,7 +121,7 @@ class SecretsManagerClient:
         secret_name: str,
         current_value: Optional[str] = "current_value",
         previous_value: Optional[str] = "previous_value",
-        current_only: Optional[bool] = True,
+        current_only: Optional[bool] = False,
     ) -> dict[str, Optional[bytes]]:
 
         environment = os.getenv("ENVIRONMENT")
