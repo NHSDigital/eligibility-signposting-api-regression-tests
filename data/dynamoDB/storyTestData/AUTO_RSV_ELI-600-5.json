@@ -1,9 +1,8 @@
 {
-    "scenario_name": "RSV - Multiple Overlapping Configs - NotActionable",
+    "scenario_name": "RSV - Multiple Overlapping Configs - - Choose Best Result 5",
     "config_filenames": [
-        "AUTO_RSV_ELI-600-4.json",
         "AUTO_RSV_ELI-600-5.json",
-        "AUTO_RSV_ELI-600-6.json"
+        "AUTO_RSV_ELI-600-5-1.json"
     ],
     "request_headers": {
         "nhs-login-nhs-number": "9000060005"

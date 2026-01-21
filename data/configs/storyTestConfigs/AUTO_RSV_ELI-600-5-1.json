@@ -1,8 +1,8 @@
 {
     "CampaignConfig": {
-        "ID": "4",
+        "ID": "5-1",
         "Version": 1,
-        "Name": "ELI-600 - Multiple Campaign Config Files - Overlapping",
+        "Name": "ELI-600 - Multiple Campaign Config Files - Overlapping - 5-1",
         "Type": "V",
         "Target": "RSV",
         "Manager": [
@@ -27,7 +27,7 @@
                 "ID": ",<<RANDOM_GUID>>",
                 "DefaultCommsRouting": "DEFAULT",
                 "Version": 1,
-                "Name": "ELI-600 - Multiple Campaign Config Files - 4",
+                "Name": "ELI-600 - Multiple Campaign Config Files - 5-1",
                 "IterationDate": "<<DATE_DAY_0>>",
                 "IterationNumber": 1,
                 "CommsType": "I",
@@ -39,29 +39,27 @@
                 "IterationCohorts": [
                     {
                         "CohortLabel": "eli_600_actionable",
-                        "CohortGroup": "eli_600_eli_600_actionable_group",
-                        "PositiveDescription": "You are currently in eli_600_eli_600_actionable",
-                        "NegativeDescription": "You are not currently in eli_600_eli_600_actionable",
+                        "CohortGroup": "eli_600_actionable_group",
+                        "PositiveDescription": "You are currently in eli_600_actionable",
+                        "NegativeDescription": "You are not currently in eli_600_actionable",
                         "Priority": 0
                     }
                 ],
-                "IterationRules": [
-                    {
+                "IterationRules": [{
                         "Type": "F",
-                        "Name": "Remove actionable and not actionable and ",
-                        "Description": "Remove anyone with a future booking from RSV 75-79 cohort",
+                        "Name": "Make Person Not Eligible",
+                        "Description": "Make Person Not Eligible",
                         "Operator": "in",
-                        "Comparator": "9000060004",
+                        "Comparator": "9000060005",
                         "AttributeLevel": "PERSON",
                         "AttributeName": "ICB",
                         "CohortLabel": "eli_600_actionable",
                         "Priority": 100
-                    }
-                ],
+                    }],
                 "ActionsMapper": {
                     "DEFAULT": {
-                        "ExternalRoutingCode": "4",
-                        "ActionDescription": "This is the 4 ActionDescription",
+                        "ExternalRoutingCode": "5-1",
+                        "ActionDescription": "This is the 5-1 ActionDescription",
                         "ActionType": "ButtonWithAuthLink",
                         "UrlLink": "http://www.nhs.uk/book-rsv",
                         "UrlLabel": "Manage your appointment"

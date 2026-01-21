@@ -1,14 +1,14 @@
 {
     "meta": {
-        "lastUpdated": "2026-01-21T09:29:10.231218+00:00"
+        "lastUpdated": "2026-01-21T12:06:47.475517+00:00"
     },
     "processedSuggestions": [
         {
             "actions": [
                 {
-                    "actionCode": "4",
+                    "actionCode": "5",
                     "actionType": "ButtonWithAuthLink",
-                    "description": "This is the 4 ActionDescription",
+                    "description": "This is the 5 ActionDescription",
                     "urlLabel": "Manage your appointment",
                     "urlLink": "http://www.nhs.uk/book-rsv"
                 }
@@ -16,9 +16,9 @@
             "condition": "RSV",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "eli_600_actionable_group",
+                    "cohortCode": "eli_600_eli_600_actionable_group",
                     "cohortStatus": "Actionable",
-                    "cohortText": "You are currently in eli_600_actionable"
+                    "cohortText": "You are currently in eli_600_eli_600_actionable"
                 }
             ],
             "status": "Actionable",
@@ -26,5 +26,5 @@
             "suitabilityRules": []
         }
     ],
-    "responseId": "8f12be40-7179-4fdd-ae0a-e386309f1c42"
+    "responseId": "e9f37a5d-972c-446e-a533-61c9f08b26e3"
 }
