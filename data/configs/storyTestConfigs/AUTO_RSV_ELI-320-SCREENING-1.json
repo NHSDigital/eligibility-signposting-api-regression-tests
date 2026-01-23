@@ -2,7 +2,7 @@
   "CampaignConfig": {
     "ID": "CC56789",
     "Version": 1,
-    "Name": "ELI-320 - FLU SCREENING Config",
+    "Name": "Story_Campaign_Config_ID_FLU_Screening",
     "Type": "S",
     "Target": "FLU",
     "Manager": [
