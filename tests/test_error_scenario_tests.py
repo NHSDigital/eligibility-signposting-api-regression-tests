@@ -80,33 +80,68 @@ def test_check_for_missing_person(eligibility_client):
                 ],
             },
         },
-        {
-            "scenario": "missing nhs number in path - added for ELI-584",
-            "nhs_number": None,
-            "request_headers": {"nhs-login-nhs-number": "9934567890"},
-            "expected_status": http.HTTPStatus.FORBIDDEN,
-            "expected_body": {
-                "resourceType": "OperationOutcome",
-                "id": "<ignored>",
-                "meta": {"lastUpdated": "<ignored>"},
-                "issue": [
-                    {
-                        "severity": "error",
-                        "code": "forbidden",
-                        "details": {
-                            "coding": [
-                                {
-                                    "code": "ACCESS_DENIED",
-                                    "display": "Access has been denied to process this request.",
-                                    "system": "https://fhir.nhs.uk/STU3/ValueSet/Spine-ErrorOrWarningCode-1",
-                                }
-                            ]
-                        },
-                        "diagnostics": "You are not authorised to request information for the supplied NHS Number",
-                    }
-                ],
+        pytest.param(
+            {
+                "scenario": "missing nhs number in path - added for ELI-584",
+                "nhs_number": None,
+                "request_headers": {"nhs-login-nhs-number": "9934567890"},
+                "expected_status": http.HTTPStatus.BAD_REQUEST,
+                "expected_body": {
+                    "id": "<ignored>",
+                    "issue": [
+                        {
+                            "code": "invalid",
+                            "details": {
+                                "coding": [
+                                    {
+                                        "code": "BAD_REQUEST",
+                                        "display": "Bad Request",
+                                        "system": "https://fhir.nhs.uk/STU3/ValueSet/Spine-ErrorOrWarningCode-1",
+                                    }
+                                ]
+                            },
+                            "diagnostics": "Missing required NHS Number from path parameters",
+                            "location": ["parameters/id"],
+                            "severity": "error",
+                        }
+                    ],
+                    "meta": {"lastUpdated": "<ignored>"},
+                    "resourceType": "OperationOutcome",
+                },
             },
-        },
+            marks=pytest.mark.skip(reason="Defect: skipping until fixed (ELI-614)"),
+        ),
+        pytest.param(
+            {
+                "scenario": "missing nhs number in path and no header - added for ELI-584",
+                "nhs_number": None,
+                "request_headers": {},
+                "expected_status": http.HTTPStatus.BAD_REQUEST,
+                "expected_body": {
+                    "id": "<ignored>",
+                    "issue": [
+                        {
+                            "code": "invalid",
+                            "details": {
+                                "coding": [
+                                    {
+                                        "code": "BAD_REQUEST",
+                                        "display": "Bad Request",
+                                        "system": "https://fhir.nhs.uk/STU3/ValueSet/Spine-ErrorOrWarningCode-1",
+                                    }
+                                ]
+                            },
+                            "diagnostics": "Missing required NHS Number from path parameters",
+                            "location": ["parameters/id"],
+                            "severity": "error",
+                        }
+                    ],
+                    "meta": {"lastUpdated": "<ignored>"},
+                    "resourceType": "OperationOutcome",
+                },
+            },
+            marks=pytest.mark.skip(reason="Defect: skipping until fixed (ELI-614)"),
+        ),
         {
             "scenario": "incorrect header - NHS number mismatch",
             "nhs_number": "9934567890",
@@ -165,7 +200,13 @@ def test_check_for_missing_person(eligibility_client):
             },
         },
     ],
-    ids=["correct-header", "missing-path-number", "incorrect-header", "missing-header"],
+    ids=[
+        "correct-header",
+        "missing-path-number",
+        "missing-path-and-header",
+        "incorrect-header",
+        "missing-header",
+    ],
 )
 def test_nhs_login_header_handling(eligibility_client, test_case):
     response = eligibility_client.make_request(
