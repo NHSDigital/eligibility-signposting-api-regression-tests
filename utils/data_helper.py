@@ -147,7 +147,7 @@ def load_all_test_scenarios(folder_path):
         secret_version = raw_json.get("secret_version")
 
         if not any(k.lower() == "nhsd-application-id" for k in request_headers):
-            request_headers["nhsd-application-id"] = "Auto_Test_Consumer_ID"
+            request_headers["nhsd-application-id"] = "Story_Test_Consumer_ID"
 
         # Resolve placeholders with shared DTO
         resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)
