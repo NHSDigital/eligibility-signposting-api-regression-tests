@@ -10,7 +10,10 @@ from utils.s3_config_manager import delete_all_configs_from_s3
 def test_check_for_missing_person(eligibility_client):
     nhs_number = "9934567890"
 
-    request_headers = {"nhs-login-nhs-number": "9934567890"}
+    request_headers = {
+        "nhs-login-nhs-number": "9934567890",
+        "nhsd-application-id": "Story_Test_Consumer_ID",
+    }
 
     expected_body = {
         "resourceType": "OperationOutcome",
@@ -53,7 +56,10 @@ def test_check_for_missing_person(eligibility_client):
         {
             "scenario": "correct header - NHS number exists but not found in data",
             "nhs_number": "9934567890",
-            "request_headers": {"nhs-login-nhs-number": "9934567890"},
+            "request_headers": {
+                "nhs-login-nhs-number": "9934567890",
+                "nhsd-application-id": "Story_Test_Consumer_ID",
+            },
             "expected_status": http.HTTPStatus.NOT_FOUND,
             "expected_body": {
                 "resourceType": "OperationOutcome",
@@ -84,7 +90,10 @@ def test_check_for_missing_person(eligibility_client):
             {
                 "scenario": "missing nhs number in path - added for ELI-584",
                 "nhs_number": None,
-                "request_headers": {"nhs-login-nhs-number": "9934567890"},
+                "request_headers": {
+                    "nhs-login-nhs-number": "9934567890",
+                    "nhsd-application-id": "Story_Test_Consumer_ID",
+                },
                 "expected_status": http.HTTPStatus.BAD_REQUEST,
                 "expected_body": {
                     "id": "<ignored>",
@@ -115,7 +124,7 @@ def test_check_for_missing_person(eligibility_client):
             {
                 "scenario": "missing nhs number in path and no header - added for ELI-584",
                 "nhs_number": None,
-                "request_headers": {},
+                "request_headers": {"nhsd-application-id": "Story_Test_Consumer_ID"},
                 "expected_status": http.HTTPStatus.BAD_REQUEST,
                 "expected_body": {
                     "id": "<ignored>",
@@ -145,7 +154,10 @@ def test_check_for_missing_person(eligibility_client):
         {
             "scenario": "incorrect header - NHS number mismatch",
             "nhs_number": "9934567890",
-            "request_headers": {"nhs-login-nhs-number": "99345678900"},
+            "request_headers": {
+                "nhs-login-nhs-number": "99345678900",
+                "nhsd-application-id": "Story_Test_Consumer_ID",
+            },
             "expected_status": http.HTTPStatus.FORBIDDEN,
             "expected_body": {
                 "resourceType": "OperationOutcome",
@@ -172,7 +184,7 @@ def test_check_for_missing_person(eligibility_client):
         {
             "scenario": "missing header - NHS number required",
             "nhs_number": "1234567890",
-            "request_headers": {},
+            "request_headers": {"nhsd-application-id": "Story_Test_Consumer_ID"},
             "expected_status": http.HTTPStatus.NOT_FOUND,
             "expected_body": {
                 "resourceType": "OperationOutcome",
@@ -231,7 +243,10 @@ def test_nhs_login_header_handling(eligibility_client, test_case):
         {
             "scenario": "invalid conditions - use special character in conditions",
             "nhs_number": "9990032010",
-            "request_headers": {"nhs-login-nhs-number": "9990032010"},
+            "request_headers": {
+                "nhs-login-nhs-number": "9990032010",
+                "nhsd-application-id": "Story_Test_Consumer_ID",
+            },
             "query_params": {"conditions": "covid-rsv"},
             "expected_status": http.HTTPStatus.BAD_REQUEST,
             "expected_body": {
@@ -261,7 +276,10 @@ def test_nhs_login_header_handling(eligibility_client, test_case):
         {
             "scenario": "unknown-category - misspelt category",
             "nhs_number": "9990032010",
-            "request_headers": {"nhs-login-nhs-number": "9990032010"},
+            "request_headers": {
+                "nhs-login-nhs-number": "9990032010",
+                "nhsd-application-id": "Story_Test_Consumer_ID",
+            },
             "query_params": {"category": "VACCINATIONSS"},
             "expected_status": http.HTTPStatus.UNPROCESSABLE_ENTITY,
             "expected_body": {
@@ -335,7 +353,10 @@ def test_no_config_error(eligibility_client):
 
     response = eligibility_client.make_request(
         nhs_number="9990032010",
-        headers={"nhs-login-nhs-number": "9990032010"},
+        headers={
+            "nhs-login-nhs-number": "9990032010",
+            "nhsd-application-id": "Story_Test_Consumer_ID",
+        },
         raise_on_error=False,
     )
 

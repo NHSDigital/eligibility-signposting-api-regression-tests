@@ -1,6 +1,6 @@
 {
     "CampaignConfig": {
-        "ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d0",
+        "ID": "Story_Campaign_Config_ID",
         "Version": 1,
         "Name": "EliD RSV example config",
         "Type": "V",
@@ -83,7 +83,7 @@
                     },
                     {
                         "Type": "S",
-                         "Name": "Other Setting 3",
+                        "Name": "Other Setting 3",
                         "Code": "OtherSetting3",
                         "Description": "This is the Other Setting 3 description",
                         "Priority": 530,
@@ -96,7 +96,7 @@
                     },
                     {
                         "Type": "S",
-                         "Name": "Other Setting 10",
+                        "Name": "Other Setting 10",
                         "Code": "OtherSetting10",
                         "Description": "This is the Other Setting 10 description",
                         "Priority": 540,
@@ -109,7 +109,7 @@
                     },
                     {
                         "Type": "S",
-                         "Name": "Other Setting 11",
+                        "Name": "Other Setting 11",
                         "Code": "OtherSetting11",
                         "Description": "This is the Other Setting 11 description",
                         "Priority": 550,
@@ -122,7 +122,7 @@
                     },
                     {
                         "Type": "S",
-                         "Name": "Other Setting 12",
+                        "Name": "Other Setting 12",
                         "Code": "OtherSetting12",
                         "Description": "This is the Other Setting 12 description",
                         "Priority": 560,
@@ -224,7 +224,7 @@
                         "RuleCode": "Mapper:RuleCode:OtherSetting-rsv_80_2024_plus1day",
                         "RuleText": "Mapper:RuleText:This is the Description for all Other Setting Names for rsv_80_2024_plus1day"
                     },
-                     "OTHER_SETTINGS_RSV_75TO79_PLUS1DAY": {
+                    "OTHER_SETTINGS_RSV_75TO79_PLUS1DAY": {
                         "RuleNames": [
                             "Other Setting 10",
                             "Other Setting 11",
