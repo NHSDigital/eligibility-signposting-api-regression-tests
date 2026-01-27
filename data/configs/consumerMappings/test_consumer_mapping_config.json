@@ -1,37 +1,37 @@
 {
     "f27926bd-7e9e-4651-a673-20579c7eb51c": [
         {
-            "CampaignConfigID": "VITA_CampaignConfigID_Config_ID_RSV",
+            "CampaignConfigID": "VITA_Campaign_Config_ID_RSV",
             "Description": "RSV Ongoing for My Vaccines"
         }
     ],
     "Story_Test_Consumer_ID": [
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID",
+            "CampaignConfigID": "Story_Campaign_Config_ID",
             "Description": "General Config ID"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_RSV",
+            "CampaignConfigID": "Story_Campaign_Config_ID_RSV",
             "Description": "General Config ID for RSV"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_COVID",
+            "CampaignConfigID": "Story_Campaign_Config_ID_COVID",
             "Description": "General Config ID for COVID"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_FLU",
+            "CampaignConfigID": "Story_Campaign_Config_ID_FLU",
             "Description": "General Config ID for FLU"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_MMR",
+            "CampaignConfigID": "Story_Campaign_Config_ID_MMR",
             "Description": "General Config ID for MMR"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_RSV_Screening",
+            "CampaignConfigID": "Story_Campaign_Config_ID_RSV_Screening",
             "Description": "General Config ID for RSV Screening"
         },
         {
-            "CampaignConfigID": "Story_CampaignConfigID_Config_ID_FLU_Screening",
+            "CampaignConfigID": "Story_Campaign_Config_ID_FLU_Screening",
             "Description": "General Config ID for FLU Screening"
         },
         {
