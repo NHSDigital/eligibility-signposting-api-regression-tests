@@ -2,6 +2,10 @@ name: Repopulate My Vaccs Preprod Data
 
 on:
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      ELID_PREPROD_AWS_ACCOUNT_ID:
+        required: true
 
 jobs:
   run-vita-int-tests:
@@ -12,6 +16,32 @@ jobs:
     environment: preprod
 
     steps:
+      - name: Verify caller repository
+        run: |
+          ALLOWED_REPOS=("NHSDigital/eligibility-signposting-api" "NHSDigital/vaccinations-app")
+          CALLER_REPO="${{ github.repository }}"
+
+          # If triggered by workflow_call, the calling repo is in github.repository
+          # If triggered manually, it's this repo itself which is allowed
+          if [[ "${{ github.event_name }}" == "workflow_call" ]]; then
+            CALLER_REPO="${{ github.event.workflow_run.repository.full_name || github.repository }}"
+          fi
+
+          ALLOWED=false
+          for repo in "${ALLOWED_REPOS[@]}"; do
+            if [[ "$CALLER_REPO" == "$repo" ]]; then
+              ALLOWED=true
+              break
+            fi
+          done
+
+          if [[ "$ALLOWED" == "false" && "${{ github.event_name }}" == "workflow_call" ]]; then
+            echo "Error: Repository $CALLER_REPO is not allowed to trigger this workflow"
+            exit 1
+          fi
+
+          echo "Workflow triggered by allowed repository: $CALLER_REPO"
+
       - name: Checkout main
         uses: actions/checkout@v4
         with:
@@ -50,7 +80,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          role-to-assume: arn:aws:iam::${{ secrets.ELID_PREPROD_AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
 
       - name: Run Vita Integration Tests
