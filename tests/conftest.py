@@ -36,7 +36,10 @@ def pytest_configure(config):
     os.environ["BASE_URL"] = (
         f"https://{env}.eligibility-signposting-api.nhs.uk/patient-check/"
     )
-    os.environ["S3_BUCKET_NAME"] = f"eligibility-signposting-api-{env}-eli-rules"
+    os.environ["S3_CONFIG_BUCKET_NAME"] = f"eligibility-signposting-api-{env}-eli-rules"
+    os.environ["S3_CONSUMER_MAPPING_BUCKET_NAME"] = (
+        f"eligibility-signposting-api-{env}-eli-consumer-map"
+    )
     os.environ["SSM_PARAM_KEY_FILE"] = f"/{env}/mtls/api_private_key_cert"
     os.environ["SSM_PARAM_CLIENT_CERT"] = f"/{env}/mtls/api_client_cert"
     os.environ["SSM_PARAM_CA_CERT"] = f"/{env}/mtls/api_ca_cert"
@@ -45,7 +48,9 @@ def pytest_configure(config):
     )
 
     assert os.getenv("BASE_URL") is not None, "BASE_URL must be set"
-    assert os.getenv("S3_BUCKET_NAME") is not None, "S3_BUCKET_NAME must be set"
+    assert (
+        os.getenv("S3_CONFIG_BUCKET_NAME") is not None
+    ), "S3_CONFIG_BUCKET_NAME must be set"
     assert os.getenv("SSM_PARAM_KEY_FILE") is not None, "SSM_PARAM_KEY_FILE must be set"
     assert (
         os.getenv("SSM_PARAM_CLIENT_CERT") is not None
@@ -58,7 +63,7 @@ def pytest_configure(config):
     logger.debug(f"Environment variables for the {env.upper()} environment:")
     logger.debug(f"ENVIRONMENT {os.getenv("ENVIRONMENT")}")
     logger.debug(f"BASE_URL: {os.getenv("BASE_URL")}")
-    logger.debug(f"S3_BUCKET_NAME: {os.getenv("S3_BUCKET_NAME")}")
+    logger.debug(f"S3_CONFIG_BUCKET_NAME: {os.getenv("S3_CONFIG_BUCKET_NAME")}")
     logger.debug(f"SSM_PARAM_KEY_FILE: {os.getenv("SSM_PARAM_KEY_FILE")}")
     logger.debug(f"SSM_PARAM_CLIENT_CERT: {os.getenv("SSM_PARAM_CLIENT_CERT")}")
     logger.debug(f"SSM_PARAM_CA_CERT: {os.getenv("SSM_PARAM_CA_CERT")}")

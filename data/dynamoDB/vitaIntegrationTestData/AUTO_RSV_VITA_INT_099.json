@@ -2,7 +2,9 @@
     "scenario_name": "RSV - Vita Integration - Not Actionable - Too Young for a Vaccs",
     "comment": "requested as an additional test.  ref data had a vacc on this user so creating the data as required here",
     "request_headers": {
-        "nhs-login-nhs-number": "9461135831"
+        "nhs-login-nhs-number": "9461135831",
+        "nhsd-application-id": "f27926bd-7e9e-4651-a673-20579c7eb51c",
+        "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
         "RSV_Config_v1.1.json"
