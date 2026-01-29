@@ -3,6 +3,40 @@
         {
             "CampaignConfigID": "VITA_Campaign_Config_ID_RSV",
             "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_Campaign_Config_ID_COVID",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_Campaign_Config_ID_FLU",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_NBS_Campaign_Config_ID_COVID",
+            "Description": "Shared Config for My Vaccines and NBS"
+        }
+    ],
+    "NBS_CONSUMER_ID": [
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_RSV",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_COVID",
+            "Description": "COVID Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_COVID_ACTIVE",
+            "Description": "COVID Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_FLU",
+            "Description": "FLU Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "VITA_NBS_Campaign_Config_ID_COVID",
+            "Description": "Shared Config for My Vaccines and NBS"
         }
     ],
     "Story_Test_Consumer_ID": [
