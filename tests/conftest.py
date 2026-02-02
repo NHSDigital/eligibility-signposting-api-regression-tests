@@ -38,7 +38,7 @@ def pytest_configure(config):
     )
     os.environ["S3_CONFIG_BUCKET_NAME"] = f"eligibility-signposting-api-{env}-eli-rules"
     os.environ["S3_CONSUMER_MAPPING_BUCKET_NAME"] = (
-        f"eligibility-signposting-api-{env}-eli-consumer-map"
+        f"eligibility-signposting-api-{env}-consumer-map"
     )
     os.environ["SSM_PARAM_KEY_FILE"] = f"/{env}/mtls/api_private_key_cert"
     os.environ["SSM_PARAM_CLIENT_CERT"] = f"/{env}/mtls/api_client_cert"
