@@ -170,12 +170,12 @@ def upload_consumer_mapping_file_to_s3(local_path: str) -> None:
     environment = os.getenv("ENVIRONMENT")
     if environment in ["dev", "test"]:
         s3_bucket = os.getenv("S3_CONSUMER_MAPPING_BUCKET_NAME")
-        s3_connection = S3ConfigManager(s3_bucket)
         logger.info(
             "Uploading consumer mapping file: %s to S3 bucket: %s",
             local_path,
             s3_bucket,
         )
+        s3_connection = S3ConfigManager(s3_bucket)
         s3_connection.upload_if_missing_or_changed(Path(local_path))
     else:
         logger.info("Skipping upload in preprod until feature deployed")
