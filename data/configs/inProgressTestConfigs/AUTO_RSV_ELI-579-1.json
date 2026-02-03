@@ -1,0 +1,137 @@
+{
+    "CampaignConfig": {
+        "ID": "Story_Campaign_Config_ID",
+        "Version": 1,
+        "Name": "ELI-579 - add days template function",
+        "Type": "V",
+        "Target": "COVID",
+        "Manager": [
+            "person1@nhs.net"
+        ],
+        "Approver": [
+            "person1@nhs.net"
+        ],
+        "Reviewer": [
+            "person1@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "DefaultCommsRouting": "DEFAULT",
+        "StartDate": "<<DATE_DAY_-1>>",
+        "EndDate": "<<DATE_DAY_1>>",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "Iterations": [
+            {
+                "ID": ",<<RANDOM_GUID>>",
+                "DefaultCommsRouting": "DEFAULT",
+                "Version": 1,
+                "Name": "ELI-579 - add days template function",
+                "IterationDate": "<<DATE_DAY_-1>>",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "DefaultNotEligibleRouting": "",
+                "DefaultNotActionableRouting": "",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "eli_579_covid_age",
+                        "CohortGroup": "eli_579_covid_age_group",
+                        "PositiveDescription": "You are currently in eli_579_covid_age [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%A %d %B %y)]]",
+                        "NegativeDescription": "You are not currently in eli_579_covid_age",
+                        "Priority": 0
+                    }
+                ],
+                "IterationRules": [
+                    {
+                        "Type": "S",
+                        "Name": "Add days to in an S Rule",
+                        "Description": "Add days to in an S Rule: [[TARGET.COVID.BOOKED_APPOINTMENT_DATE:ADD_DAYS(91):DATE(%Y-%m-%dT%H:%M:%S)]] and DOB [[PERSON.DATE_OF_BIRTH:ADD_DAYS(-1)]]",
+                        "Priority": 500,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "ICB",
+                        "Operator": "=",
+                        "Comparator": "9900057907"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
+                        "Description": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
+                        "Priority": 1000,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "ICB",
+                        "Operator": "in",
+                        "Comparator": "9900057901,9900057904",
+                        "CommsRouting": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "DEFAULT_VACCS_ADD_DAYS_FORMATTED",
+                        "Description": "DEFAULT_VACCS_ADD_DAYS_FORMATTED",
+                        "Priority": 1100,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "ICB",
+                        "Operator": "in",
+                        "Comparator": "9900057902,9900057905",
+                        "CommsRouting": "DEFAULT_VACCS_ADD_DAYS_FORMATTED"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "DEFAULT_VACCS_ADD_DAYS",
+                        "Description": "DEFAULT_VACCS_ADD_DAYS",
+                        "Priority": 1200,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "ICB",
+                        "Operator": "in",
+                        "Comparator": "9900057903,9900057906",
+                        "CommsRouting": "DEFAULT_VACCS_ADD_DAYS"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Y_VACCS_ADD_DAYS",
+                        "Description": "Y_VACCS_ADD_DAYS",
+                        "Priority": 2000,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "ICB",
+                        "Operator": "in",
+                        "Comparator": "9900057907",
+                        "CommsRouting": "Y_VACCS_ADD_DAYS"
+                    }
+                ],
+                "ActionsMapper": {
+                    "DEFAULT_VACCS_ADD_DAYS": {
+                        "ExternalRoutingCode": "DEFAULT_VACCS_ADD_DAYS",
+                        "ActionDescription": "DEFAULT_VACCS_ADD_DAYS ActionDescription: [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91)]]",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "http://www.nhs.uk/book-rsv",
+                        "UrlLabel": "Manage your appointment"
+                    },
+                    "DEFAULT_VACCS_ADD_DAYS_FORMATTED": {
+                        "ExternalRoutingCode": "DEFAULT_VACCS_ADD_DAYS_FORMATTED",
+                        "ActionDescription": "DEFAULT_VACCS_ADD_DAYS_FORMATTED ActionDescription: [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%d %B %Y)]]",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "http://www.nhs.uk/book-rsv",
+                        "UrlLabel": "Manage your appointment"
+                    },
+                    "DEFAULT_BOOKING_ADD_DAYS_FORMATTED": {
+                        "ExternalRoutingCode": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
+                        "ActionDescription": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: [[TARGET.COVID.NEXT_BOOKING_AVAILABLE:ADD_DAYS(71, LAST_SUCCESSFUL_DATE):DATE(%d %B %Y)]]",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "http://www.nhs.uk/book-rsv",
+                        "UrlLabel": "Manage your appointment"
+                    },
+                    "Y_VACCS_ADD_DAYS": {
+                        "ExternalRoutingCode": "Y_VACCS_ADD_DAYS",
+                        "ActionDescription": "Y_VACCS_ADD_DAYS ActionDescription: [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%A %d %B %Y)]]",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "http://www.nhs.uk/book-rsv",
+                        "UrlLabel": "Manage your appointment"
+                    }
+                }
+            }
+        ]
+    }
+}
