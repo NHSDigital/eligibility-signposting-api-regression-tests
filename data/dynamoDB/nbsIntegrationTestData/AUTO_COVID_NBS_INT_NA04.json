@@ -5,7 +5,7 @@
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_COVID_Config_Spring2026_v0.2WIP.json"
+        "NBS_COVID_Config_Spring2026_v0.2WIP_too_close.json"
     ],
     "data": [
         {
@@ -40,7 +40,7 @@
         {
             "NHS_NUMBER": "9000059313",
             "ATTRIBUTE_TYPE": "COVID",
-            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-91>>"
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-90>>"
         }
     ]
 }

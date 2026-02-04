@@ -11,7 +11,7 @@
 		"IterationFrequency": "X",
 		"IterationType": "O",
 		"IterationTime": "07:00:00",
-		"StartDate": "<<DATE_DAY_-100>>",
+		"StartDate": "<<DATE_DAY_-80>>",
 		"EndDate": "20280430",
 		"ApprovalMinimum": 0,
 		"ApprovalMaximum": 0,
@@ -24,7 +24,7 @@
 				"DefaultNotEligibleRouting": "",
 				"Version": 1,
 				"Name": "EliD NBS COVID-19 campaign example config",
-				"IterationDate": "<<DATE_DAY_-100>>",
+				"IterationDate": "<<DATE_DAY_-80>>",
 				"IterationNumber": 1,
 				"CommsType": "I",
 				"ApprovalMinimum": 0,
@@ -83,7 +83,7 @@
 						"Name": "Remove from magic cohort unless already vaccinated or have future booking",
 						"Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
 						"Operator": "<",
-						"Comparator": "<<DATE_DAY_-100>>[[NVL:18000101]]",
+						"Comparator": "<<DATE_DAY_-80>>[[NVL:18000101]]",
 						"AttributeTarget": "COVID",
 						"AttributeLevel": "TARGET",
 						"AttributeName": "LAST_SUCCESSFUL_DATE",
@@ -118,7 +118,7 @@
 						"Name": "Remove from eligible cohorts if already vaccinated",
 						"Description": "Remove anyone already vaccinated in current campaign from eligible cohorts",
 					    	"Operator": ">=",
-						"Comparator": "<<DATE_DAY_-100>>",
+						"Comparator": "<<DATE_DAY_-80>>",
 						"AttributeTarget": "COVID",
 						"AttributeLevel": "TARGET",
 						"AttributeName": "LAST_SUCCESSFUL_DATE",
@@ -146,7 +146,7 @@
 						"AttributeTarget": "COVID",
 						"AttributeName": "LAST_SUCCESSFUL_DATE",
 						"Operator": ">=",
-						"Comparator": "<<DATE_DAY_-100>>",
+						"Comparator": "<<DATE_DAY_-80>>",
 						"RuleStop": "Y"
 					},
 	                {
@@ -206,7 +206,7 @@
 						"AttributeTarget": "COVID",
 						"AttributeName": "LAST_SUCCESSFUL_DATE",
 						"Operator": ">=",
-						"Comparator": "<<DATE_DAY_-100>>",
+						"Comparator": "<<DATE_DAY_-80>>",
 						"CommsRouting": "LAST_VACCINATION_DATE"
 					},
                     {

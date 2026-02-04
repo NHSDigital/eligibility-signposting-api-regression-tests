@@ -1,5 +1,5 @@
 {
-    "scenario_name": "COVID - NBS Integration - NA05 - NotActionable - Other Setting",
+    "scenario_name": "COVID - NBS Integration - NA06 - NotActionable - Already Booked (not in eligible cohort)",
     "request_headers": {
         "nhsd-application-id": "NBS_CONSUMER_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation"
@@ -11,12 +11,7 @@
         {
             "NHS_NUMBER": "9000059314",
             "ATTRIBUTE_TYPE": "COHORTS",
-            "COHORT_MEMBERSHIPS": [
-                {
-                    "COHORT_LABEL": "covid_16+_immunosuppression",
-                    "DATE_JOINED": "20231020"
-                }
-            ]
+            "COHORT_MEMBERSHIPS": []
         },
         {
             "NHS_NUMBER": "9000059314",
@@ -36,6 +31,12 @@
             "13Q_FLAG": "Y",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9000059314",
+            "ATTRIBUTE_TYPE": "COVID",
+            "LAST_SUCCESSFUL_DATE": null,
+            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>"
         }
     ]
 }

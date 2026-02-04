@@ -8,7 +8,7 @@
                 {
                     "actionCode": "FutureBookingDate",
                     "actionType": "DataValue",
-                    "description": "2026-02-13",
+                    "description": "<<NBSDATE_DAY_11>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }

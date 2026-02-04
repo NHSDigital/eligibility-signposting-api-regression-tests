@@ -1,20 +1,33 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-03T15:10:28.830246+00:00"
+        "lastUpdated": "2026-02-04T14:08:30.997683+00:00"
     },
     "processedSuggestions": [
         {
             "actions": [
                 {
+                    "actionCode": "DateOfNextEarliestVaccination",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_1>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                },
+                {
                     "actionCode": "DateOfLastVaccination",
                     "actionType": "DataValue",
-                    "description": "<<NBSDATE_DAY_-91>>",
+                    "description": "<<NBSDATE_DAY_-90>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
             ],
             "condition": "COVID",
-            "eligibilityCohorts": [],
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "covid_clinical_risk",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged 16 or over and immunosuppressed"
+                }
+            ],
             "status": "NotActionable",
             "statusText": "You should have the COVID-19 vaccine",
             "suitabilityRules": [
@@ -26,5 +39,5 @@
             ]
         }
     ],
-    "responseId": "a80ef4a6-13f3-4883-be13-e103a61e8f40"
+    "responseId": "0cf07403-edf0-4119-949b-4c8b4893f295"
 }

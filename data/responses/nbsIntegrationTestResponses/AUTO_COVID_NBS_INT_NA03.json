@@ -1,24 +1,30 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-03T15:06:44.140158+00:00"
+        "lastUpdated": "2026-02-04T13:59:09.511616+00:00"
     },
     "processedSuggestions": [
         {
             "actions": [
                 {
-                    "actionCode": "BookNBS",
-                    "actionType": "InfoText",
-                    "description": "Eligible within CP Expansion",
+                    "actionCode": "DateOfLastVaccination",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_-99>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
             ],
             "condition": "COVID",
             "eligibilityCohorts": [],
-            "status": "Actionable",
+            "status": "NotActionable",
             "statusText": "You should have the COVID-19 vaccine",
-            "suitabilityRules": []
+            "suitabilityRules": [
+                {
+                    "ruleCode": "AlreadyVaccinated",
+                    "ruleText": "AlreadyVaccinated",
+                    "ruleType": "S"
+                }
+            ]
         }
     ],
-    "responseId": "1703e2c4-1418-4343-92ae-0dc054e2aa0d"
+    "responseId": "bac5f239-c6ba-403d-be92-765b1b08799a"
 }

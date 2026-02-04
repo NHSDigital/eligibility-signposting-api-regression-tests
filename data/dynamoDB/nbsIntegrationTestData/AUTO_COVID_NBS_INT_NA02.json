@@ -36,7 +36,7 @@
         {
             "NHS_NUMBER": "9000059311",
             "ATTRIBUTE_TYPE": "COVID",
-            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>",
+            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_11>>",
             "BOOKED_APPOINTMENT_PROVIDER": "ACC"
         }
     ]
