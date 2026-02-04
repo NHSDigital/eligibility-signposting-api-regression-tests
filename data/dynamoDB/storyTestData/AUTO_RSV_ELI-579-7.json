@@ -51,7 +51,7 @@
         {
             "NHS_NUMBER": "9900057907",
             "ATTRIBUTE_TYPE": "RSV",
-            "LAST_SUCCESSFUL_DATE": null,
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-2>>",
             "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>"
         }
     ]

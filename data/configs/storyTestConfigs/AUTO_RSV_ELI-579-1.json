@@ -136,7 +136,7 @@
                     },
                     "Y_VACCS_ADD_DAYS": {
                         "ExternalRoutingCode": "Y_VACCS_ADD_DAYS",
-                        "ActionDescription": "Y_VACCS_ADD_DAYS ActionDescription: [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%-d %B %Y)]], [[TARGET.RSV.NEXT_BOOKING_AVAILABLE:ADD_DAYS(71, BOOKED_APPOINTMENT_DATE):DATE(%-d %B %Y)]]",
+                        "ActionDescription": "Y_VACCS_ADD_DAYS ActionDescription: Covid next does due date: [[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%-d %B %Y)]], RSV next does due date: [[TARGET.RSV.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%-d %B %Y)]],[[TARGET.RSV.NEXT_BOOKING_AVAILABLE:ADD_DAYS(71, BOOKED_APPOINTMENT_DATE):DATE(%-d %B %Y)]]",
                         "ActionType": "ButtonWithAuthLink",
                         "UrlLink": "http://www.nhs.uk/book-rsv",
                         "UrlLabel": "Manage your appointment"
