@@ -18,7 +18,7 @@
                 {
                     "cohortCode": "eli_579_covid_age_group",
                     "cohortStatus": "Actionable",
-                    "cohortText": "You are currently in eli_579_covid_age Thursday 30 April 26"
+                    "cohortText": "You are currently in eli_579_covid_age <<DATE_DAY_90>>"
                 }
             ],
             "status": "Actionable",

@@ -8,7 +8,7 @@
                 {
                     "actionCode": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
                     "actionType": "ButtonWithAuthLink",
-                    "description": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription:",
+                    "description": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: ",
                     "urlLabel": "Manage your appointment",
                     "urlLink": "http://www.nhs.uk/book-rsv"
                 }
