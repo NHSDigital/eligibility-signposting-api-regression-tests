@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-03T09:17:04.886172+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "FutureBookingDate",
+                    "actionType": "DataValue",
+                    "description": "2026-02-13",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Future Booked Local Appointment",
+                    "ruleText": "Local future booking",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "e22fe313-8954-456d-90cb-dab39be370c7"
+}
