@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-01-30T08:57:50.665560+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: ",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_579_covid_age_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_579_covid_age "
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the COVID vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "f2f86564-8c52-4d32-b91b-6fa399948fe0"
+}
