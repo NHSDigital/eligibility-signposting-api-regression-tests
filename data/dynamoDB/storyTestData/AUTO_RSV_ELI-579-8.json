@@ -1,7 +1,7 @@
 {
-    "scenario_name": "ELI-579 - Add days to in an S Rule Description and Y Action",
+    "scenario_name": "ELI-579 - Add days to in an Z Action",
     "request_headers": {
-        "nhs-login-nhs-number": "9900057907",
+        "nhs-login-nhs-number": "9900057908",
         "nhsd-application-id": "Story_Test_Consumer_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
@@ -14,17 +14,13 @@
     "secret_version": null,
     "data": [
         {
-            "NHS_NUMBER": "9900057907",
+            "NHS_NUMBER": "9900057908",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
-                {
-                    "COHORT_LABEL": "eli_579_covid_age",
-                    "DATE_JOINED": "20231020"
-                }
             ]
         },
         {
-            "NHS_NUMBER": "9900057907",
+            "NHS_NUMBER": "9900057908",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "19811116",
             "GENDER": "0",
@@ -36,17 +32,11 @@
             "LOCAL_AUTHORITY": "E08000011",
             "GP_PRACTICE_CODE": "D81046",
             "PCN": "U75549",
-            "ICB": "9900057907",
+            "ICB": "9900057908",
             "COMMISSIONING_REGION": "Y61",
             "13Q_FLAG": "N",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
-        },
-        {
-            "NHS_NUMBER": "9900057907",
-            "ATTRIBUTE_TYPE": "COVID",
-            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-1>>",
-            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_+100>>"
         }
     ]
 }

@@ -8,7 +8,7 @@
                 {
                     "actionCode": "Y_VACCS_ADD_DAYS",
                     "actionType": "ButtonWithAuthLink",
-                    "description": "Y_VACCS_ADD_DAYS ActionDescription: Thursday 30 April 2026",
+                    "description": "Y_VACCS_ADD_DAYS ActionDescription: <<RDATE_DAY_90>>, <<RDATE_DAY_81>>",
                     "urlLabel": "Manage your appointment",
                     "urlLink": "http://www.nhs.uk/book-rsv"
                 }
@@ -18,7 +18,7 @@
                 {
                     "cohortCode": "eli_579_covid_age_group",
                     "cohortStatus": "NotActionable",
-                    "cohortText": "You are currently in eli_579_covid_age Thursday 30 April 26"
+                    "cohortText": "You are currently in eli_579_covid_age <<RDATE_DAY_90>>"
                 }
             ],
             "status": "NotActionable",
@@ -26,7 +26,7 @@
             "suitabilityRules": [
                 {
                     "ruleCode": "Add days to in an S Rule",
-                    "ruleText": "Add days to in an S Rule: 2026-08-09T00:00:00 and DOB 19811115",
+                    "ruleText": "Add days to in an S Rule: <<DATE_DAY_191>> and DOB 19811115",
                     "ruleType": "S"
                 }
             ]

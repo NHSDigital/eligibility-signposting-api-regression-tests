@@ -45,7 +45,7 @@
         {
             "NHS_NUMBER": "9900057904",
             "ATTRIBUTE_TYPE": "COVID",
-            "LAST_SUCCESSFUL_DATE": "<<RDATE_DAY_-1>>"
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-1>>"
         }
     ]
 }

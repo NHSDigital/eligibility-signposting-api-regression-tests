@@ -6,9 +6,9 @@
         {
             "actions": [
                 {
-                    "actionCode": "DEFAULT_VACCS_ADD_DAYS",
+                    "actionCode": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
                     "actionType": "ButtonWithAuthLink",
-                    "description": "DEFAULT_VACCS_ADD_DAYS ActionDescription: 20260430",
+                    "description": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: <<RDATE_DAY_70>>",
                     "urlLabel": "Manage your appointment",
                     "urlLink": "http://www.nhs.uk/book-rsv"
                 }
@@ -18,7 +18,7 @@
                 {
                     "cohortCode": "eli_579_covid_age_group",
                     "cohortStatus": "Actionable",
-                    "cohortText": "You are currently in eli_579_covid_age Thursday 30 April 26"
+                    "cohortText": "You are currently in eli_579_covid_age <<RDATE_DAY_90>>"
                 }
             ],
             "status": "Actionable",
