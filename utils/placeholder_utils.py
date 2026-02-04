@@ -34,7 +34,7 @@ def resolve_placeholders(value, context=None, file_name=None):
 
 def _resolve_placeholder_value(placeholder: str) -> str:
     placeholder_parts_length = 3
-    valid_placeholder_types = ["DATE", "RDATE", "IGNORE"]
+    valid_placeholder_types = ["DATE", "RDATE", "IGNORE", "NBSDATE"]
     result = f"<<{placeholder}>>"  # Default fallback
 
     if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE"]:
@@ -108,6 +108,11 @@ def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) ->
 
 
 def _format_date(date: datetime, format_type: str) -> str:
-    return (
-        date.strftime("%Y%m%d") if format_type == "DATE" else date.strftime("%-d %B %Y")
-    )
+    formats = {
+        "RDATE": "%-d %B %Y",  # e.g. 3 February 2026
+        "NBSDATE": "%Y-%m-%d",  # e.g. 2026-02-03
+        "DATE": "%Y%m%d",  # default format if needed explicitly
+    }
+
+    fmt = formats.get(format_type, "%Y%m%d")
+    return date.strftime(fmt)

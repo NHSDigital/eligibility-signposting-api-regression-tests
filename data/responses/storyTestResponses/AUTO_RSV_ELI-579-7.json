@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-04T11:22:11.236989+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "Y_VACCS_ADD_DAYS",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "Y_VACCS_ADD_DAYS ActionDescription: Covid next does due date: <<RDATE_DAY_90>>, RSV next does due date: <<RDATE_DAY_89>>,<<RDATE_DAY_81>>",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_579_covid_age_group",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "You are currently in eli_579_covid_age <<RDATE_DAY_90>>"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Add days to in an S Rule",
+                    "ruleText": "Add days to in an S Rule: 20260814 and DOB 19811115",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "747c2390-dc5f-4ecb-8c6e-fa76edf23d91"
+}
