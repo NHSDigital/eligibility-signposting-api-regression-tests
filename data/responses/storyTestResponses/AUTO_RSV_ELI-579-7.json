@@ -26,7 +26,7 @@
             "suitabilityRules": [
                 {
                     "ruleCode": "Add days to in an S Rule",
-                    "ruleText": "Add days to in an S Rule: <<DATE_DAY_190>> and DOB 19811115",
+                    "ruleText": "Add days to in an S Rule: <<DATE_DAY_191>> and DOB 19811115",
                     "ruleType": "S"
                 }
             ]
