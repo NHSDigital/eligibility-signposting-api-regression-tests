@@ -1,0 +1,42 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-06T15:08:56.947260+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DateOfLastVaccination",
+                    "actionType": "DataValue",
+                    "description": "2025-07-24",
+                    "urlLabel": "",
+                    "urlLink": ""
+                },
+                {
+                    "actionCode": "DateOfNextEarliestVaccination",
+                    "actionType": "DataValue",
+                    "description": "2026-02-05",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "are not aged 75 or over"
+                },
+                {
+                    "cohortCode": "rsv_care_home_residents",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "do not live in a care home for older adults"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "ba475223-02bf-4a61-8a72-dda84318eb94"
+}
