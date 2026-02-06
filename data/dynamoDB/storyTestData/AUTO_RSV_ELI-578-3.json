@@ -2,7 +2,7 @@
     "scenario_name": "Consumer Mapping - NBS Request FLU only - FLU in Response",
     "request_headers": {
         "nhs-login-nhs-number": "9900057803",
-        "nhsd-application-id": "NBS_CONSUMER_ID",
+        "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "query_params": {
