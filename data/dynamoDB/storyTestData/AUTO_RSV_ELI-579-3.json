@@ -2,7 +2,7 @@
     "scenario_name": "ELI-579 - Add days to LAST_SUCCESSFUL_DATE (mapped to NEXT_DOSE_DUE) - Missing Target",
     "request_headers": {
         "nhs-login-nhs-number": "9900057903",
-        "nhsd-application-id": "Story_Test_Consumer_ID",
+        "NHSE-Product-ID": "Story_Test_Consumer_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "query_params": {

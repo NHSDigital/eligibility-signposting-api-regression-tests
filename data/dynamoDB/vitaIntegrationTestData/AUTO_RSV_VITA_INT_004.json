@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( existing NBS booking ) - empty cohorts - AmendNBS",
     "request_headers": {
         "nhs-login-nhs-number": "9658218881",
-        "nhsd-application-id": "f27926bd-7e9e-4651-a673-20579c7eb51c",
+        "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
