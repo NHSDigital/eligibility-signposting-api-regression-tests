@@ -2,7 +2,7 @@
     "scenario_name": "Consumer Mapping - NBS Request - COVID Shared with VITA",
     "request_headers": {
         "nhs-login-nhs-number": "9900057807",
-        "nhsd-application-id": "f27926bd-7e9e-4651-a673-20579c7eb51c",
+        "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "query_params": {

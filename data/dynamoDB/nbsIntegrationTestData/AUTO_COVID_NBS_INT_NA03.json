@@ -1,7 +1,7 @@
 {
     "scenario_name": "COVID - NBS Integration - NA03 - NotActionable - Already been vaccinated within the current campaign",
     "request_headers": {
-         "nhsd-application-id": "NBS_CONSUMER_ID",
+         "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [

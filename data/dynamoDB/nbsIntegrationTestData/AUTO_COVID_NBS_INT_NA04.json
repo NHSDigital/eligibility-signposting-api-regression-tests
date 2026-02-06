@@ -1,7 +1,7 @@
 {
     "scenario_name": "COVID - NBS Integration - NA04 - NotActionable - Too close to previous vaccination",
     "request_headers": {
-        "nhsd-application-id": "NBS_CONSUMER_ID",
+        "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [

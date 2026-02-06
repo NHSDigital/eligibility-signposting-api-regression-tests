@@ -146,8 +146,8 @@ def load_all_test_scenarios(folder_path):
         query_params = raw_json.get("query_params")
         secret_version = raw_json.get("secret_version")
 
-        if not any(k.lower() == "nhsd-application-id" for k in request_headers):
-            request_headers["nhsd-application-id"] = "Story_Test_Consumer_ID"
+        if not any(k == "NHSE-Product-ID" for k in request_headers):
+            request_headers["NHSE-Product-ID"] = "Story_Test_Consumer_ID"
 
         # Resolve placeholders with shared DTO
         resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)

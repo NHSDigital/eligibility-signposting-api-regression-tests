@@ -18,7 +18,7 @@ def test_check_for_missing_person(eligibility_client):
 
     request_headers = {
         "nhs-login-nhs-number": "9934567890",
-        "nhsd-application-id": "Story_Test_Consumer_ID",
+        "NHSE-Product-ID": "Story_Test_Consumer_ID",
     }
 
     expected_body = {
@@ -64,7 +64,7 @@ def test_check_for_missing_person(eligibility_client):
             "nhs_number": "9934567890",
             "request_headers": {
                 "nhs-login-nhs-number": "9934567890",
-                "nhsd-application-id": "Story_Test_Consumer_ID",
+                "NHSE-Product-ID": "Story_Test_Consumer_ID",
             },
             "expected_status": http.HTTPStatus.NOT_FOUND,
             "expected_body": {
@@ -98,7 +98,7 @@ def test_check_for_missing_person(eligibility_client):
                 "nhs_number": None,
                 "request_headers": {
                     "nhs-login-nhs-number": "9934567890",
-                    "nhsd-application-id": "Story_Test_Consumer_ID",
+                    "NHSE-Product-ID": "Story_Test_Consumer_ID",
                 },
                 "expected_status": http.HTTPStatus.BAD_REQUEST,
                 "expected_body": {
@@ -130,7 +130,7 @@ def test_check_for_missing_person(eligibility_client):
             {
                 "scenario": "missing nhs number in path and no header - added for ELI-584",
                 "nhs_number": None,
-                "request_headers": {"nhsd-application-id": "Story_Test_Consumer_ID"},
+                "request_headers": {"NHSE-Product-ID": "Story_Test_Consumer_ID"},
                 "expected_status": http.HTTPStatus.BAD_REQUEST,
                 "expected_body": {
                     "id": "<ignored>",
@@ -162,7 +162,7 @@ def test_check_for_missing_person(eligibility_client):
             "nhs_number": "9934567890",
             "request_headers": {
                 "nhs-login-nhs-number": "99345678900",
-                "nhsd-application-id": "Story_Test_Consumer_ID",
+                "NHSE-Product-ID": "Story_Test_Consumer_ID",
             },
             "expected_status": http.HTTPStatus.FORBIDDEN,
             "expected_body": {
@@ -190,7 +190,7 @@ def test_check_for_missing_person(eligibility_client):
         {
             "scenario": "missing header - NHS number required",
             "nhs_number": "1234567890",
-            "request_headers": {"nhsd-application-id": "Story_Test_Consumer_ID"},
+            "request_headers": {"NHSE-Product-ID": "Story_Test_Consumer_ID"},
             "expected_status": http.HTTPStatus.NOT_FOUND,
             "expected_body": {
                 "resourceType": "OperationOutcome",
@@ -251,7 +251,7 @@ def test_nhs_login_header_handling(eligibility_client, test_case):
             "nhs_number": "9990032010",
             "request_headers": {
                 "nhs-login-nhs-number": "9990032010",
-                "nhsd-application-id": "Story_Test_Consumer_ID",
+                "NHSE-Product-ID": "Story_Test_Consumer_ID",
             },
             "query_params": {"conditions": "covid-rsv"},
             "expected_status": http.HTTPStatus.BAD_REQUEST,
@@ -284,7 +284,7 @@ def test_nhs_login_header_handling(eligibility_client, test_case):
             "nhs_number": "9990032010",
             "request_headers": {
                 "nhs-login-nhs-number": "9990032010",
-                "nhsd-application-id": "Story_Test_Consumer_ID",
+                "NHSE-Product-ID": "Story_Test_Consumer_ID",
             },
             "query_params": {"category": "VACCINATIONSS"},
             "expected_status": http.HTTPStatus.UNPROCESSABLE_ENTITY,
@@ -361,7 +361,7 @@ def test_no_config_error(eligibility_client):
         nhs_number="9990032010",
         headers={
             "nhs-login-nhs-number": "9990032010",
-            "nhsd-application-id": "Story_Test_Consumer_ID",
+            "NHSE-Product-ID": "Story_Test_Consumer_ID",
         },
         raise_on_error=False,
     )
