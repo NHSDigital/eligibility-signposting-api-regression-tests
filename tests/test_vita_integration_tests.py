@@ -1,4 +1,6 @@
+import csv
 import http
+from pathlib import Path
 
 import pytest
 
@@ -21,6 +23,7 @@ id_list = [
     for filename, scenario in param_list
 ]
 
+NHS_CSV_PATH = Path("nhs_numbers.csv")
 
 @pytest.mark.vitaintegration
 @pytest.mark.parametrize(("filename", "scenario"), param_list, ids=id_list)
@@ -34,6 +37,8 @@ def test_run_vita_integration_test_cases(
         query_params,
         expected_response_code,
     ) = get_scenario_params(scenario, config_path)
+
+    write_nhs_number_to_csv(nhs_number, filename)
 
     actual_response = eligibility_client.make_request(
         nhs_number=nhs_number,
@@ -52,3 +57,16 @@ def test_run_vita_integration_test_cases(
         f"Expected: {expected_response}\n"
         f"Actual:   {actual_response}\n"
     )
+
+
+def write_nhs_number_to_csv(nhs_number: str, filename: str):
+    file_exists = NHS_CSV_PATH.exists()
+
+    with NHS_CSV_PATH.open(mode="a", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+
+        # Write header once
+        if not file_exists:
+            writer.writerow(["filename", "nhs_number"])
+
+        writer.writerow([filename, nhs_number])
