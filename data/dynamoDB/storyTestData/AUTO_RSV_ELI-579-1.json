@@ -2,7 +2,7 @@
     "scenario_name": "ELI-579 - Add days to LAST_SUCCESSFUL_DATE (config driven mapping to NEXT_BOOKING_AVAILABLE) - Formatted  - Missing Target",
     "request_headers": {
         "nhs-login-nhs-number": "9900057901",
-        "nhsd-application-id": "Story_Test_Consumer_ID",
+        "NHSE-Product-ID": "Story_Test_Consumer_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "query_params": {

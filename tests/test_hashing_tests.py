@@ -71,7 +71,7 @@ def test_secret_hashing_nhs_number(eligibility_client, test_case, hashing_secret
     nhs_number = test_case["nhs_number"]
     request_headers = {
         "nhs-login-nhs-number": f"{nhs_number}",
-        "nhsd-application-id": "Story_Test_Consumer_ID",
+        "NHSE-Product-ID": "Story_Test_Consumer_ID",
     }
     data = {"NHS_NUMBER": f"{nhs_number}", "ATTRIBUTE_TYPE": "PERSON"}
 
