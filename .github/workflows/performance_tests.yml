@@ -1,0 +1,148 @@
+name: Regression Tests
+
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: string
+        required: false
+        default: "dev"
+      tags:
+        description: 'Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :'
+        required: false
+        type: string
+        default: "@regression"
+      log_level:
+        description: 'Log level to output to console'
+        type: string
+        required: false
+        default: "INFO"
+      id:
+        description: "Run identifier (Don't change - Only used for CI)"
+        type: string
+        required: false
+        default: "Run during opened pull request"
+      github_tag:
+        description: 'The github tag to run the test pack from'
+        type: string
+        required: true
+
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :'
+        required: false
+        type: string
+        default: "@regression"
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+        default: "dev"
+      log_level:
+        description: 'Log level to output to console'
+        type: choice
+        options: ["INFO", "DEBUG"]
+        required: false
+        default: "INFO"
+      id:
+        description: "Run identifier (Don't change - Only used for CI)"
+        required: true
+        default: "Manually Triggered Run"
+      github_tag:
+        description: 'The github tag to run the test pack from'
+        required: true
+        default: "main"
+
+jobs:
+  regression_tests:
+    permissions:
+      id-token: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: show_input_parameters
+        env:
+          tags: ${{ inputs.tags }}
+          environment: ${{ inputs.environment }}
+          log_level: ${{ inputs.log_level }}
+          id: ${{ inputs.id }}
+          github_tag: ${{ inputs.github_tag }}
+        run: |
+          echo "tags: ${tags}"
+          echo "environment: ${environment}"
+          echo "log_level: ${log_level}"
+          echo "id: ${id}"
+          echo "github_tag: ${github_tag}"
+          # output to summary
+          # shellcheck disable=SC2129
+          echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "log_level: ${log_level}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
+          echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
+
+      - name: ${{github.event.inputs.id}}
+        env:
+          ID: ${{github.event.inputs.id}}
+          ENV: ${{ inputs.environment }}
+        run: |
+          echo run identifier "$ID"-"$ENV"
+          echo run identifier "$ID"-"$ENV"  >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          ref: ${{ inputs.github_tag }}
+
+      # using git commit sha for version of action to ensure we have stable version
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+
+      - name: Cache asdf
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.asdf
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+
+      - name: Install asdf dependencies in .tool-versions
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+        env:
+          PYTHON_CONFIGURE_OPTS: --enable-shared
+
+      - name: Cache Virtualenv
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: make install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
+      - name: Performance Tests
+        id: tests
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+          LOG_LEVEL: ${{ inputs.log_level }}
+          INPUT_TAG: ${{ inputs.tags }}
+        run: |
+          make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
