@@ -8,14 +8,7 @@
                 {
                     "actionCode": "DateOfLastVaccination",
                     "actionType": "DataValue",
-                    "description": "2025-07-24",
-                    "urlLabel": "",
-                    "urlLink": ""
-                },
-                {
-                    "actionCode": "DateOfNextEarliestVaccination",
-                    "actionType": "DataValue",
-                    "description": "2026-02-05",
+                    "description": "<<NBSDATE_DAY_-197>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }

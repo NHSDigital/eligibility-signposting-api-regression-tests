@@ -1,27 +1,23 @@
 {
-    "scenario_name": "RSV - NBS Integration - NA01 - NotActionable - You should have the RSV vaccine - Future booking (NBS)",
+    "scenario_name": "RSV - NBS Integration - NA04 - NotActionable - Under 75 and Vaccinated within last 28 weeks",
     "request_headers": {
         "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April 2026_v0.4.json"
+        "NBS_RSV_Config_April 2026_v0.6.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9000059210",
+            "NHS_NUMBER": "9100592131",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
-                {
-                    "COHORT_LABEL": "covid_16+_immunosuppression",
-                    "DATE_JOINED": "20231020"
-                }
             ]
         },
         {
-            "NHS_NUMBER": "9000059210",
+            "NHS_NUMBER": "9100592131",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
+            "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>",
             "GENDER": "0",
             "POSTCODE": "SG8 6EG",
             "POSTCODE_SECTOR": "SG86",
@@ -38,10 +34,9 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9000059210",
+            "NHS_NUMBER": "9100592131",
             "ATTRIBUTE_TYPE": "RSV",
-            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>",
-            "BOOKED_APPOINTMENT_PROVIDER": "MYA"
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-196>>"
         }
     ]
 }

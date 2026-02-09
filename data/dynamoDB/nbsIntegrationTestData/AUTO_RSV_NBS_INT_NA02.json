@@ -1,21 +1,21 @@
 {
-    "scenario_name": "RSV - NBS Integration - NA03 - NotActionable - Already been vaccinated within the current campaign",
+    "scenario_name": "RSV - NBS Integration - NA02 - NotActionable - You should have the RSV vaccine - Future booking (Local)",
     "request_headers": {
-         "NHSE-Product-ID": "P.XWA-VFF",
+        "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April 2026_v0.4.json"
+        "NBS_RSV_Config_April 2026_v0.6.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9000059212",
+            "NHS_NUMBER": "9900059211",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
             ]
         },
         {
-            "NHS_NUMBER": "9000059212",
+            "NHS_NUMBER": "9900059211",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
@@ -34,9 +34,10 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9000059212",
+            "NHS_NUMBER": "9900059211",
             "ATTRIBUTE_TYPE": "RSV",
-            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-50>>"
+            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_11>>",
+            "BOOKED_APPOINTMENT_PROVIDER": "ACC"
         }
     ]
 }

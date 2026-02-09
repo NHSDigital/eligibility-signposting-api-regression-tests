@@ -23,6 +23,10 @@
             "Description": "RSV Ongoing for NBS"
         },
         {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_RSV",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
             "CampaignConfigID": "NBS_Campaign_Config_ID_COVID",
             "Description": "COVID Ongoing for NBS"
         },

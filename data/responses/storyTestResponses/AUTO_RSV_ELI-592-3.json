@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-06T15:19:24.951290+00:00"
+        "lastUpdated": "2026-02-06T15:20:54.428268+00:00"
     },
     "processedSuggestions": [
         {
@@ -8,14 +8,7 @@
                 {
                     "actionCode": "DateOfLastVaccination",
                     "actionType": "DataValue",
-                    "description": "2025-07-25",
-                    "urlLabel": "",
-                    "urlLink": ""
-                },
-                {
-                    "actionCode": "DateOfNextEarliestVaccination",
-                    "actionType": "DataValue",
-                    "description": "2026-02-06",
+                    "description": "<<NBSDATE_DAY_-196>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
@@ -26,12 +19,12 @@
             "statusText": "You should have the RSV vaccine",
             "suitabilityRules": [
                 {
-                    "ruleCode": "Under75VaccinatedInPast28Weeks",
-                    "ruleText": "Under 75 years old and vaccinated within the past 28 weeks",
+                    "ruleCode": "AlreadyVaccinated",
+                    "ruleText": "AlreadyVaccinated",
                     "ruleType": "S"
                 }
             ]
         }
     ],
-    "responseId": "121a2e7a-b453-4bd2-9869-13764d8c3787"
+    "responseId": "1661c3a7-e5e6-4a64-879a-864013c1a9aa"
 }

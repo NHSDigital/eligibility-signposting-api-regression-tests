@@ -1,27 +1,23 @@
 {
-    "scenario_name": "RSV - NBS Integration - NA04 - NotActionable - 75 and Vaccinated outside last 28 weeks",
+    "scenario_name": "RSV - NBS Config - ELI-592 - NotActionable - Over 75 and Vaccinated within last 28 weeks",
     "request_headers": {
-        "NHSE-Product-ID": "P.XWA-VFF",
-        "nhsd-End-User-Organisation-ods": "elid_automation"
+        "nhsd-End-User-Organisation-ods": "elid_automation",
+        "NHSE-Product-ID": "Story_Test_Consumer_ID"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April 2026_v0.4.json"
+        "AUTO_RSV_ELI_592.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9100592134",
+            "NHS_NUMBER": "9100005921",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
-                {
-                    "COHORT_LABEL": "care_home_residents_older_adults",
-                    "DATE_JOINED": "20231020"
-                }
             ]
         },
         {
-            "NHS_NUMBER": "9100592134",
+            "NHS_NUMBER": "9100005921",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>",
+            "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
             "POSTCODE": "SG8 6EG",
             "POSTCODE_SECTOR": "SG86",
@@ -38,7 +34,7 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9100592134",
+            "NHS_NUMBER": "9100005921",
             "ATTRIBUTE_TYPE": "RSV",
             "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-196>>"
         }
