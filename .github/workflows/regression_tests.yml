@@ -138,11 +138,11 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
 
-      - name: Regression Tests
+      - name: Performance Tests
         id: tests
         env:
           ENVIRONMENT: ${{ inputs.environment }}
           LOG_LEVEL: ${{ inputs.log_level }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
-          make run-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
+          make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
