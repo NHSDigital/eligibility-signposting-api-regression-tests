@@ -19,6 +19,10 @@
     ],
     "P.XWA-VFF": [
         {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d1",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
             "CampaignConfigID": "NBS_Campaign_Config_ID_RSV",
             "Description": "RSV Ongoing for NBS"
         },

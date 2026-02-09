@@ -1,21 +1,23 @@
 {
-    "scenario_name": "COVID - NBS Integration - NA02 - NotActionable - You should have the COVID vaccine - Future booking (Local)",
+    "scenario_name": "RSV - NBS Integration - NA07 - No current campaign",
     "request_headers": {
         "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
+    "query_params": {
+        "conditions": "covids"
+    },
     "config_filenames": [
-        "NBS_COVID_Config_Spring2026_v0.2WIP.json"
+        "NBS_RSV_Config_April 2026_v0.6.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9900059311",
+            "NHS_NUMBER": "9900059216",
             "ATTRIBUTE_TYPE": "COHORTS",
-            "COHORT_MEMBERSHIPS": [
-            ]
+            "COHORT_MEMBERSHIPS": []
         },
         {
-            "NHS_NUMBER": "9900059311",
+            "NHS_NUMBER": "9900059216",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
@@ -29,15 +31,14 @@
             "PCN": "U75549",
             "ICB": "QUE",
             "COMMISSIONING_REGION": "Y61",
-            "13Q_FLAG": "N",
+            "13Q_FLAG": "Y",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9900059311",
-            "ATTRIBUTE_TYPE": "COVID",
-            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_11>>",
-            "BOOKED_APPOINTMENT_PROVIDER": "ACC"
+            "NHS_NUMBER": "9900059216",
+            "ATTRIBUTE_TYPE": "RSV",
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-100>>"
         }
     ]
 }
