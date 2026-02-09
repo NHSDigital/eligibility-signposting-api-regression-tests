@@ -33,8 +33,6 @@ def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
 @pytest.fixture(scope="function")
 def test_data(get_scenario_params):
     temp_csv_path = Path("nhs_numbers.csv")
-    if temp_csv_path.exists():
-        temp_csv_path.unlink()
     for filename, scenario in param_list:
         (
             nhs_number,

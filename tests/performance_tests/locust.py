@@ -14,7 +14,7 @@ def _(parser):
     parser.add_argument("--env", choices=["dev", "test", "pre-prod"], default="dev", help="Environment")
 
 with open("nhs_numbers.csv", newline='') as csvFile:
-    reader = csv.reader(csvFile)
+    reader = csv.DictReader(csvFile)
     csvData = list(reader)
 
 #Class for API execution
@@ -34,7 +34,7 @@ class GetPatientId(HttpUser):
 
         # Gets a new random NHS Number
         csvRow = random.choice(csvData)
-        PatientId = csvRow[0][0]
+        PatientId = csvRow["NhsNumber"]
 
         # Gets this value from the CLI options (if required, set to pre-prod by default). This is required to change the certs for each environment.
         env = self.environment.parsed_options.env
@@ -49,7 +49,7 @@ class GetPatientId(HttpUser):
         with self.client.get(
             name="patient-check/{PatientId}",
             url=f"patient-check/{PatientId}",
-            headers={"Accept" : "application/json", "nhs-login-nhs-number": f"{PatientId}"},
+            headers={"Accept" : "application/json", "nhs-login-nhs-number": f"{PatientId}", "NHSE-Product-ID": "P.WTJ-FJT"},
             cert=(client_cert_path, private_key_path),
             verify=False,
             catch_response=True
