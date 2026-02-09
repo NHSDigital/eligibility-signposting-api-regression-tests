@@ -252,14 +252,14 @@
                     {
                         "Type": "X",
                         "Name": "Under 75 and vaccinated more than 28 weeks ago",
-                        "Description": "Under 75 and vaccinated in the past 28 weeks",
+                        "Description": "Under 75 and vaccinated more than 28 weeks ago",
                         "Priority": 2000,
                         "AttributeLevel": "TARGET",
                         "AttributeTarget": "RSV",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
                         "Operator": "D<",
                         "Comparator": "-196",
-                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE"
+                        "CommsRouting": "LAST_VACCINATION_DATE"
                     },
                     {
                         "Type": "Y",
@@ -358,7 +358,7 @@
                     },
                     "EARLIEST_NEXT_VACCINATION_DATE": {
                         "ExternalRoutingCode": "DateOfNextEarliestVaccination",
-                        "ActionDescription": "[[TARGET.RSV.NEXT_DOSE_DUE:ADD_DAYS(196):DATE(%Y-%m-%d)]]",
+                        "ActionDescription": "[[TARGET.RSV.NEXT_DOSE_DUE:ADD_DAYS(197):DATE(%Y-%m-%d)]]",
                         "ActionType": "DataValue",
                         "UrlLink": null,
                         "UrlLabel": ""
