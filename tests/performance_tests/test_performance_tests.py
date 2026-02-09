@@ -33,11 +33,7 @@ def temp_csv_path():
     temp_dir = Path("temp")
     file_path = temp_dir / "nhs_numbers.csv"
     temp_dir.mkdir(parents=True, exist_ok=True)
-
-    yield file_path
-
-    if temp_dir.exists():
-        shutil.rmtree(temp_dir)
+    return file_path
 
 @pytest.fixture(scope="function")
 def test_data(get_scenario_params, temp_csv_path):
@@ -58,10 +54,10 @@ def test_locust_run_and_csv_exists(test_data):
         "locust",
         "-f", "tests/performance_tests/locust.py",
         "--headless",
-        "-u", "1",
+        "-u", "10",
         "-r", "2",
-        "-t", "2s",
-        "--csv", "locust_results"
+        "-t", "20s",
+        "--csv", "temp/locust_results"
     ]
 
     result = subprocess.run(locust_command, capture_output=True, text=True)
