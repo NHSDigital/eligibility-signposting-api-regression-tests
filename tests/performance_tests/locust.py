@@ -11,27 +11,14 @@ from locust import HttpUser, task, constant_throughput, events
 # Function to get CLI arguments for environment, which will be used for the
 @events.init_command_line_parser.add_listener
 def _(parser):
-    parser.add_argument("--env", choices=["dev", "test", "pre"], default="pre", help="Environment")
+    parser.add_argument("--env", choices=["dev", "test", "pre-prod"], default="dev", help="Environment")
 
 with open("nhs_numbers.csv", newline='') as csvFile:
-    reader = csv.DictReader(csvFile)
+    reader = csv.reader(csvFile)
     csvData = list(reader)
 
 #Class for API execution
 class GetPatientId(HttpUser):
-
-    def generate_nhs_number(self):
-        start = 9900000000
-        end = 9999999999
-
-        # Find the first and last multiples of 11 in the range
-        startRange = start + (11 - start % 11) if start % 11 != 0 else start
-        lastRange = end - (end % 11)
-
-        # Generate a random multiple of 11 within the range
-        random_multiple = random.randrange(startRange, lastRange + 1, 11)
-
-        return random_multiple
 
     # Required to prevent warnings on certain exceptions with TLS
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -40,15 +27,14 @@ class GetPatientId(HttpUser):
     wait_time = constant_throughput(1)
 
     # This can be set in the CLI settings if required to be changed
-    host = ""
+    host = "https://dev.eligibility-signposting-api.nhs.uk/"
 
     @task
     def getPatientData(self):
 
         # Gets a new random NHS Number
         csvRow = random.choice(csvData)
-        PatientId = csvRow['NhsNumber']
-        # PatientId = GetPatientId.generate_nhs_number() # This may be obsolete..
+        PatientId = csvRow[0][0]
 
         # Gets this value from the CLI options (if required, set to pre-prod by default). This is required to change the certs for each environment.
         env = self.environment.parsed_options.env

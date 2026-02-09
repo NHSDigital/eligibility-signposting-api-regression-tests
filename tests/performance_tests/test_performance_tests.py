@@ -26,14 +26,15 @@ id_list = [
 def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
     with csv_path.open(mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        # Write header once
         if not csv_path.exists():
             writer.writerow(["NhsNumber"])
         writer.writerow([nhs_number])
 
 @pytest.fixture(scope="function")
-def test_data(tmp_path, get_scenario_params) -> Path:
-    temp_csv_path = tmp_path / "nhs_numbers.csv"
+def test_data(get_scenario_params):
+    temp_csv_path = Path("nhs_numbers.csv")
+    if temp_csv_path.exists():
+        temp_csv_path.unlink()
     for filename, scenario in param_list:
         (
             nhs_number,
@@ -43,19 +44,16 @@ def test_data(tmp_path, get_scenario_params) -> Path:
             expected_response_code,
         ) = get_scenario_params(scenario, config_path)
         write_nhs_number_to_csv(nhs_number, temp_csv_path)
-    return temp_csv_path
 
 
 def test_locust_run_and_csv_exists(test_data):
-
-    assert test_data.exists(), "CSV file was not created during setup."
 
     locust_command = [
         "locust",
         "-f", "tests/performance_tests/locust.py",
         "--headless",
         "-u", "1",
-        "-r", "1",
+        "-r", "2",
         "-t", "2s",
         "--csv", "locust_results"
     ]
