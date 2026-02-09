@@ -1,4 +1,5 @@
 import csv
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -26,9 +27,20 @@ def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
             writer.writerow(["NhsNumber"])
         writer.writerow([nhs_number])
 
+
 @pytest.fixture(scope="function")
-def test_data(get_scenario_params):
-    temp_csv_path = Path("nhs_numbers.csv")
+def temp_csv_path():
+    temp_dir = Path("temp")
+    file_path = temp_dir / "nhs_numbers.csv"
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    yield file_path
+
+    if temp_dir.exists():
+        shutil.rmtree(temp_dir)
+
+@pytest.fixture(scope="function")
+def test_data(get_scenario_params, temp_csv_path):
     for filename, scenario in param_list:
         (
             nhs_number,

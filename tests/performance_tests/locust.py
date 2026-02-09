@@ -13,7 +13,7 @@ from locust import HttpUser, task, constant_throughput, events
 def _(parser):
     parser.add_argument("--env", choices=["dev", "test", "pre-prod"], default="dev", help="Environment")
 
-with open("nhs_numbers.csv", newline='') as csvFile:
+with open("temp/nhs_numbers.csv", newline='') as csvFile:
     reader = csv.reader(csvFile)
     csvData = list(reader)
 
