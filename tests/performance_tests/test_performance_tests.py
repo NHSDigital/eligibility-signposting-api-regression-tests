@@ -1,0 +1,67 @@
+import csv
+import subprocess
+from pathlib import Path
+
+import pytest
+
+from tests import test_config
+from utils.data_helper import initialise_tests, load_all_expected_responses
+from utils.s3_config_manager import upload_consumer_mapping_file_to_s3, upload_configs_to_s3
+
+# Update the below with the configuration values specified in test_config.py
+all_data, dto = initialise_tests(test_config.VITA_INTEGRATION_TEST_DATA)
+all_expected_responses = load_all_expected_responses(
+    test_config.VITA_INTEGRATION_RESPONSES
+)
+config_path = test_config.VITA_INTEGRATION_CONFIGS
+
+upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
+
+param_list = list(all_data.items())
+id_list = [
+    f"{filename} - {scenario.get('scenario_name', 'No Scenario')}"
+    for filename, scenario in param_list
+]
+
+def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
+    with csv_path.open(mode="a", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        # Write header once
+        if not csv_path.exists():
+            writer.writerow(["NhsNumber"])
+        writer.writerow([nhs_number])
+
+@pytest.fixture(scope="function")
+def test_data(tmp_path, get_scenario_params) -> Path:
+    temp_csv_path = tmp_path / "nhs_numbers.csv"
+    for filename, scenario in param_list:
+        (
+            nhs_number,
+            config_filenames,
+            request_headers,
+            query_params,
+            expected_response_code,
+        ) = get_scenario_params(scenario, config_path)
+        write_nhs_number_to_csv(nhs_number, temp_csv_path)
+    return temp_csv_path
+
+
+def test_locust_run_and_csv_exists(test_data):
+
+    assert test_data.exists(), "CSV file was not created during setup."
+
+    locust_command = [
+        "locust",
+        "-f", "tests/performance_tests/locust.py",
+        "--headless",
+        "-u", "1",
+        "-r", "1",
+        "-t", "2s",
+        "--csv", "locust_results"
+    ]
+
+    result = subprocess.run(locust_command, capture_output=True, text=True)
+
+    assert result.returncode == 0, f"Locust failed: {result.stderr}"
+
+

@@ -54,7 +54,7 @@ class GetPatientId(HttpUser):
         env = self.environment.parsed_options.env
         out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), f"out/{env}"))
 
-        PROJECT_ROOT = Path(__file__).resolve().parents[1]  # adjust depth if needed
+        PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
 
         private_key_path = PROJECT_ROOT / "certs/api_private_key_cert.pem"
         client_cert_path = PROJECT_ROOT / "certs/api_client_cert.pem"
