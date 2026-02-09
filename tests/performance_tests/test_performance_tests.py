@@ -57,7 +57,8 @@ def test_locust_run_and_csv_exists(test_data):
         "-u", "10",
         "-r", "2",
         "-t", "20s",
-        "--csv", "temp/locust_results"
+        "--csv", "temp/locust_results",
+        "--html", "report.html"
     ]
 
     result = subprocess.run(locust_command, capture_output=True, text=True)
