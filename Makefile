@@ -80,10 +80,13 @@ run-tests: guard-env guard-log_level clear-db
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_error_scenario_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_nbs_integration_tests.py
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_upload_consumer_configs.py
 
 ifeq ($(filter $(env),test dev),$(env))
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_hashing_tests.py
+endif
+
+ifeq ($(filter $(env),preprod),$(env))
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_upload_consumer_configs.py
 endif
 
 run-vita-preprod-tests:
