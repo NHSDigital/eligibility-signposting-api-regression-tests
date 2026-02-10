@@ -34,7 +34,7 @@ install-asdf-plugins:
 	@asdf install
 
 install-node:
-	npm ci
+	npx npm@11.6.3 ci
 
 install-python:
 	poetry config virtualenvs.in-project true --local
