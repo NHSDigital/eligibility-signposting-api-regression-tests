@@ -1,0 +1,35 @@
+{
+    "meta": {
+        "lastUpdated": "2026-01-28T11:15:35.878284+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "VITA_NBS_Campaign_Config_ID_COVID",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the VITA_NBS_Campaign_Config_ID_COVID ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_578_covid_age_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_age"
+                },
+                {
+                    "cohortCode": "eli_578_covid_clinical_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_clinical"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the COVID vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "e281d4b7-ea22-4575-a4a5-34a6a3081591"
+}

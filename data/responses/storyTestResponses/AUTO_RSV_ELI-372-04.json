@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-12T09:50:24.986714+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "BookNBSInfoText",
+                    "actionType": "ButtonWithAuthLinkWithInfoText",
+                    "description": "### Book an appointment online at a pharmacy\n\nYou can book an appointment online at a pharmacy that offers the RSV vaccination. You need to be registered with a GP to do this.",
+                    "urlLabel": "Continue to booking",
+                    "urlLink": "https://www.nhswebsite-staging.nhs.uk/nbs/nhs-app/vita/rsv"
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "other_cohort_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "you are in other_cohort_group"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "800c9348-3c8b-40aa-bbd2-e2bba56b9085"
+}

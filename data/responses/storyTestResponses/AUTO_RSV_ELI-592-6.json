@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-06T15:20:54.428268+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DateOfLastVaccination",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_-197>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "AlreadyVaccinated",
+                    "ruleText": "AlreadyVaccinated",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "1661c3a7-e5e6-4a64-879a-864013c1a9aa"
+}

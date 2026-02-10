@@ -1,6 +1,6 @@
 {
   "CampaignConfig": {
-    "ID": "CC1234",
+    "ID": "Story_Campaign_Config_ID_COVID",
     "Version": 1,
     "Name": "ELI-320 - COVID Config",
     "Type": "V",

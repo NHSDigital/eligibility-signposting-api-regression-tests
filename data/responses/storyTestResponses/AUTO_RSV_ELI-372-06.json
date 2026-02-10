@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2025-11-12T11:13:29.066503+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DEFAULTX",
+                    "actionType": "NotActionableInfoText",
+                    "description": "This is the default Not Actionable Action",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "age_catchup",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "turned 80 after 1st September 2024"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Suppression 1 with CohortLabel = cohort_1,cohort_2",
+                    "ruleText": "Suppression 1 with CohortLabel = cohort_1,cohort_2 description",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "d0eb550b-51c2-451f-a796-f7c5f62303d1"
+}

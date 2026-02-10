@@ -1,0 +1,68 @@
+{
+    "CampaignConfig": {
+        "ID": "VITA_Campaign_Config_ID_RSV",
+        "Version": 1,
+        "Name": "ELI-578 - Campaign Mapping - MV - RSV",
+        "Type": "V",
+        "Target": "RSV",
+        "Manager": [
+            "person1@nhs.net"
+        ],
+        "Approver": [
+            "person1@nhs.net"
+        ],
+        "Reviewer": [
+            "person1@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "DefaultCommsRouting": "DEFAULT",
+        "StartDate": "<<DATE_DAY_-1>>",
+        "EndDate": "<<DATE_DAY_1>>",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "Iterations": [
+            {
+                "ID": ",<<RANDOM_GUID>>",
+                "DefaultCommsRouting": "DEFAULT",
+                "Version": 1,
+                "Name": "ELI-578 - Campaign Mapping - MV - RSV",
+                "IterationDate": "<<DATE_DAY_-1>>",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "DefaultNotEligibleRouting": "",
+                "DefaultNotActionableRouting": "",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "eli_578_covid_age",
+                        "CohortGroup": "eli_578_covid_age_group",
+                        "PositiveDescription": "You are currently in eli_578_covid_age",
+                        "NegativeDescription": "You are not currently in eli_578_covid_age",
+                        "Priority": 0
+                    },
+                    {
+                        "CohortLabel": "eli_578_covid_clinical",
+                        "CohortGroup": "eli_578_covid_clinical_group",
+                        "PositiveDescription": "You are currently in eli_578_covid_clinical",
+                        "NegativeDescription": "You are not currently in eli_578_covid_clinical",
+                        "Priority": 0
+                    }
+                ],
+                "IterationRules": [],
+                "ActionsMapper": {
+                    "DEFAULT": {
+                        "ExternalRoutingCode": "VITA_Campaign_Config_ID_RSV",
+                        "ActionDescription": "This is the VITA_Campaign_Config_ID_RSV ActionDescription",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "http://www.nhs.uk/book-rsv",
+                        "UrlLabel": "Manage your appointment"
+                    }
+                }
+            }
+        ]
+    }
+}

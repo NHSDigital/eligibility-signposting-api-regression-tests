@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-05T14:47:39.653497+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "are not aged 75 or over"
+                },
+                {
+                    "cohortCode": "rsv_care_home_residents",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "do not live in a care home for older adults"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "7f228604-bf87-49c2-abc1-706bbf5075fd"
+}

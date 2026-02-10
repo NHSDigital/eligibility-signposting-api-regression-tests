@@ -1,0 +1,59 @@
+{
+    "scenario_name": "RSV - Vita Integration - Not Actionable - Too Young for a Vaccs",
+    "comment": "requested as an additional test.  ref data had a vacc on this user so creating the data as required here",
+    "request_headers": {
+        "nhs-login-nhs-number": "9461135831",
+        "NHSE-Product-ID": "P.WTJ-FJT",
+        "nhsd-End-User-Organisation-ods": "elid_automation"
+    },
+    "config_filenames": [
+        "RSV_Config_v1.1.json"
+    ],
+    "data": [
+        {
+            "NHS_NUMBER": "9461135831",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "flu_4-16_autumnwinter2023",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "mmr_6to11_2023",
+                    "DATE_JOINED": "20240109"
+                },
+                {
+                    "COHORT_LABEL": "flu_4to16_autumnwinter2025",
+                    "DATE_JOINED": "20250819"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9461135831",
+            "ATTRIBUTE_TYPE": "PERSON",
+            "13Q_FLAG": "N",
+            "CARE_HOME_FLAG": "N",
+            "COMMISSIONING_REGION": null,
+            "DATE_OF_BIRTH": "20111211",
+            "DE_FLAG": "N",
+            "GENDER": "1",
+            "GP_PRACTICE_CODE": "B83013",
+            "ICB": null,
+            "ICB_OF_RESIDENCE": "QWO",
+            "LOCAL_AUTHORITY": "E08000036",
+            "LSOA": "E01011873",
+            "MSOA": "E02002443",
+            "PCN": null,
+            "POSTCODE": "WF3 4EJ",
+            "POSTCODE_OUTCODE": "WF3",
+            "POSTCODE_SECTOR": "WF34"
+        },
+        {
+            "NHS_NUMBER": "9461135831",
+            "ATTRIBUTE_TYPE": "RSV",
+            "BOOKED_APPOINTMENT_DATE": null,
+            "BOOKED_APPOINTMENT_PROVIDER": null,
+            "LAST_SUCCESSFUL_DATE": null
+        }
+    ]
+}

@@ -56,7 +56,8 @@ class EligibilityApiClient:
 
     def make_request(
         self,
-        nhs_number: str,
+        # nhs_number: str,
+        nhs_number: str | None,
         method: str = "GET",
         payload: dict[str, Any] | list | None = None,
         headers: dict[str, str] | None = None,
@@ -65,7 +66,14 @@ class EligibilityApiClient:
     ) -> dict[str, Any]:
         strict_ssl = options.get("strict_ssl", False)
         raise_on_error = options.get("raise_on_error", True)
-        url = f"{self.api_url.rstrip('/')}/{nhs_number}"
+
+        url_old = f"{self.api_url.rstrip('/')}/{nhs_number}"
+        print(url_old)
+        # new code
+        base = self.api_url.rstrip("/")
+        nhs_segment = nhs_number.strip() if isinstance(nhs_number, str) else ""
+        url = f"{base}/{nhs_segment}" if nhs_segment else f"{base}/"
+
         cert = (
             str(self.cert_paths["client_cert"]),
             str(self.cert_paths["private_key"]),
