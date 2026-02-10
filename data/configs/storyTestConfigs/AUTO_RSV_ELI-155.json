@@ -1,6 +1,6 @@
 {
     "CampaignConfig": {
-        "ID": "<<RANDOM_GUID>>",
+        "ID": "Story_Campaign_Config_ID",
         "Version": 1,
         "Name": "ELI-155 - cohort_label is not supported in R rules",
         "Type": "V",

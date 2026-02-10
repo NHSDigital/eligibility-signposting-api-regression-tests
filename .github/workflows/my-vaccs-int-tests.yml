@@ -1,0 +1,88 @@
+name: Repopulate My Vaccs Preprod Data
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      ELID_PREPROD_AWS_ACCOUNT_ID:
+        required: true
+
+jobs:
+  run-vita-int-tests:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-22.04
+    environment: preprod
+
+    steps:
+      - name: Verify caller repository
+        run: |
+          ALLOWED_REPOS=("NHSDigital/eligibility-signposting-api" "NHSDigital/vaccinations-app")
+          CALLER_REPO="${{ github.repository }}"
+
+          # If triggered by workflow_call, the calling repo is in github.repository
+          # If triggered manually, it's this repo itself which is allowed
+          if [[ "${{ github.event_name }}" == "workflow_call" ]]; then
+            CALLER_REPO="${{ github.event.workflow_run.repository.full_name || github.repository }}"
+          fi
+
+          ALLOWED=false
+          for repo in "${ALLOWED_REPOS[@]}"; do
+            if [[ "$CALLER_REPO" == "$repo" ]]; then
+              ALLOWED=true
+              break
+            fi
+          done
+
+          if [[ "$ALLOWED" == "false" && "${{ github.event_name }}" == "workflow_call" ]]; then
+            echo "Error: Repository $CALLER_REPO is not allowed to trigger this workflow"
+            exit 1
+          fi
+
+          echo "Workflow triggered by allowed repository: $CALLER_REPO"
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          repository: NHSDigital/eligibility-signposting-api-regression-tests
+          ref: main
+
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+
+      - name: Cache asdf
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.asdf
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+
+      - name: Install asdf dependencies
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+        env:
+          PYTHON_CONFIGURE_OPTS: --enable-shared
+
+      - name: Cache Virtualenv
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: make install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ELID_PREPROD_AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
+      - name: Run Vita Integration Tests
+        run: make run-vita-preprod-tests

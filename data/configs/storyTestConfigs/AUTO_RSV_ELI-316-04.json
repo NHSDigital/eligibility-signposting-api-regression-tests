@@ -1,6 +1,6 @@
 {
     "CampaignConfig": {
-        "ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d0",
+        "ID": "Story_Campaign_Config_ID",
         "Version": 1,
         "Name": "EliD RSV example config",
         "Type": "V",
@@ -81,7 +81,7 @@
                     },
                     {
                         "Type": "S",
-                         "Name": "Other Setting 3",
+                        "Name": "Other Setting 3",
                         "Code": "OtherSetting3",
                         "Description": "This is the Other Setting 3 description",
                         "Priority": 530,
@@ -183,7 +183,7 @@
                         "RuleCode": "Mapper:RuleCode:First_Part_Of_And_Rule",
                         "RuleText": "Mapper:RuleText:This is the Description for the first part of the and rule"
                     },
-                     "OTHER_SETTINGS_2": {
+                    "OTHER_SETTINGS_2": {
                         "RuleNames": [
                             "Other Setting 10",
                             "Other Setting 11",

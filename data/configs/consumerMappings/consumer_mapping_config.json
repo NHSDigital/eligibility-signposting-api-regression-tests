@@ -1,0 +1,104 @@
+{
+    "P.WTJ-FJT": [
+        {
+            "CampaignConfigID": "VITA_Campaign_Config_ID_RSV",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_Campaign_Config_ID_COVID",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_Campaign_Config_ID_FLU",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "VITA_NBS_Campaign_Config_ID_COVID",
+            "Description": "Shared Config for My Vaccines and NBS"
+        }
+    ],
+    "P.XWA-VFF": [
+        {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d1",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_RSV",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_COVID",
+            "Description": "COVID Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_COVID_ACTIVE",
+            "Description": "COVID Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "NBS_Campaign_Config_ID_FLU",
+            "Description": "FLU Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "VITA_NBS_Campaign_Config_ID_COVID",
+            "Description": "Shared Config for My Vaccines and NBS"
+        }
+    ],
+    "Story_Test_Consumer_ID": [
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID",
+            "Description": "General Config ID"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_RSV",
+            "Description": "General Config ID for RSV"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_COVID",
+            "Description": "General Config ID for COVID"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_FLU",
+            "Description": "General Config ID for FLU"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_MMR",
+            "Description": "General Config ID for MMR"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_RSV_Screening",
+            "Description": "General Config ID for RSV Screening"
+        },
+        {
+            "CampaignConfigID": "Story_Campaign_Config_ID_FLU_Screening",
+            "Description": "General Config ID for FLU Screening"
+        },
+        {
+            "CampaignConfigID": "ELI-600-1",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-2",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-3",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-4",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-4-1",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-5",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        },
+        {
+            "CampaignConfigID": "ELI-600-5-1",
+            "Description": "Specific Configs for testing muliple configs for single consumer"
+        }
+    ]
+}
