@@ -35,9 +35,6 @@ jobs:
         env:
           PYTHON_CONFIGURE_OPTS: --enable-shared
 
-      - name: Pin npm version
-        run: npm install -g npm@11.6.3
-
       - name: Cache Virtualenv
         uses: actions/cache@v4
         id: cache-venv
