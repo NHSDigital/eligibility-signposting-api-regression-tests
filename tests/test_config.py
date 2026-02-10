@@ -28,3 +28,10 @@ NBS_INTEGRATION_CONFIGS: str = "data/configs/nbsIntegrationTestConfigs"
 
 # Consumer Mapping file - this is a single one for all environments but this may change
 CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.json"
+
+# Location of Integration Test Configs
+INT_TEST_CONFIG_PATHS: list[str] = [
+    "data/configs/nbsIntegrationTestConfigs/NBS_RSV_Config_April 2026_v0.6.json",
+    "data/configs/nbsIntegrationTestConfigs/NBS_COVID_Config_Spring2026_v0.2WIP.json",
+    "data/configs/vitaIntegrationTestConfigs/RSV_Config_v1.1.json",
+]
