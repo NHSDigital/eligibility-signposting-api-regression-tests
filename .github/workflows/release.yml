@@ -30,14 +30,14 @@ jobs:
       spec_version: ${{steps.output_version_tag.outputs.SPEC_VERSION}}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.BRANCH_NAME }}
           fetch-depth: 0
 
       # using git commit sha for version of action to ensure we have stable version
       - name: Install asdf
-        uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47
         with:
           asdf_version: 0.18.0
 
@@ -49,7 +49,7 @@ jobs:
           key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
 
       - name: Install asdf dependencies in .tool-versions
-        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47
         with:
           asdf_version: 0.18.0
         env:
