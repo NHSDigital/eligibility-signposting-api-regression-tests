@@ -146,3 +146,12 @@ jobs:
           INPUT_TAG: ${{ inputs.tags }}
         run: |
           make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
+
+      - name: Upload Performance Report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-report
+          path: temp/report.html
+
+
