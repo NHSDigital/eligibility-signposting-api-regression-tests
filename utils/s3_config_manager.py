@@ -154,9 +154,17 @@ def upload_config_to_s3(local_path: Path) -> None:
     s3_connection.upload_if_missing_or_changed(local_path)
 
 
-def upload_configs_to_s3(config_filenames: list[str], config_path: str | Path) -> None:
-    config_path = Path(config_path)
-    local_paths = [config_path / f for f in config_filenames]
+def upload_configs_to_s3(
+    config_files: list[str], config_path: str | Path | None = None
+) -> None:
+    if config_path:
+        base = Path(config_path)
+        # Treat entries as filenames relative to the base path
+        local_paths = [base / f for f in config_files]
+    else:
+        # Treat entries as fully-qualified paths
+        local_paths = [Path(p) for p in config_files]
+
     s3_connection = S3ConfigManager(os.getenv("S3_CONFIG_BUCKET_NAME"))
     s3_connection.upload_all_configs(local_paths)
 
