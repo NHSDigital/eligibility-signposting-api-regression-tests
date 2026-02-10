@@ -19,6 +19,7 @@ id_list = [
     for filename, scenario in param_list
 ]
 
+
 def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
     with csv_path.open(mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
@@ -33,6 +34,7 @@ def temp_csv_path():
     file_path = temp_dir / "nhs_numbers.csv"
     temp_dir.mkdir(parents=True, exist_ok=True)
     return file_path
+
 
 @pytest.fixture(scope="function")
 def test_data(get_scenario_params, temp_csv_path):
@@ -51,17 +53,21 @@ def test_locust_run_and_csv_exists(test_data):
 
     locust_command = [
         "locust",
-        "-f", "tests/performance_tests/locust.py",
+        "-f",
+        "tests/performance_tests/locust.py",
         "--headless",
-        "-u", "10",
-        "-r", "2",
-        "-t", "20s",
-        "--csv", "temp/locust_results",
-        "--html", "temp/report.html"
+        "-u",
+        "10",
+        "-r",
+        "2",
+        "-t",
+        "20s",
+        "--csv",
+        "temp/locust_results",
+        "--html",
+        "temp/report.html",
     ]
 
     result = subprocess.run(locust_command, capture_output=True, text=True)
 
     assert result.returncode == 0, f"Locust failed: {result.stderr}"
-
-

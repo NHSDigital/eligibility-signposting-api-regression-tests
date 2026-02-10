@@ -3,6 +3,7 @@ import random
 from pathlib import Path
 
 import urllib3
+
 # Use pip and venv to get access to the Locust library
 from locust import HttpUser, task, constant_throughput, events
 
@@ -12,10 +13,12 @@ from utils.eligibility_api_client import EligibilityApiClient
 # Function to get CLI arguments for environment, which will be used for the
 @events.init_command_line_parser.add_listener
 def _(parser):
-    parser.add_argument("--env", choices=["dev", "test", "pre-prod"], default="dev", help="Environment")
+    parser.add_argument(
+        "--env", choices=["dev", "test", "pre-prod"], default="dev", help="Environment"
+    )
 
 
-with open("temp/nhs_numbers.csv", newline='') as csvFile:
+with open("temp/nhs_numbers.csv", newline="") as csvFile:
     reader = csv.reader(csvFile)
     csvData = list(reader)
 
@@ -40,14 +43,17 @@ class GetPatientId(HttpUser):
 
         # The request is getting sent is here
         with self.client.make_request(
-                patient_id,
-                headers={"Accept": "application/json",
-                         "nhs-login-nhs-number": f"{patient_id}",
-                         "NHSE-Product-ID": "P.WTJ-FJT"},
-                raise_on_error=False,
+            patient_id,
+            headers={
+                "Accept": "application/json",
+                "nhs-login-nhs-number": f"{patient_id}",
+                "NHSE-Product-ID": "P.WTJ-FJT",
+            },
+            raise_on_error=False,
         ) as response:
             # This is checking asserting the response has the word cohortText, which shows on a valid request
-            if 'processedSuggestions' not in response.text:
+            if "processedSuggestions" not in response.text:
                 response.failure(
                     f"Response didn't contain processedSuggestions (expected), nhsNumber was {patient_id}. "
-                    f"Response was {response.text}")
+                    f"Response was {response.text}"
+                )
