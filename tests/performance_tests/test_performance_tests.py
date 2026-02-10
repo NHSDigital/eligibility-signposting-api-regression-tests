@@ -36,7 +36,7 @@ def temp_csv_path():
     return file_path
 
 @pytest.fixture(scope="function")
-def test_data(get_scenario_params, eligibility_client, temp_csv_path):
+def test_data(get_scenario_params, temp_csv_path):
     for filename, scenario in param_list:
         (
             nhs_number,

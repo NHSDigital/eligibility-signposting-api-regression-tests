@@ -8,6 +8,9 @@ import csv
 # Use pip and venv to get access to the Locust library
 from locust import HttpUser, task, constant_throughput, events
 
+from utils.eligibility_api_client import EligibilityApiClient
+
+
 # Function to get CLI arguments for environment, which will be used for the
 @events.init_command_line_parser.add_listener
 def _(parser):
@@ -27,34 +30,23 @@ class GetPatientId(HttpUser):
     wait_time = constant_throughput(1)
 
     # This can be set in the CLI settings if required to be changed
-    host = "https://dev.eligibility-signposting-api.nhs.uk/"
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
+    client = EligibilityApiClient(cert_dir= f"{PROJECT_ROOT}/certs")
 
     @task
-    def getPatientData(self):
+    def get_patient_data(self):
 
-        # Gets a new random NHS Number
-        csvRow = random.choice(csvData)
-        PatientId = csvRow[0]
-
-        # Gets this value from the CLI options (if required, set to pre-prod by default). This is required to change the certs for each environment.
-        env = self.environment.parsed_options.env
-        out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), f"out/{env}"))
-
-        PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
-
-        private_key_path = PROJECT_ROOT / "certs/api_private_key_cert.pem"
-        client_cert_path = PROJECT_ROOT / "certs/api_client_cert.pem"
+        # Gets a new random NHS Number from provided CSV
+        csv_row = random.choice(csvData)
+        patient_id = csv_row[0]
 
         # The request is getting sent is here
-        with self.client.get(
-            name="patient-check/{PatientId}",
-            url=f"patient-check/{PatientId}",
-            headers={"Accept" : "application/json", "nhs-login-nhs-number": f"{PatientId}", "NHSE-Product-ID": "P.WTJ-FJT"},
-            cert=(client_cert_path, private_key_path),
-            verify=False,
-            catch_response=True
+        with self.client.make_request(
+            patient_id,
+            headers={"Accept" : "application/json", "nhs-login-nhs-number": f"{patient_id}", "NHSE-Product-ID": "P.WTJ-FJT"},
+            raise_on_error=False,
         ) as response:
             # This is checking asserting the response has the word cohortText, which shows on a valid request
             if 'processedSuggestions' not in response.text:
-                response.failure(f"Response didn't contain processedSuggestions (expected), nhsNumber was {PatientId}. Response was {response.text}")
+                response.failure(f"Response didn't contain processedSuggestions (expected), nhsNumber was {patient_id}. Response was {response.text}")
 
