@@ -138,20 +138,11 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
 
-      - name: Performance Tests
+      - name: Regression Tests
         id: tests
         env:
           ENVIRONMENT: ${{ inputs.environment }}
           LOG_LEVEL: ${{ inputs.log_level }}
           INPUT_TAG: ${{ inputs.tags }}
         run: |
-          make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
-
-      - name: Upload Performance Report
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: performance-report
-          path: temp/report.html
-
-
+          make run-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
