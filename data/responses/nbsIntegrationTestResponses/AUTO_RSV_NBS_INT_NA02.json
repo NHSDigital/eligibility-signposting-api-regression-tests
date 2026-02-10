@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-05T13:42:51.070222+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "FutureBookingDate",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_11>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "Future Booked Local Appointment",
+                    "ruleText": "Local future booking",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "500da317-40dc-4885-bf6d-60aeed278afb"
+}

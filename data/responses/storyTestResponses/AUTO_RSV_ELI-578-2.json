@@ -1,0 +1,62 @@
+{
+    "meta": {
+        "lastUpdated": "2026-01-28T10:22:05.545002+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "NBS_Campaign_Config_ID_COVID",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the NBS_Campaign_Config_ID_COVID ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_578_covid_age_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_age"
+                },
+                {
+                    "cohortCode": "eli_578_covid_clinical_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_clinical"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the COVID vaccine",
+            "suitabilityRules": []
+        },
+        {
+            "actions": [
+                {
+                    "actionCode": "NBS_Campaign_Config_ID_RSV",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the NBS_Campaign_Config_ID_RSV ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_578_covid_age_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_age"
+                },
+                {
+                    "cohortCode": "eli_578_covid_clinical_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_clinical"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "2c97069f-318b-49d0-b89b-e30493c26629"
+}

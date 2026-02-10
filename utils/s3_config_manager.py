@@ -150,17 +150,28 @@ class S3ConfigManager:
 
 
 def upload_config_to_s3(local_path: Path) -> None:
-    s3_connection = S3ConfigManager(os.getenv("S3_BUCKET_NAME"))
+    s3_connection = S3ConfigManager(os.getenv("S3_CONFIG_BUCKET_NAME"))
     s3_connection.upload_if_missing_or_changed(local_path)
 
 
 def upload_configs_to_s3(config_filenames: list[str], config_path: str | Path) -> None:
     config_path = Path(config_path)
     local_paths = [config_path / f for f in config_filenames]
-    s3_connection = S3ConfigManager(os.getenv("S3_BUCKET_NAME"))
+    s3_connection = S3ConfigManager(os.getenv("S3_CONFIG_BUCKET_NAME"))
     s3_connection.upload_all_configs(local_paths)
 
 
 def delete_all_configs_from_s3() -> None:
-    s3_connection = S3ConfigManager(os.getenv("S3_BUCKET_NAME"))
+    s3_connection = S3ConfigManager(os.getenv("S3_CONFIG_BUCKET_NAME"))
     s3_connection.delete_all()
+
+
+def upload_consumer_mapping_file_to_s3(local_path: str) -> None:
+    s3_bucket = os.getenv("S3_CONSUMER_MAPPING_BUCKET_NAME")
+    logger.info(
+        "Uploading consumer mapping file: %s to S3 bucket: %s",
+        local_path,
+        s3_bucket,
+    )
+    s3_connection = S3ConfigManager(s3_bucket)
+    s3_connection.upload_if_missing_or_changed(Path(local_path))
