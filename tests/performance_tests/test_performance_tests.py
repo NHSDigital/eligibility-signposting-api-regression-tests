@@ -1,13 +1,12 @@
 import csv
-import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
 
 from tests import test_config
-from utils.data_helper import initialise_tests, load_all_expected_responses
-from utils.s3_config_manager import upload_consumer_mapping_file_to_s3, upload_configs_to_s3
+from utils.data_helper import initialise_tests
+from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 
 # Update the below with the configuration values specified in test_config.py
 all_data, dto = initialise_tests(test_config.PERFORMANCE_TEST_DATA)

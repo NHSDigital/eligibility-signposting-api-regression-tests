@@ -1,10 +1,8 @@
-import os
+import csv
+import random
 from pathlib import Path
 
 import urllib3
-import random
-import csv
-
 # Use pip and venv to get access to the Locust library
 from locust import HttpUser, task, constant_throughput, events
 
