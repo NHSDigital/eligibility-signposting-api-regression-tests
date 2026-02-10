@@ -1,17 +1,17 @@
 {
-    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( in CP area ) - age rolling - BookNBS",
+    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine - BookNBS Old Text",
     "request_headers": {
-        "nhs-login-nhs-number": "9686368973",
+        "nhs-login-nhs-number": "9000063201",
         "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v1.2.json"
+        "AUTO_RSV_ELI-632-1.json"
     ],
     "secret_version": null,
     "data": [
         {
-            "NHS_NUMBER": "9686368973",
+            "NHS_NUMBER": "9000063201",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "NHS_NUMBER": "9686368973",
+            "NHS_NUMBER": "9000063201",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
