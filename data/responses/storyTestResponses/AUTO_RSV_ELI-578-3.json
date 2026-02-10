@@ -1,0 +1,35 @@
+{
+    "meta": {
+        "lastUpdated": "2026-01-28T10:39:48.677275+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "NBS_Campaign_Config_ID_COVID",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the NBS_Campaign_Config_ID_COVID ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "FLU",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_578_covid_age_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_age"
+                },
+                {
+                    "cohortCode": "eli_578_covid_clinical_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_578_covid_clinical"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the FLU vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "4c37ee35-f3fe-4895-9d3d-a6abc8f7e5e8"
+}

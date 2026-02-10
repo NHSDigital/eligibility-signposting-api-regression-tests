@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "lastUpdated": "2026-01-21T09:08:55.627565+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_600_yesterday_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_600_yesterday"
+                },
+                {
+                    "cohortCode": "eli_600_all_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_600_all"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "097d2fb2-d7ac-49c8-8aca-319605815669"
+}

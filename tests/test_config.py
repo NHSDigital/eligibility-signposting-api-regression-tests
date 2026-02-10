@@ -20,3 +20,11 @@ IN_PROGRESS_CONFIGS: str = "data/configs/inProgressTestConfigs"
 VITA_INTEGRATION_TEST_DATA: str = "data/dynamoDB/vitaIntegrationTestData/"
 VITA_INTEGRATION_RESPONSES: str = "data/responses/vitaIntegrationTestResponses/"
 VITA_INTEGRATION_CONFIGS: str = "data/configs/vitaIntegrationTestConfigs"
+
+# NBS Integration Test Data Paths
+NBS_INTEGRATION_TEST_DATA: str = "data/dynamoDB/nbsIntegrationTestData/"
+NBS_INTEGRATION_RESPONSES: str = "data/responses/nbsIntegrationTestResponses/"
+NBS_INTEGRATION_CONFIGS: str = "data/configs/nbsIntegrationTestConfigs"
+
+# Consumer Mapping file - this is a single one for all environments but this may change
+CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.json"

@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-04T10:54:42.433375+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "Z_VACCS_ADD_DAYS",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "Z_VACCS_ADD_DAYS ActionDescription: 23 November 1981",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_579_covid_age_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_579_covid_age"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "7847e74e-4d76-4b0d-8e37-9027c5b0968e"
+}
