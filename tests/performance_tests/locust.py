@@ -7,8 +7,6 @@ import urllib3
 # Use pip and venv to get access to the Locust library
 from locust import HttpUser, task, constant_throughput, events
 
-from utils.eligibility_api_client import EligibilityApiClient
-
 
 # Function to get CLI arguments for environment, which will be used for the
 @events.init_command_line_parser.add_listener
@@ -25,6 +23,7 @@ with open("temp/nhs_numbers.csv", newline="") as csvFile:
 
 # Class for API execution
 class GetPatientId(HttpUser):
+
     # Required to prevent warnings on certain exceptions with TLS
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -32,28 +31,36 @@ class GetPatientId(HttpUser):
     wait_time = constant_throughput(1)
 
     # This can be set in the CLI settings if required to be changed
-    PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
-    client = EligibilityApiClient(cert_dir=f"{PROJECT_ROOT}/certs")
+    host = "https://dev.eligibility-signposting-api.nhs.uk/"
 
     @task
-    def get_patient_data(self):
-        # Gets a new random NHS Number from provided CSV
-        csv_row = random.choice(csvData)
-        patient_id = csv_row[0]
+    def getPatientData(self):
+
+        # Gets a new random NHS Number
+        csvRow = random.choice(csvData)
+        PatientId = csvRow[0]
+
+        PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
+
+        private_key_path = PROJECT_ROOT / "certs/api_private_key_cert.pem"
+        client_cert_path = PROJECT_ROOT / "certs/api_client_cert.pem"
 
         # The request is getting sent is here
-        with self.client.make_request(
-            patient_id,
+        with self.client.get(
+            name="patient-check/{PatientId}",
+            url=f"patient-check/{PatientId}",
             headers={
                 "Accept": "application/json",
-                "nhs-login-nhs-number": f"{patient_id}",
+                "nhs-login-nhs-number": f"{PatientId}",
                 "NHSE-Product-ID": "P.WTJ-FJT",
             },
-            raise_on_error=False,
+            cert=(client_cert_path, private_key_path),
+            verify=False,
+            catch_response=True,
         ) as response:
             # This is checking asserting the response has the word cohortText, which shows on a valid request
             if "processedSuggestions" not in response.text:
                 response.failure(
-                    f"Response didn't contain processedSuggestions (expected), nhsNumber was {patient_id}. "
+                    f"Response didn't contain processedSuggestions (expected), nhsNumber was {PatientId}. "
                     f"Response was {response.text}"
                 )

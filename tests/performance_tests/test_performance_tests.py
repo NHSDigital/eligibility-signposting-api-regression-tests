@@ -20,12 +20,12 @@ id_list = [
 ]
 
 
-def write_nhs_number_to_csv(nhs_number: str, csv_path: Path):
+def write_request_params_to_csv(nhs_number: str, request_headers: str, csv_path: Path):
     with csv_path.open(mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
         if not csv_path.exists():
             writer.writerow(["NhsNumber"])
-        writer.writerow([nhs_number])
+        writer.writerow([nhs_number, request_headers])
 
 
 @pytest.fixture(scope="function")
@@ -37,7 +37,7 @@ def temp_csv_path():
 
 
 @pytest.fixture(scope="function")
-def test_data(get_scenario_params, temp_csv_path):
+def test_data(get_scenario_params, temp_csv_path, eligibility_client):
     for filename, scenario in param_list:
         (
             nhs_number,
@@ -46,7 +46,7 @@ def test_data(get_scenario_params, temp_csv_path):
             query_params,
             expected_response_code,
         ) = get_scenario_params(scenario, config_path)
-        write_nhs_number_to_csv(nhs_number, temp_csv_path)
+        write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
 def test_locust_run_and_csv_exists(test_data):
