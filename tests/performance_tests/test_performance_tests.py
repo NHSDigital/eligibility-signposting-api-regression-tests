@@ -53,20 +53,20 @@ def test_data(get_scenario_params, temp_csv_path):
 def test_locust_run_and_csv_exists(test_data, eligibility_client):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
-
+    locust_report = "temp/locust_results"
     locust_command = [
         "locust",
         "-f",
         "tests/performance_tests/locust.py",
         "--headless",
         "-u",
-        "10",
+        "100",
         "-r",
-        "2",
+        "20",
         "-t",
-        "20s",
+        "15s",
         "--csv",
-        "temp/locust_results",
+        locust_report,
         "--html",
         "temp/report.html",
     ]
@@ -76,3 +76,19 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
     )
 
     assert result.returncode == 0, f"Locust failed: {result.stderr}"
+    stats_file = Path(f"{locust_report}_stats.csv")
+    avg_response_time = 0
+    total_failures = 0
+
+    with open(stats_file, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row["Name"] == "Aggregated":
+                avg_response_time = float(row["Average Response Time"])
+                total_failures = int(row["Failure Count"])
+                break
+    assert total_failures == 0, f"Test had {total_failures} failures. Check temp/report.html"
+    assert avg_response_time <= 500, (
+        f"SLA Violated: Average response time was {avg_response_time:.2f}ms "
+        f"(Max allowed: 500ms)"
+    )
