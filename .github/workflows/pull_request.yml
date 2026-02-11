@@ -19,9 +19,10 @@ jobs:
   regression_tests:
     uses: ./.github/workflows/regression_tests.yml
     with:
-      environment: 'dev'
-      log_level: 'INFO'
-      tags: '@regression'
-      id: 'Run during opened pull request'
+      environment: "dev"
+      log_level: "INFO"
+      tags: "@regression"
+      id: "Run during opened pull request"
       github_tag: ${{ github.event.pull_request.head.ref }}
-    secrets: inherit
+    secrets:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
