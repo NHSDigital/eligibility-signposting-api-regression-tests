@@ -1,4 +1,5 @@
 import csv
+import os
 import subprocess
 from pathlib import Path
 
@@ -37,7 +38,7 @@ def temp_csv_path():
 
 
 @pytest.fixture(scope="function")
-def test_data(get_scenario_params, temp_csv_path, eligibility_client):
+def test_data(get_scenario_params, temp_csv_path):
     for filename, scenario in param_list:
         (
             nhs_number,
@@ -49,7 +50,9 @@ def test_data(get_scenario_params, temp_csv_path, eligibility_client):
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
-def test_locust_run_and_csv_exists(test_data):
+def test_locust_run_and_csv_exists(test_data, eligibility_client):
+    custom_env = os.environ.copy()
+    custom_env["BASE_URL"] = eligibility_client.api_url
 
     locust_command = [
         "locust",
@@ -68,6 +71,8 @@ def test_locust_run_and_csv_exists(test_data):
         "temp/report.html",
     ]
 
-    result = subprocess.run(locust_command, capture_output=True, text=True)
+    result = subprocess.run(
+        locust_command, capture_output=True, text=True, env=custom_env
+    )
 
     assert result.returncode == 0, f"Locust failed: {result.stderr}"

@@ -1,5 +1,6 @@
 import ast
 import csv
+import os
 import random
 from pathlib import Path
 
@@ -32,7 +33,7 @@ class GetPatientId(HttpUser):
     wait_time = constant_throughput(1)
 
     # This can be set in the CLI settings if required to be changed
-    host = "https://dev.eligibility-signposting-api.nhs.uk/"
+    host = os.getenv("BASE_URL")
 
     @task
     def getPatientData(self):
@@ -49,8 +50,8 @@ class GetPatientId(HttpUser):
 
         # The request is getting sent is here
         with self.client.get(
-            name="patient-check/{PatientId}",
-            url=f"patient-check/{PatientId}",
+            name="{PatientId}",
+            url=f"{PatientId}",
             headers=header,
             cert=(client_cert_path, private_key_path),
             verify=False,
