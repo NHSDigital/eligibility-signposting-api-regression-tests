@@ -1,3 +1,4 @@
+import ast
 import csv
 import random
 from pathlib import Path
@@ -39,6 +40,7 @@ class GetPatientId(HttpUser):
         # Gets a new random NHS Number
         csvRow = random.choice(csvData)
         PatientId = csvRow[0]
+        header = ast.literal_eval(csvRow[1])
 
         PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
 
@@ -49,11 +51,7 @@ class GetPatientId(HttpUser):
         with self.client.get(
             name="patient-check/{PatientId}",
             url=f"patient-check/{PatientId}",
-            headers={
-                "Accept": "application/json",
-                "nhs-login-nhs-number": f"{PatientId}",
-                "NHSE-Product-ID": "P.WTJ-FJT",
-            },
+            headers=header,
             cert=(client_cert_path, private_key_path),
             verify=False,
             catch_response=True,
