@@ -156,3 +156,184 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
     assert (
         max_response_latency < 600
     ), f"Max response time was {max_response_latency}ms (Max allowed: 500ms)"
+
+
+def write_latency_flow_html(
+    output: str,
+    metrics: LatencyDict,
+):
+    """
+    metrics format:
+
+    {
+        "locust": {"avg": float, "min": float, "max": float},
+        "response": {"avg": float, "min": float, "max": float},
+        "integration": {"avg": float, "min": float, "max": float},
+    }
+    """
+
+    metrics = {
+        "locust": {"avg": 820, "min": 410, "max": 2100},
+        "response": {"avg": 95, "min": 40, "max": 210},
+        "integration": {"avg": 640, "min": 300, "max": 1850},
+    }
+
+    title: str = "Latency Flow Overview",
+    subtitle: str = "End-to-end request journey with average, minimum and maximum latency (ms)",
+
+    required_sections = {"locust", "response", "integration"}
+    if not required_sections.issubset(metrics):
+        missing = required_sections - metrics.keys()
+        raise ValueError(f"Missing required metric sections: {missing}")
+
+    for section in required_sections:
+        for key in ("avg", "min", "max"):
+            if key not in metrics[section]:
+                raise ValueError(f"Missing '{key}' in metrics['{section}']")
+
+    def fmt(x: float) -> str:
+        return str(int(x)) if float(x).is_integer() else f"{x:.1f}"
+
+    loc = metrics["locust"]
+    resp = metrics["response"]
+    integ = metrics["integration"]
+
+    html = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+</head>
+<body>
+  <div class="latency-flow-card">
+    <style>
+      .latency-flow-card {{
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 24px;
+        background: #ffffff;
+        max-width: 1100px;
+      }}
+
+      .latency-title {{
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }}
+
+      .latency-sub {{
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 28px;
+      }}
+
+      .flow-container {{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }}
+
+      .flow-node {{
+        flex: 1;
+        min-width: 220px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px;
+        background: #f9fafb;
+        text-align: center;
+      }}
+
+      .flow-node.external {{
+        background: #eef2ff;
+        border-color: #c7d2fe;
+      }}
+
+      .flow-node.gateway {{
+        background: #ecfeff;
+        border-color: #a5f3fc;
+      }}
+
+      .flow-node.integration {{
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+      }}
+
+      .node-title {{
+        font-weight: 600;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }}
+
+      .node-avg {{
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }}
+
+      .node-range {{
+        font-size: 12px;
+        color: #6b7280;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }}
+
+      .flow-arrow {{
+        font-size: 28px;
+        color: #9ca3af;
+        font-weight: 300;
+      }}
+
+      .flow-summary {{
+        margin-top: 28px;
+        font-size: 13px;
+        color: #374151;
+        line-height: 1.6;
+      }}
+    </style>
+
+    <div class="latency-title">{title}</div>
+    <div class="latency-sub">{subtitle}</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node external">
+        <div class="node-title">Locust (Client – Outside App)</div>
+        <div class="node-avg">{fmt(loc["avg"])} ms</div>
+        <div class="node-range">min {fmt(loc["min"])} · max {fmt(loc["max"])}</div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-node gateway">
+        <div class="node-title">API Gateway<br>responseLatency</div>
+        <div class="node-avg">{fmt(resp["avg"])} ms</div>
+        <div class="node-range">min {fmt(resp["min"])} · max {fmt(resp["max"])}</div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-node integration">
+        <div class="node-title">Integration (Lambda + DynamoDB/S3)</div>
+        <div class="node-avg">{fmt(integ["avg"])} ms</div>
+        <div class="node-range">min {fmt(integ["min"])} · max {fmt(integ["max"])}</div>
+      </div>
+
+    </div>
+
+    <div class="flow-summary">
+      <strong>How to interpret:</strong><br>
+      • Locust shows total client-perceived latency.<br>
+      • responseLatency is reported by API Gateway.<br>
+      • integrationLatency is backend execution time (lambda,s3,DynamoDB etc).<br>
+    </div>
+
+  </div>
+</body>
+</html>
+"""
+
+    with open(output, "w", encoding="utf-8") as f:
+        f.write(html)
