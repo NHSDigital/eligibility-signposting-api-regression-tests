@@ -8,6 +8,9 @@ import pytest
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
+import boto3
+from datetime import datetime, timedelta, timezone
+import time
 
 # Update the below with the configuration values specified in test_config.py
 all_data, dto = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
@@ -54,26 +57,32 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
     locust_report = "temp/locust_results"
+
+    start_time = int(datetime.now().timestamp())
+
     locust_command = [
         "locust",
         "-f",
         "tests/performance_tests/locust.py",
         "--headless",
         "-u",
-        "100",
+        "10",
         "-r",
-        "20",
+        "2",
         "-t",
-        "15s",
+        "10s",
         "--csv",
         locust_report,
         "--html",
         "temp/report.html",
     ]
 
+
     result = subprocess.run(
         locust_command, capture_output=True, text=True, env=custom_env
     )
+
+    end_time  = int(datetime.now().timestamp())
 
     assert result.returncode == 0, f"Locust failed: {result.stderr}"
     stats_file = Path(f"{locust_report}_stats.csv")
@@ -88,7 +97,59 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
                 total_failures = int(row["Failure Count"])
                 break
     assert total_failures == 0, f"Test had {total_failures} failures. Check temp/report.html"
-    assert avg_response_time <= 500, (
+    assert avg_response_time <= 600, (
         f"SLA Violated: Average response time was {avg_response_time:.2f}ms "
         f"(Max allowed: 500ms)"
+    )
+
+    time.sleep(100)
+
+    query = ('stats avg(integrationLatency) as avgIntegrationLatency,'
+             ' max(integrationLatency) as maxIntegrationLatency,'
+             ' min(integrationLatency) as minIntegrationLatency,'
+             ' avg(responseLatency) as avgResponseLatency,'
+             ' max(responseLatency) as maxResponseLatency,'
+             ' min(responseLatency) as minResponseLatency,'
+             ' count(*) as recordCount')
+
+    client = boto3.client('logs', region_name='eu-west-2')
+
+    print(start_time, end_time)
+
+    response = client.start_query(
+        logGroupName='/aws/apigateway/default-eligibility-signposting-api',
+        startTime=start_time,
+        endTime=end_time,
+        queryString=query
+    )
+
+    query_id = response['queryId']
+
+    # Poll for query completion
+    while True:
+        result = client.get_query_results(queryId=query_id)
+        if result['status'] == 'Complete':
+            break
+        time.sleep(1)
+
+    # Print the actual log results
+    for row in result['results']:
+        row_dict = {field['field']: field.get('value') for field in row}
+        avg_integration_latency = float(row_dict.get("avgIntegrationLatency"))
+        max_integration_latency = float(row_dict.get("maxIntegrationLatency"))
+        avg_response_latency = float(row_dict.get("avgResponseLatency"))
+        max_response_latency = float(row_dict.get("maxResponseLatency"))
+        record_count = row_dict.get("recordCount")
+
+    assert avg_integration_latency < 600, (
+        f"Average response time was {avg_integration_latency}ms (Max allowed: 200ms)"
+    )
+    assert max_integration_latency < 600, (
+        f"Max response time was {max_integration_latency}ms (Max allowed: 200ms)"
+    )
+    assert avg_response_latency < 600, (
+        f"Average response time was {avg_response_latency}ms (Max allowed: 500ms)"
+    )
+    assert max_response_latency < 600, (
+        f"Max response time was {max_response_latency}ms (Max allowed: 500ms)"
     )

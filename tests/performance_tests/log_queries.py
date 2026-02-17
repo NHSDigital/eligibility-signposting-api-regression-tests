@@ -8,8 +8,7 @@ query = ('stats avg(integrationLatency) as avgIntegrationLatency,'
          ' avg(responseLatency) as avgResponseLatency,'
          ' max(responseLatency) as maxResponseLatency,'
          ' min(responseLatency) as minResponseLatency,'
-         ' count(*) as recordCount,'
-         ' limit 2')
+         ' count(*) as recordCount')
 
 
 client = boto3.client('logs', region_name='eu-west-2')
