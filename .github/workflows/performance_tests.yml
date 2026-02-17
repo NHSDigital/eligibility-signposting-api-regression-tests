@@ -105,9 +105,17 @@ jobs:
         run: |
           make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
 
-      - name: Upload Performance Report
+      - name: Upload Locust Performance Report
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: performance-report
-          path: temp/report.html
+          name: performance-locust-report
+          path: temp/locust_report.html
+
+      - name: Upload AWS Logs Performance Report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-awslogs-report
+          path: temp/aws_logs_report.html
+
