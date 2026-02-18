@@ -53,7 +53,7 @@ def test_data(get_scenario_params, temp_csv_path):
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
-def test_locust_run_and_csv_exists(test_data, eligibility_client):
+def test_locust_run_and_csv_exists(test_data, eligibility_client, perf_run_time, perf_users, perf_spawn_rate):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
     locust_report = "temp/locust_results"
@@ -66,11 +66,11 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
         "tests/performance_tests/locust.py",
         "--headless",
         "-u",
-        "10",
+        perf_users,
         "-r",
-        "1",
+        perf_spawn_rate,
         "-t",
-        "5s",
+        perf_run_time,
         "--csv",
         locust_report,
         "--html",
@@ -100,10 +100,11 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
                 }
                 break
 
-    # assert locust_stats["failures"] == 0, (
-    #     f"Test had {locust_stats['failures']} failures. "
-    #     f"Full stats: {locust_stats}"
-    # )
+    assert locust_stats["failures"] == 0, (
+        f"Test had {locust_stats['failures']} failures. "
+        f"Full stats: {locust_stats}"
+    )
+
     #
     # assert locust_stats["avg"] <= 600, (
     #     f"SLA Violated: Average response time was "
@@ -157,16 +158,6 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
     for row in result["results"]:
         row_dict = {field["field"]: field.get("value") for field in row}
 
-        # aws_log_stats = {
-        #     "avg_integration": float(row_dict.get("avgIntegrationLatency") or 0),
-        #     "min_integration": float(row_dict.get("minIntegrationLatency") or 0),
-        #     "max_integration": float(row_dict.get("maxIntegrationLatency") or 0),
-        #     "avg_response": float(row_dict.get("avgResponseLatency") or 0),
-        #     "min_response": float(row_dict.get("minResponseLatency") or 0),
-        #     "max_response": float(row_dict.get("maxResponseLatency") or 0),
-        #     "record_count": int(row_dict.get("recordCount") or 0),
-        # }
-
         aws_log_stats = {
             "avg_integration": float(row_dict.get("avgIntegrationLatency")),
             "min_integration": float(row_dict.get("minIntegrationLatency")),
@@ -178,6 +169,8 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
         }
 
         break
+
+    output_results_html("temp/aws_logs_report.html", locust_stats, aws_log_stats)
 
     assert aws_log_stats["record_count"] > 0, (
         f"No CloudWatch log records found. Stats: {aws_log_stats}"
@@ -206,29 +199,6 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client):
         f"{aws_log_stats['max_response']}ms (Max allowed: 600ms). "
         f"Stats: {aws_log_stats}"
     )
-
-    #output results to file
-    # locust_stats
-    """
-        locust_stats = {
-            "avg": 520.4,
-            "min": 210.0,
-            "max": 980.0,
-            "failures": 0,
-        }
-    """
-    # aws_log_stats
-    """
-        aws_log_stats = {
-            "avg_integration": 470.2,
-            "max_integration": 910.0,
-            "avg_response": 495.8,
-            "max_response": 940.0,
-            "record_count": 50,
-        }
-    """
-
-    output_results_html("temp/aws_logs_report.html", locust_stats, aws_log_stats)
 
 
 def output_results_html(

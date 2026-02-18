@@ -11,13 +11,28 @@ on:
         type: environment
         required: true
         default: "dev"
+      users:
+        description: 'Number of users to simulate'
+        type: number
+        required: true
+        default: 100
+      spawn_rate:
+        description: 'Rate to spawn users'
+        type: number
+        required: true
+        default: 20
+      run_time:
+        description: 'Duration to run the test for (e.g. 1m, 30s, 1h)'
+        type: string
+        required: true
+        default: "30s"
       github_tag:
         description: 'The github tag to run the test pack from'
         required: true
         default: "main"
 
 jobs:
-  perfromance_tests:
+  performance_tests:
     permissions:
       id-token: write
       issues: write
@@ -102,8 +117,16 @@ jobs:
           ENVIRONMENT: ${{ inputs.environment }}
           LOG_LEVEL: "INFO"
           INPUT_TAG: "@performance"
+          USERS: ${{ inputs.users }}
+          SPAWN_RATE: ${{ inputs.spawn_rate }}
+          RUN_TIME: ${{ inputs.run_time }}
         run: |
-          make run-performance-tests env="$ENVIRONMENT" log_level="$LOG_LEVEL"
+          make run-performance-tests \
+            env="$ENVIRONMENT" \
+            log_level="$LOG_LEVEL" \
+            users="$USERS" \
+            spawn_rate="$SPWAN_RATE" \
+            run_time="$RUN_TIME"
 
       - name: Upload Locust Performance Report
         if: always()
