@@ -1,35 +1,34 @@
 {
-    "scenario_name": "RSV - Vita Integration - Actionable - Continue to booking - NBS E2E",
+    "scenario_name": "ELI-651 - NotActionable - You should have the RSV vaccine in your setting - care_home_residents_older_adults",
     "request_headers": {
-        "nhs-login-nhs-number": "9735548852",
+        "nhs-login-nhs-number": "9000065103",
         "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v2.0WIP.json"
+        "AUTO_RSV_ELI-651.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9735548852",
+            "NHS_NUMBER": "9000065103",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_75+_plus1day",
+                    "COHORT_LABEL": "care_home_residents_older_adults",
                     "DATE_JOINED": "20231020"
                 }
             ]
         },
         {
-            "NHS_NUMBER": "9735548852",
+            "NHS_NUMBER": "9000065103",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
-            "GENDER": "0",
-            "POSTCODE": "SG8 6EG",
-            "POSTCODE_SECTOR": "SG86",
-            "POSTCODE_OUTCODE": "SG8",
-            "MSOA": "E02003792",
-            "LSOA": "E01018267",
-            "LOCAL_AUTHORITY": "E08000011",
+            "DATE_OF_BIRTH": "<<DATE_AGE_74>>",
+            "GENDER": "2",
+            "POSTCODE": "CB3 8DX",
+            "POSTCODE_SECTOR": "CB38",
+            "POSTCODE_OUTCODE": "CB3",
+            "MSOA": "E02007085",
+            "LSOA": "E01018223",
             "GP_PRACTICE_CODE": "D81046",
             "PCN": "U75549",
             "ICB": "QUE",

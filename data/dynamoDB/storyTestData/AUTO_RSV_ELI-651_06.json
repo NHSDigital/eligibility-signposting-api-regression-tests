@@ -1,16 +1,16 @@
 {
-    "scenario_name": "RSV - Vita Integration - NotActionable - You should have the RSV vaccine (already vaccinated) - unknown membership - AlreadyVaccinated",
+    "scenario_name": "ELI-651 - NotActionable - You should have the RSV vaccine (already vaccd) - rsv_75+_plus1day - AlreadyVaccinated",
     "request_headers": {
-        "nhs-login-nhs-number": "9450114080",
+        "nhs-login-nhs-number": "9000065106",
         "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v2.0WIP.json"
+        "AUTO_RSV_ELI-651.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9450114080",
+            "NHS_NUMBER": "9000065106",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "2",
@@ -24,11 +24,21 @@
             "ICB": "QUE",
             "COMMISSIONING_REGION": "Y61",
             "13Q_FLAG": "N",
-            "CARE_HOME_FLAG": "Y",
+            "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9450114080",
+            "NHS_NUMBER": "9000065106",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_75+_plus1day",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9000065106",
             "ATTRIBUTE_TYPE": "RSV",
             "LAST_SUCCESSFUL_DATE": "20250403"
         }
