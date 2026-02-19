@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-04T15:11:55.070821+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DateOfLastVaccination",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_-92>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "AlreadyVaccinated",
+                    "ruleText": "AlreadyVaccinated",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "9980df06-f7fb-4e69-9d96-e5036dda2d26"
+}

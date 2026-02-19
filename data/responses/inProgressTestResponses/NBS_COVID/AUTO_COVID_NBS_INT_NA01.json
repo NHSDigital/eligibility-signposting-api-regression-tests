@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-03T09:16:26.664475+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "FutureBookingDate",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_10>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [],
+            "status": "NotActionable",
+            "statusText": "You should have the COVID-19 vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "FutureBookingNBS",
+                    "ruleText": "NBS future booking",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "aa5631e5-e5c5-4625-86da-e972af4da412"
+}

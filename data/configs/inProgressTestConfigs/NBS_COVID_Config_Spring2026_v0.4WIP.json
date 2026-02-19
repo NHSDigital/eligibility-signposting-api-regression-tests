@@ -2,7 +2,7 @@
     "CampaignConfig": {
         "ID": "NBS_Campaign_Config_ID_COVID",
         "Version": 1,
-        "Name": "EliD NBS COVID-19 campaign example config",
+        "Name": "EliD NBS COVID-19 campaign config Release 1",
         "Type": "V",
         "Target": "COVID",
         "Manager": [
@@ -17,8 +17,8 @@
         "IterationFrequency": "X",
         "IterationType": "O",
         "IterationTime": "07:00:00",
-        "StartDate": "<<DATE_DAY_-80>>",
-        "EndDate": "20280430",
+        "StartDate": "<<DATE_DAY_-100>>",
+        "EndDate": "<<DATE_DAY_+100>>",
         "ApprovalMinimum": 0,
         "ApprovalMaximum": 0,
         "DefaultCommsRouting": "BOOK_NBS",
@@ -29,8 +29,8 @@
                 "DefaultNotActionableRouting": "",
                 "DefaultNotEligibleRouting": "",
                 "Version": 1,
-                "Name": "EliD NBS COVID-19 campaign example config",
-                "IterationDate": "<<DATE_DAY_-80>>",
+                "Name": "EliD NBS COVID-19 campaign config Release 1",
+                "IterationDate": "<<DATE_DAY_-100>>",
                 "IterationNumber": 1,
                 "CommsType": "I",
                 "ApprovalMinimum": 0,
@@ -53,24 +53,24 @@
                     {
                         "CohortLabel": "covid_16+_immunosuppression",
                         "CohortGroup": "covid_clinical_risk",
-                        "PositiveDescription": "are aged 16 or over and immunosuppressed",
-                        "NegativeDescription": "are not aged 16 or over and immunosuppressed",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
                         "Priority": 20,
                         "Virtual": "N"
                     },
                     {
                         "CohortLabel": "covid_under16_immunosuppression",
                         "CohortGroup": "covid_clinical_risk",
-                        "PositiveDescription": "are aged under 16 and immunosuppressed",
-                        "NegativeDescription": "are not aged under 16 and immunosuppressed",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
                         "Priority": 30,
                         "Virtual": "N"
                     },
                     {
                         "CohortLabel": "care_home_residents_older_adults",
                         "CohortGroup": "care_home_residents",
-                        "PositiveDescription": "currently live in a care home for older adults",
-                        "NegativeDescription": "do not currently live in a care home for older adults",
+                        "PositiveDescription": "live in a care home for older adults",
+                        "NegativeDescription": "do not live in a care home for older adults",
                         "Priority": 40,
                         "Virtual": "N"
                     },
@@ -89,7 +89,7 @@
                         "Name": "Remove from magic cohort unless already vaccinated or have future booking",
                         "Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
                         "Operator": "<",
-                        "Comparator": "<<DATE_DAY_-80>>[[NVL:18000101]]",
+                        "Comparator": "<<DATE_DAY_-93>>[[NVL:18000101]]",
                         "AttributeTarget": "COVID",
                         "AttributeLevel": "TARGET",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
@@ -116,7 +116,7 @@
                         "AttributeLevel": "PERSON",
                         "AttributeName": "DATE_OF_BIRTH",
                         "Operator": ">=",
-                        "Comparator": "19510501",
+                        "Comparator": "19510701",
                         "CohortLabel": "covid_75+_Spring2026"
                     },
                     {
@@ -124,7 +124,7 @@
                         "Name": "Remove from eligible cohorts if already vaccinated",
                         "Description": "Remove anyone already vaccinated in current campaign from eligible cohorts",
                         "Operator": ">=",
-                        "Comparator": "<<DATE_DAY_-80>>",
+                        "Comparator": "<<DATE_DAY_-93>>",
                         "AttributeTarget": "COVID",
                         "AttributeLevel": "TARGET",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
@@ -152,7 +152,7 @@
                         "AttributeTarget": "COVID",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
                         "Operator": ">=",
-                        "Comparator": "<<DATE_DAY_-80>>",
+                        "Comparator": "<<DATE_DAY_-93>>",
                         "RuleStop": "Y"
                     },
                     {
@@ -169,7 +169,7 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked NBS Appointment",
+                        "Name": "FutureBookingNBS",
                         "Description": "NBS future booking",
                         "Priority": 700,
                         "Operator": "D>=",
@@ -181,7 +181,7 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked NBS Appointment",
+                        "Name": "FutureBookingNBS",
                         "Description": "NBS future booking",
                         "Priority": 700,
                         "Operator": "in",
@@ -193,7 +193,7 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked Local Appointment",
+                        "Name": "FutureBookingLocal",
                         "Description": "Local future booking",
                         "Priority": 750,
                         "Operator": "D>=",
@@ -212,7 +212,7 @@
                         "AttributeTarget": "COVID",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
                         "Operator": ">=",
-                        "Comparator": "<<DATE_DAY_-80>>",
+                        "Comparator": "<<DATE_DAY_-93>>",
                         "CommsRouting": "LAST_VACCINATION_DATE"
                     },
                     {
@@ -244,27 +244,6 @@
                     "BOOK_NBS": {
                         "ExternalRoutingCode": "BookNBS",
                         "ActionDescription": "Eligible within CP Expansion",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "NOT_NBS": {
-                        "ExternalRoutingCode": "NotNBS",
-                        "ActionDescription": "Eligible outside of CP Expansion",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "AMEND_NBS": {
-                        "ExternalRoutingCode": "AmendNBS",
-                        "ActionDescription": "Future NBS booking",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "MANAGE_LOCAL": {
-                        "ExternalRoutingCode": "ManageLocal",
-                        "ActionDescription": "Future local booking",
                         "ActionType": "InfoText",
                         "UrlLink": null,
                         "UrlLabel": ""
