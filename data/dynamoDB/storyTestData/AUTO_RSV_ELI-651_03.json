@@ -34,7 +34,7 @@
             "ICB": "QUE",
             "COMMISSIONING_REGION": "Y61",
             "13Q_FLAG": "N",
-            "CARE_HOME_FLAG": "N",
+            "CARE_HOME_FLAG": "Y",
             "DE_FLAG": "N"
         }
     ]
