@@ -9,7 +9,7 @@ from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 import boto3
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import time
 
 # Update the below with the configuration values specified in test_config.py
@@ -53,7 +53,9 @@ def test_data(get_scenario_params, temp_csv_path):
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
-def test_locust_run_and_csv_exists(test_data, eligibility_client, perf_run_time, perf_users, perf_spawn_rate):
+def test_locust_run_and_csv_exists(
+    test_data, eligibility_client, perf_run_time, perf_users, perf_spawn_rate
+):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
     locust_report = "temp/locust_results"
@@ -101,8 +103,7 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client, perf_run_time,
                 break
 
     assert locust_stats["failures"] == 0, (
-        f"Test had {locust_stats['failures']} failures. "
-        f"Full stats: {locust_stats}"
+        f"Test had {locust_stats['failures']} failures. " f"Full stats: {locust_stats}"
     )
 
     #
@@ -172,9 +173,9 @@ def test_locust_run_and_csv_exists(test_data, eligibility_client, perf_run_time,
 
     output_results_html("temp/aws_logs_report.html", locust_stats, aws_log_stats)
 
-    assert aws_log_stats["record_count"] > 0, (
-        f"No CloudWatch log records found. Stats: {aws_log_stats}"
-    )
+    assert (
+        aws_log_stats["record_count"] > 0
+    ), f"No CloudWatch log records found. Stats: {aws_log_stats}"
 
     assert aws_log_stats["avg_integration"] < 600, (
         f"Average integration latency was "
@@ -281,10 +282,22 @@ def output_results_html(
   <h2>Locust Statistics</h2>
   <table>
     <tr><th>Metric</th><th>Value</th></tr>
-    <tr><td>Average Latency (ms)</td><td class="metric-value">{locust_stats["avg"]:.2f}</td></tr>
-    <tr><td>Minimum Latency (ms)</td><td class="metric-value">{locust_stats["min"]:.2f}</td></tr>
-    <tr><td>Maximum Latency (ms)</td><td class="metric-value">{locust_stats["max"]:.2f}</td></tr>
-    <tr><td>Failures</td><td class="metric-value">{locust_stats["failures"]}</td></tr>
+    <tr>
+      <td>Average Latency (ms)</td>
+      <td class="metric-value">{locust_stats["avg"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Minimum Latency (ms)</td>
+      <td class="metric-value">{locust_stats["min"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Maximum Latency (ms)</td>
+      <td class="metric-value">{locust_stats["max"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Failures</td>
+      <td class="metric-value">{locust_stats["failures"]}</td>
+    </tr>
   </table>
 </div>
 
@@ -292,15 +305,36 @@ def output_results_html(
   <h2>AWS Log Statistics</h2>
   <table>
     <tr><th>Metric</th><th>Value</th></tr>
-    <tr><td>Average Integration Latency (ms)</td><td class="metric-value">{aws_log_stats["avg_integration"]:.2f}</td></tr>
-    <tr><td>Min Integration Latency (ms)</td><td class="metric-value">{aws_log_stats["min_integration"]:.2f}</td></tr>
-    <tr><td>Maximum Integration Latency (ms)</td><td class="metric-value">{aws_log_stats["max_integration"]:.2f}</td></tr>
+    <tr>
+      <td>Average Integration Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["avg_integration"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Min Integration Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["min_integration"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Maximum Integration Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["max_integration"]:.2f}</td>
+    </tr>
 
-    <tr><td>Average Response Latency (ms)</td><td class="metric-value">{aws_log_stats["avg_response"]:.2f}</td></tr>
-    <tr><td>Min Response Latency (ms)</td><td class="metric-value">{aws_log_stats["min_response"]:.2f}</td></tr>
-    <tr><td>Maximum Response Latency (ms)</td><td class="metric-value">{aws_log_stats["max_response"]:.2f}</td></tr>
+    <tr>
+      <td>Average Response Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["avg_response"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Min Response Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["min_response"]:.2f}</td>
+    </tr>
+    <tr>
+      <td>Maximum Response Latency (ms)</td>
+      <td class="metric-value">{aws_log_stats["max_response"]:.2f}</td>
+    </tr>
 
-    <tr><td>Log Records Analysed</td><td class="metric-value">{aws_log_stats["record_count"]}</td></tr>
+    <tr>
+      <td>Log Records Analysed</td>
+      <td class="metric-value">{aws_log_stats["record_count"]}</td>
+    </tr>
   </table>
 </div>
 
@@ -310,5 +344,4 @@ def output_results_html(
 """
 
     with open(output, "w", encoding="utf-8") as f:
-         f.write(html)
-
+        f.write(html)
