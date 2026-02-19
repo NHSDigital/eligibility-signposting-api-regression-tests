@@ -1,0 +1,101 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Performance Results</title>
+
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: #f9fafb;
+    padding: 40px;
+  }
+
+  .card {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 20px;
+  }
+
+  .section {
+    margin-top: 28px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+
+  th {
+    text-align: left;
+    background: #f3f4f6;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+  }
+
+  .metric-value {
+    font-weight: 600;
+  }
+
+  .subtle {
+    color: #6b7280;
+    font-size: 13px;
+  }
+</style>
+</head>
+
+<body>
+<div class="card">
+
+<h2>Performance Test Results</h2>
+<div class="subtle">Locust execution and AWS log analysis</div>
+
+<div class="section">
+  <h2>Locust Statistics</h2>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>Average Latency (ms)</td><td class="metric-value">323.29</td></tr>
+    <tr><td>Minimum Latency (ms)</td><td class="metric-value">193.12</td></tr>
+    <tr><td>Maximum Latency (ms)</td><td class="metric-value">1391.49</td></tr>
+    <tr><td>Failures</td><td class="metric-value">0</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>AWS Log Statistics</h2>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>Average Integration Latency (ms)</td><td class="metric-value">249.67</td></tr>
+    <tr><td>Min Integration Latency (ms)</td><td class="metric-value">160.00</td></tr>
+    <tr><td>Maximum Integration Latency (ms)</td><td class="metric-value">695.00</td></tr>
+
+    <tr><td>Average Response Latency (ms)</td><td class="metric-value">260.49</td></tr>
+    <tr><td>Min Response Latency (ms)</td><td class="metric-value">171.00</td></tr>
+    <tr><td>Maximum Response Latency (ms)</td><td class="metric-value">706.00</td></tr>
+
+    <tr><td>Log Records Analysed</td><td class="metric-value">2721</td></tr>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
