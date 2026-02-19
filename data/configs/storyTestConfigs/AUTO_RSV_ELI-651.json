@@ -920,7 +920,7 @@
                         "CohortGroup": "rsv_age",
                         "PositiveDescription": "are aged 75 or over",
                         "NegativeDescription": "are not aged 75 or over",
-                        "Priority": 1,
+                        "Priority": 0,
                         "Virtual": "N"
                     },
                     {
