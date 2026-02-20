@@ -1,0 +1,276 @@
+{
+    "CampaignConfig": {
+        "ID": "NBS_Campaign_Config_ID_COVID",
+        "Version": 1,
+        "Name": "EliD NBS COVID-19 campaign config Release 1",
+        "Type": "V",
+        "Target": "COVID",
+        "Manager": [
+            "example@nhs.net"
+        ],
+        "Approver": [
+            "example@nhs.net"
+        ],
+        "Reviewer": [
+            "example@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "StartDate": "<<DATE_DAY_-100>>",
+        "EndDate": "<<DATE_DAY_+100>>",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "DefaultCommsRouting": "BOOK_NBS",
+        "Iterations": [
+            {
+                "ID": "9ecb782b-48ea-4f0d-8e8y-9c2fyb1e46y1",
+                "DefaultCommsRouting": "BOOK_NBS",
+                "DefaultNotActionableRouting": "",
+                "DefaultNotEligibleRouting": "",
+                "Version": 1,
+                "Name": "EliD NBS COVID-19 campaign config Release 1",
+                "IterationDate": "<<DATE_DAY_-100>>",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "StatusText": {
+                    "NotEligible": "We do not believe you can have it",
+                    "NotActionable": "You should have the COVID-19 vaccine",
+                    "Actionable": "You should have the COVID-19 vaccine"
+                },
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "covid_75+_Spring2026",
+                        "CohortGroup": "covid_age",
+                        "PositiveDescription": "are aged 75 or over (including those who will be 75 by 30 June 2026)",
+                        "NegativeDescription": "are not aged 75 or over by 30 June 2026",
+                        "Priority": 10,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "covid_16+_immunosuppression",
+                        "CohortGroup": "covid_clinical_risk",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
+                        "Priority": 20,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "covid_under16_immunosuppression",
+                        "CohortGroup": "covid_clinical_risk",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
+                        "Priority": 30,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "care_home_residents_older_adults",
+                        "CohortGroup": "care_home_residents",
+                        "PositiveDescription": "live in a care home for older adults",
+                        "NegativeDescription": "do not live in a care home for older adults",
+                        "Priority": 40,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "elid_all_people",
+                        "CohortGroup": "magic_cohort",
+                        "PositiveDescription": "",
+                        "NegativeDescription": "",
+                        "Priority": 50,
+                        "Virtual": "Y"
+                    }
+                ],
+                "IterationRules": [
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
+                        "Operator": "<",
+                        "Comparator": "<<DATE_DAY_-93>>[[NVL:18000101]]",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone without a future booking from magic cohort",
+                        "Operator": "D<",
+                        "Comparator": "0[[NVL:18000101]]",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove under 75 Years at end of campaign",
+                        "Description": "Ensure anyone who has a PDS date of birth which determines their age to be less than 75 years at the end of campaign is filtered out.",
+                        "Priority": 120,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": ">=",
+                        "Comparator": "19510701",
+                        "CohortLabel": "covid_75+_Spring2026"
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if already vaccinated",
+                        "Description": "Remove anyone already vaccinated in current campaign from eligible cohorts",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-93>>",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "covid_75+_Spring2026,covid_16+_immunosuppression,covid_under16_immunosuppression,care_home_residents_older_adults",
+                        "Priority": 140
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if future booking",
+                        "Description": "Remove anyone with a future booking from eligible cohorts",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "covid_75+_Spring2026,covid_16+_immunosuppression,covid_under16_immunosuppression,care_home_residents_older_adults",
+                        "Priority": 160
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinated",
+                        "Description": "AlreadyVaccinated",
+                        "Priority": 500,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-93>>",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "Within91days",
+                        "Priority": 600,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>",
+                        "Comparator": "-91",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingNBS",
+                        "Description": "NBS future booking",
+                        "Priority": 700,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingNBS",
+                        "Description": "NBS future booking",
+                        "Priority": 700,
+                        "Operator": "in",
+                        "Comparator": "NBS,MYA",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_PROVIDER",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocal",
+                        "Description": "Local future booking",
+                        "Priority": 750,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Already vaccinated default text",
+                        "Description": "Already vaccinated default text",
+                        "Priority": 3000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-93>>",
+                        "CommsRouting": "LAST_VACCINATION_DATE"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Too close default text",
+                        "Description": "Too close default text",
+                        "Priority": 3100,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>",
+                        "Comparator": "-91",
+                        "CommsRouting": "EARLIEST_NEXT_VACCINATION_DATE|LAST_VACCINATION_DATE"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "FutureBookingDate",
+                        "Description": "Future booking date",
+                        "Priority": 3200,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "CommsRouting": "FUTURE_APPOINTMENT_DATE"
+                    }
+                ],
+                "ActionsMapper": {
+                    "BOOK_NBS": {
+                        "ExternalRoutingCode": "BookNBS",
+                        "ActionDescription": "Eligible within CP Expansion",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "LAST_VACCINATION_DATE": {
+                        "ExternalRoutingCode": "DateOfLastVaccination",
+                        "ActionDescription": "[[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "EARLIEST_NEXT_VACCINATION_DATE": {
+                        "ExternalRoutingCode": "DateOfNextEarliestVaccination",
+                        "ActionDescription": "[[TARGET.COVID.NEXT_DOSE_DUE:ADD_DAYS(91):DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                        "FUTURE_APPOINTMENT_DATE": {
+                        "ExternalRoutingCode": "FutureBookingDate",
+                        "ActionDescription": "[[TARGET.COVID.BOOKED_APPOINTMENT_DATE:DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    }
+                }
+            }
+        ]
+    }
+}

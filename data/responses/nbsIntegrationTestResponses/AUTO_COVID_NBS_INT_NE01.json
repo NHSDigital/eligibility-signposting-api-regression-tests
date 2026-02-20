@@ -15,12 +15,12 @@
                 {
                     "cohortCode": "covid_clinical_risk",
                     "cohortStatus": "NotEligible",
-                    "cohortText": "are not aged 16 or over and immunosuppressed"
+                    "cohortText": "do not have a weakened immune system because of a health condition or treatment"
                 },
                 {
                     "cohortCode": "care_home_residents",
                     "cohortStatus": "NotEligible",
-                    "cohortText": "do not currently live in a care home for older adults"
+                    "cohortText": "do not live in a care home for older adults"
                 }
             ],
             "status": "NotEligible",
