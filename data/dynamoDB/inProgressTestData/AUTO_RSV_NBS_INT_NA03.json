@@ -37,6 +37,20 @@
             "NHS_NUMBER": "9900059212",
             "ATTRIBUTE_TYPE": "RSV",
             "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-50>>"
+        },
+        {
+            "NHS_NUMBER": "9900059212",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_75+_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "care_home_residents_older_adults",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
         }
     ]
 }

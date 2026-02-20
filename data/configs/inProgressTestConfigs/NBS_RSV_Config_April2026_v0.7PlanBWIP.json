@@ -1,6 +1,6 @@
 {
     "CampaignConfig": {
-        "ID": "7fcb742b-43fa-4a0d-8f2f-9c2efb1f46d1",
+        "ID": "NBS_Campaign_Config_ID_RSV",
         "Version": 1,
         "Name": "EliD NBS RSV campaign config Release 1",
         "Type": "V",
@@ -17,7 +17,7 @@
         "IterationFrequency": "X",
         "IterationType": "O",
         "IterationTime": "07:00:00",
-        "StartDate": "20260401",
+        "StartDate": "<<DATE_DAY_-100>>",
         "EndDate": "20350401",
         "ApprovalMinimum": 0,
         "ApprovalMaximum": 0,
@@ -30,7 +30,7 @@
                 "DefaultNotEligibleRouting": "",
                 "Version": 1,
                 "Name": "EliD NBS RSV campaign config Release 1",
-                "IterationDate": "20260401",
+                "IterationDate": "<<DATE_DAY_-100>>",
                 "IterationNumber": 1,
                 "CommsType": "I",
                 "ApprovalMinimum": 0,

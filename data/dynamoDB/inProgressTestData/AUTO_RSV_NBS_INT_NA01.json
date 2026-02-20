@@ -42,6 +42,19 @@
             "ATTRIBUTE_TYPE": "RSV",
             "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>",
             "BOOKED_APPOINTMENT_PROVIDER": "MYA"
+        },{
+            "NHS_NUMBER": "9900059210",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_75+_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "care_home_residents_older_adults",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
         }
     ]
 }
