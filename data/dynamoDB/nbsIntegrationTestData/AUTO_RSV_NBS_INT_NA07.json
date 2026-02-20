@@ -8,16 +8,16 @@
         "conditions": "covids"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April 2026_v0.6.json"
+        "NBS_RSV_Config_April2026_v0.7WIP.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9900059216",
+            "NHS_NUMBER": "9900067016",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": []
         },
         {
-            "NHS_NUMBER": "9900059216",
+            "NHS_NUMBER": "9900067016",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
@@ -36,7 +36,7 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9900059216",
+            "NHS_NUMBER": "9900067016",
             "ATTRIBUTE_TYPE": "RSV",
             "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-100>>"
         }

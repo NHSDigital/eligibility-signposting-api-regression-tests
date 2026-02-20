@@ -19,7 +19,7 @@
             "statusText": "You should have the COVID-19 vaccine",
             "suitabilityRules": [
                 {
-                    "ruleCode": "Future Booked Local Appointment",
+                    "ruleCode": "FutureBookingLocal",
                     "ruleText": "Local future booking",
                     "ruleType": "S"
                 }

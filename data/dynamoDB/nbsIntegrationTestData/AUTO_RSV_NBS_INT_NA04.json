@@ -5,17 +5,17 @@
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April 2026_v0.6.json"
+        "NBS_RSV_Config_April2026_v0.7WIP.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9100592131",
+            "NHS_NUMBER": "9100670131",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
             ]
         },
         {
-            "NHS_NUMBER": "9100592131",
+            "NHS_NUMBER": "9100670131",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>",
             "GENDER": "0",
@@ -34,7 +34,7 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9100592131",
+            "NHS_NUMBER": "9100670131",
             "ATTRIBUTE_TYPE": "RSV",
             "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-196>>"
         }
