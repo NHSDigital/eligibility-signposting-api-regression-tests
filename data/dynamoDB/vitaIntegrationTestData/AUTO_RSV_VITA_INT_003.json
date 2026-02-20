@@ -1,12 +1,12 @@
 {
-    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( out CP area ) - age catchup - BookLocal",
+    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( out CP area ) - care_home_residents_older_adults - BookLocal",
     "request_headers": {
         "nhs-login-nhs-number": "9658218873",
         "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v1.2.json"
+        "RSV_Config_v2.0WIP.json"
     ],
     "data": [
         {
@@ -14,7 +14,7 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_80_2024_plus1day",
+                    "COHORT_LABEL": "care_home_residents_older_adults",
                     "DATE_JOINED": "20231020"
                 }
             ]
@@ -34,7 +34,7 @@
             "ICB": "QUE",
             "COMMISSIONING_REGION": "Y61",
             "13Q_FLAG": "N",
-            "CARE_HOME_FLAG": "N",
+            "CARE_HOME_FLAG": "Y",
             "DE_FLAG": "N"
         }
     ]
