@@ -25,7 +25,7 @@
         {
             "NHS_NUMBER": "9990059202",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_65>>",
+            "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
             "POSTCODE": "SG8 6EG",
             "POSTCODE_SECTOR": "SG86",
