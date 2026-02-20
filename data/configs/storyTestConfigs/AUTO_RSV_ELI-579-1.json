@@ -129,7 +129,7 @@
                     },
                     "DEFAULT_BOOKING_ADD_DAYS_FORMATTED": {
                         "ExternalRoutingCode": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED",
-                        "ActionDescription": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: [[TARGET.COVID.NEXT_BOOKING_AVAILABLE:ADD_DAYS(71, LAST_SUCCESSFUL_DATE):DATE(%d %B %Y)]]",
+                        "ActionDescription": "DEFAULT_BOOKING_ADD_DAYS_FORMATTED ActionDescription: [[TARGET.COVID.NEXT_BOOKING_AVAILABLE:ADD_DAYS(71, LAST_SUCCESSFUL_DATE):DATE(%-d %B %Y)]]",
                         "ActionType": "ButtonWithAuthLink",
                         "UrlLink": "http://www.nhs.uk/book-rsv",
                         "UrlLabel": "Manage your appointment"
