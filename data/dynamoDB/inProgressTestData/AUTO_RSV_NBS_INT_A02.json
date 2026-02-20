@@ -9,7 +9,7 @@
     ],
     "data": [
         {
-            "NHS_NUMBER": "9900059202",
+            "NHS_NUMBER": "9900067002",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
@@ -23,7 +23,7 @@
             ]
         },
         {
-            "NHS_NUMBER": "9900059202",
+            "NHS_NUMBER": "9900067002",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
