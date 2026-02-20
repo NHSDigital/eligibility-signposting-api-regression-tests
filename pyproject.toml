@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["SeanSteberis <sean.steberis@airelogic.com>"]
 readme = "README.md"
-package-mode = false
 
 
 [build-system]
@@ -29,6 +28,7 @@ boto3 = "^1.42.45"
 faker = "^37.5.3"
 pyright = "^1.1.406"
 pyflakes = "^3.4.0"
+locust = "^2.43.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"

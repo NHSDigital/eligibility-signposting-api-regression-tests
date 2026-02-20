@@ -81,6 +81,9 @@ run-tests: guard-env guard-log_level clear-db
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_nbs_integration_tests.py
 
+run-performance-tests: guard-env guard-log_level clear-db
+	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/performance_tests/test_performance_tests.py
+
 ifeq ($(filter $(env),test dev),$(env))
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_hashing_tests.py
 endif

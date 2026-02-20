@@ -26,6 +26,10 @@ NBS_INTEGRATION_TEST_DATA: str = "data/dynamoDB/nbsIntegrationTestData/"
 NBS_INTEGRATION_RESPONSES: str = "data/responses/nbsIntegrationTestResponses/"
 NBS_INTEGRATION_CONFIGS: str = "data/configs/nbsIntegrationTestConfigs"
 
+# Performance Test Data Paths
+PERFORMANCE_TEST_DATA: str = "data/dynamoDB/performanceTestData/"
+PERFORMANCE_TEST_CONFIGS: str = "data/configs/performanceTestConfigs"
+
 # Consumer Mapping file - this is a single one for all environments but this may change
 CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.json"
 
