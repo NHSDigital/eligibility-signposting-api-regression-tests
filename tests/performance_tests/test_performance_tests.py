@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
+import logging
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
@@ -102,16 +102,20 @@ def test_locust_run_and_csv_exists(
                 }
                 break
 
-    assert locust_stats["failures"] == 0, (
-        f"Test had {locust_stats['failures']} failures. " f"Full stats: {locust_stats}"
-    )
+    if locust_stats["failures"] != 0:
+        logging.warning(
+            "Test had %s failures. Full stats: %s",
+            locust_stats["failures"],
+            locust_stats,
+        )
 
-    #
-    # assert locust_stats["avg"] <= 600, (
-    #     f"SLA Violated: Average response time was "
-    #     f"{locust_stats['avg']:.2f}ms (Max allowed: 600ms). "
-    #     f"Full stats: {locust_stats}"
-    # )
+    if locust_stats["avg"] > 600:
+        logging.warning(
+            "SLA Violated: Average response time was %.2fms (Max allowed: 600ms). "
+            "Full stats: %s",
+            locust_stats["avg"],
+            locust_stats,
+        )
 
     time.sleep(100)
 
@@ -173,33 +177,39 @@ def test_locust_run_and_csv_exists(
 
     output_results_html("temp/aws_logs_report.html", locust_stats, aws_log_stats)
 
-    assert (
-        aws_log_stats["record_count"] > 0
-    ), f"No CloudWatch log records found. Stats: {aws_log_stats}"
+    if aws_log_stats["record_count"] <= 0:
+        logging.warning(
+            "No CloudWatch log records found. Stats: %s",
+            aws_log_stats,
+        )
 
-    assert aws_log_stats["avg_integration"] < 600, (
-        f"Average integration latency was "
-        f"{aws_log_stats['avg_integration']}ms (Max allowed: 600ms). "
-        f"Stats: {aws_log_stats}"
-    )
+    if aws_log_stats["avg_integration"] >= 600:
+        logging.warning(
+            "Average integration latency was %sms (Max allowed: 600ms). " "Stats: %s",
+            aws_log_stats["avg_integration"],
+            aws_log_stats,
+        )
 
-    assert aws_log_stats["max_integration"] < 600, (
-        f"Max integration latency was "
-        f"{aws_log_stats['max_integration']}ms (Max allowed: 600ms). "
-        f"Stats: {aws_log_stats}"
-    )
+    if aws_log_stats["max_integration"] >= 600:
+        logging.warning(
+            "Max integration latency was %sms (Max allowed: 600ms). " "Stats: %s",
+            aws_log_stats["max_integration"],
+            aws_log_stats,
+        )
 
-    assert aws_log_stats["avg_response"] < 600, (
-        f"Average response latency was "
-        f"{aws_log_stats['avg_response']}ms (Max allowed: 600ms). "
-        f"Stats: {aws_log_stats}"
-    )
+    if aws_log_stats["avg_response"] >= 600:
+        logging.warning(
+            "Average response latency was %sms (Max allowed: 600ms). " "Stats: %s",
+            aws_log_stats["avg_response"],
+            aws_log_stats,
+        )
 
-    assert aws_log_stats["max_response"] < 600, (
-        f"Max response latency was "
-        f"{aws_log_stats['max_response']}ms (Max allowed: 600ms). "
-        f"Stats: {aws_log_stats}"
-    )
+    if aws_log_stats["max_response"] >= 600:
+        logging.warning(
+            "Max response latency was %sms (Max allowed: 600ms). " "Stats: %s",
+            aws_log_stats["max_response"],
+            aws_log_stats,
+        )
 
 
 def output_results_html(

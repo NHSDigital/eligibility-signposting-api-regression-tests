@@ -118,7 +118,7 @@ class S3ConfigManager:
                     "✅ Config '%s' is unchanged in S3. Skipping upload.", filename
                 )
             else:
-                logger.debug("⬆️ Uploading config '%s' to S3...", filename)
+                logger.warning("⬆️ Uploading config '%s' to S3...", filename)
                 self.s3_client.put_object(
                     Body=resolved_json_str.encode("utf-8"),
                     Bucket=self.bucket_name,
