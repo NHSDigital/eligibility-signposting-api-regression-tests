@@ -72,17 +72,11 @@ deep-clean-install:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-clear-db: guard-env guard-log_level
-	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_reset_db.py
+setup-db: guard-env guard-log_level
+	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_reset_db.py tests/test_preload_data.py
 
-preload-data: guard-env guard-log_level
-	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_preload_data.py
-
-run-tests: guard-env guard-log_level clear-db preload-data
-	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_story_tests.py
-	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_error_scenario_tests.py
-	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_vita_integration_tests.py
-	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_nbs_integration_tests.py
+run-tests: guard-env guard-log_level setup-db
+	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_story_tests.py tests/test_error_scenario_tests.py tests/test_vita_integration_tests.py tests/test_nbs_integration_tests.py
 
 ifeq ($(filter $(env),test dev),$(env))
 	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_hashing_tests.py

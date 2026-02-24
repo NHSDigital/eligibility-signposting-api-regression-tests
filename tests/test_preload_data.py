@@ -1,7 +1,7 @@
 """Preloads all DynamoDB test data from all suites in one step.
 
-Runs after clear-db and before individual test suites.
-Uses batch writes for efficiency (~34 batch calls instead of ~850 individual puts).
+Runs after test_reset_db (pytest collects files alphabetically) and before
+individual test suites. Uses batch writes for efficiency.
 """
 
 from tests import test_config
