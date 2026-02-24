@@ -120,13 +120,13 @@ class S3ConfigManager:
         if (
             self._uploaded_configs
             and set(self._uploaded_configs.keys()) == desired_keys
-        ):
-            if all(
+            and all(
                 self._uploaded_configs.get(k) == resolved_configs.get(k)
                 for k in desired_keys
-            ):
-                logger.debug("⏭️ S3 configs unchanged since last upload. Skipping.")
-                return
+            )
+        ):
+            logger.debug("⏭️ S3 configs unchanged since last upload. Skipping.")
+            return
 
         # Delete stale keys not in the desired set
         if self._uploaded_configs:
