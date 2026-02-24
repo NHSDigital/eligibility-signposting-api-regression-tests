@@ -117,7 +117,10 @@ class S3ConfigManager:
             resolved_configs[s3_key] = json.dumps(resolved, indent=2)
 
         # Check if the desired state matches what we've already uploaded
-        if self._uploaded_configs and set(self._uploaded_configs.keys()) == desired_keys:
+        if (
+            self._uploaded_configs
+            and set(self._uploaded_configs.keys()) == desired_keys
+        ):
             if all(
                 self._uploaded_configs.get(k) == resolved_configs.get(k)
                 for k in desired_keys
@@ -142,9 +145,7 @@ class S3ConfigManager:
         # Upload configs that are new or changed
         for s3_key, resolved_json_str in resolved_configs.items():
             if self._uploaded_configs.get(s3_key) == resolved_json_str:
-                logger.debug(
-                    "✅ Config '%s' unchanged. Skipping upload.", s3_key
-                )
+                logger.debug("✅ Config '%s' unchanged. Skipping upload.", s3_key)
             else:
                 logger.debug("⬆️ Uploading config '%s' to S3...", s3_key)
                 self.s3_client.put_object(
@@ -197,14 +198,16 @@ def upload_configs_to_s3(
         local_paths = [Path(p) for p in config_files]
 
     bucket = os.getenv("S3_CONFIG_BUCKET_NAME")
-    if _cached_s3_config_manager is None or _cached_s3_config_manager.bucket_name != bucket:
+    if (
+        _cached_s3_config_manager is None
+        or _cached_s3_config_manager.bucket_name != bucket
+    ):
         _cached_s3_config_manager = S3ConfigManager(bucket)
 
     _cached_s3_config_manager.upload_all_configs(local_paths)
 
 
 def delete_all_configs_from_s3() -> None:
-    global _cached_s3_config_manager
     s3_connection = S3ConfigManager(os.getenv("S3_CONFIG_BUCKET_NAME"))
     s3_connection.delete_all()
     # Also invalidate the cached manager so it doesn't think configs still exist

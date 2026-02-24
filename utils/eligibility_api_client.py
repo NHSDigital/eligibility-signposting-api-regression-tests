@@ -81,10 +81,6 @@ class EligibilityApiClient:
         nhs_segment = nhs_number.strip() if isinstance(nhs_number, str) else ""
         url = f"{base}/{nhs_segment}" if nhs_segment else f"{base}/"
 
-        cert = (
-            str(self.cert_paths["client_cert"]),
-            str(self.cert_paths["private_key"]),
-        )
         verify: bool | str = str(self.cert_paths["ca_cert"]) if strict_ssl else False
 
         try:

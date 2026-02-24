@@ -8,7 +8,6 @@ import pytest
 
 from dotenv import load_dotenv
 
-from tests import test_config
 from utils.dynamo_helper import insert_into_dynamo
 from utils.secrets_helper import SecretsManagerClient
 
