@@ -141,4 +141,3 @@ jobs:
         with:
           name: performance-awslogs-report
           path: temp/aws_logs_report.html
-

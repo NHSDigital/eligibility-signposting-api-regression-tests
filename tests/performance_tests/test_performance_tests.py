@@ -5,7 +5,7 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict
 
 import boto3
 import pytest
@@ -64,11 +64,13 @@ def _build_locust_command(
         "--html",
         html_report,
         "--stop-timeout",
-        "30"
+        "30",
     ]
 
 
-def _run_locust(command: list[str], env: Dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _run_locust(
+    command: list[str], env: Dict[str, str]
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, capture_output=True, text=True, env=env)
 
 
@@ -90,7 +92,9 @@ def _read_locust_aggregated_stats(stats_file: Path) -> Dict[str, float]:
     raise AssertionError(f"Could not find 'Aggregated' row in {stats_file}")
 
 
-def _warn_on_locust_sla(locust_stats: Dict[str, float], sla_ms: float = SLA_AVG_MS) -> None:
+def _warn_on_locust_sla(
+    locust_stats: Dict[str, float], sla_ms: float = SLA_AVG_MS
+) -> None:
     failures = int(locust_stats.get("failures", 0))
     avg = float(locust_stats.get("avg", 0.0))
 
@@ -202,7 +206,9 @@ def _warn_on_aws_sla(
             )
 
 
-def write_request_params_to_csv(nhs_number: str, request_headers: str, csv_path: Path) -> None:
+def write_request_params_to_csv(
+    nhs_number: str, request_headers: str, csv_path: Path
+) -> None:
     file_exists = csv_path.exists()
     with csv_path.open(mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
@@ -237,8 +243,6 @@ def test_locust_run_and_csv_exists(
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
-
-
 
     locust_command = _build_locust_command(
         perf_users=perf_users,
