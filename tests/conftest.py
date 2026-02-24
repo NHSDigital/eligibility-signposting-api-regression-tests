@@ -4,8 +4,14 @@ import os
 import pytest
 from dotenv import load_dotenv
 
+from tests import test_config
+
 from utils.eligibility_api_client import EligibilityApiClient
-from utils.s3_config_manager import upload_configs_to_s3
+from utils.s3_config_manager import (
+    upload_configs_to_s3,
+    upload_consumer_mapping_file_to_s3,
+)
+
 
 load_dotenv()
 
@@ -74,6 +80,11 @@ def pytest_configure(config):
 @pytest.fixture(scope="session")
 def eligibility_client():
     return EligibilityApiClient(cert_dir="certs")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def upload_consumer_mapping_once():
+    upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 
 @pytest.fixture

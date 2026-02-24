@@ -130,7 +130,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: make install
+        run: make install-python
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5.1.0

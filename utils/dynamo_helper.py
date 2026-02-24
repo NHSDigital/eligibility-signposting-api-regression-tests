@@ -158,6 +158,45 @@ class DynamoDBHelper:
         waiter.wait(TableName=self.table_name)
         logger.info(f"Table '{self.table_name}' successfully deleted.")
 
+    def purge_all_items(self) -> int:
+        logger.info("Purging all items from table '%s'...", self.table_name)
+        key_attributes = [
+            key["AttributeName"] for key in self.table.key_schema
+        ]
+        expression_attribute_names = {
+            f"#k{index}": name for index, name in enumerate(key_attributes)
+        }
+        projection_expression = ", ".join(expression_attribute_names.keys())
+
+        scan_kwargs = {
+            "ProjectionExpression": projection_expression,
+            "ExpressionAttributeNames": expression_attribute_names,
+        }
+
+        deleted_count = 0
+        while True:
+            response = self.table.scan(**scan_kwargs)
+            items = response.get("Items", [])
+
+            if items:
+                with self.table.batch_writer() as batch:
+                    for item in items:
+                        key = {
+                            attribute_name: item[attribute_name]
+                            for attribute_name in key_attributes
+                        }
+                        batch.delete_item(Key=key)
+                        deleted_count += 1
+
+            last_evaluated_key = response.get("LastEvaluatedKey")
+            if not last_evaluated_key:
+                break
+
+            scan_kwargs["ExclusiveStartKey"] = last_evaluated_key
+
+        logger.info("Purge complete. Deleted %d item(s).", deleted_count)
+        return deleted_count
+
 
 def restore_tags_to_table(dynamo_db_table: DynamoDBHelper):
     if dynamo_db_table.table_arn is None or dynamo_db_table.tags is None:
@@ -207,6 +246,16 @@ def reset_dynamo_tables():
         )
         return
     dynamo_db_table = DynamoDBHelper(table_name, environment)
+
+    try:
+        deleted_count = dynamo_db_table.purge_all_items()
+        logger.info("DynamoDB reset complete via purge. Removed %d item(s).", deleted_count)
+        return
+    except ClientError as e:
+        logger.warning(
+            "Purge-based reset failed; falling back to delete/recreate flow: %s",
+            e,
+        )
 
     # --- Step 1: Fetch table information ---
     try:

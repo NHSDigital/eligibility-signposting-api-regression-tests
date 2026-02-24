@@ -10,13 +10,10 @@ from dotenv import load_dotenv
 
 from tests import test_config
 from utils.dynamo_helper import insert_into_dynamo
-from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 from utils.secrets_helper import SecretsManagerClient
 
 load_dotenv()
 logger = logging.getLogger(__name__)
-
-upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 test_cases = [
     {
