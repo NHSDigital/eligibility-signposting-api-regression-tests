@@ -2,13 +2,9 @@ import http
 
 import pytest
 
-from tests import test_config
 from utils.s3_config_manager import (
     delete_all_configs_from_s3,
-    upload_consumer_mapping_file_to_s3,
 )
-
-upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 
 @pytest.mark.errorscenarios
