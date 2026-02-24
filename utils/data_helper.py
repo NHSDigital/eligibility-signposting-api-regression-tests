@@ -69,7 +69,26 @@ def _insert_scenarios_into_dynamo(all_data):
 
         all_items.extend(items_to_insert)
 
-    insert_into_dynamo(all_items)
+    # Deduplicate items with the same (NHS_NUMBER, ATTRIBUTE_TYPE) key.
+    # Some test scenarios share identical DynamoDB data (e.g. same patient,
+    # different S3 configs) and batch_writer rejects duplicate keys in a batch.
+    seen_keys = set()
+    unique_items = []
+    for item in all_items:
+        key = (str(item.get("NHS_NUMBER", "")), str(item.get("ATTRIBUTE_TYPE", "")))
+        if key not in seen_keys:
+            seen_keys.add(key)
+            unique_items.append(item)
+
+    if len(unique_items) < len(all_items):
+        logger.info(
+            "Deduplicated %d → %d items (removed %d duplicates)",
+            len(all_items),
+            len(unique_items),
+            len(all_items) - len(unique_items),
+        )
+
+    insert_into_dynamo(unique_items)
     logger.info("Data Added to Dynamo")
 
 
