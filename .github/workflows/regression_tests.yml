@@ -7,17 +7,17 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: 'Environment to run tests against'
+        description: "Environment to run tests against"
         type: string
         required: false
         default: "dev"
       tags:
-        description: 'Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :'
+        description: "Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :"
         required: false
         type: string
         default: "@regression"
       log_level:
-        description: 'Log level to output to console'
+        description: "Log level to output to console"
         type: string
         required: false
         default: "INFO"
@@ -27,24 +27,24 @@ on:
         required: false
         default: "Run during opened pull request"
       github_tag:
-        description: 'The github tag to run the test pack from'
+        description: "The github tag to run the test pack from"
         type: string
         required: true
 
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :'
+        description: "Test scenario tags. If you want to specify multiple tags, you should separate them with a colon :"
         required: false
         type: string
         default: "@regression"
       environment:
-        description: 'Environment to run tests against'
+        description: "Environment to run tests against"
         type: environment
         required: true
         default: "dev"
       log_level:
-        description: 'Log level to output to console'
+        description: "Log level to output to console"
         type: choice
         options: ["INFO", "DEBUG"]
         required: false
@@ -54,7 +54,7 @@ on:
         required: true
         default: "Manually Triggered Run"
       github_tag:
-        description: 'The github tag to run the test pack from'
+        description: "The github tag to run the test pack from"
         required: true
         default: "main"
 
