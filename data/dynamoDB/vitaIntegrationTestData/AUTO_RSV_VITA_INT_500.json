@@ -7,7 +7,7 @@
     },
     "expected_response_code": 500,
     "config_filenames": [
-        "RSV_Config_v2.0WIP.json"
+        "RSV_Config_v2.0WIP_v0.2.json"
     ],
     "data": [
         {
