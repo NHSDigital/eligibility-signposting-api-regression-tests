@@ -34,6 +34,13 @@ class EligibilityApiClient:
 
         self._ensure_certs_present()
 
+        # Use a persistent session for TCP/TLS connection reuse across tests
+        self.session = requests.Session()
+        self.session.cert = (
+            str(self.cert_paths["client_cert"]),
+            str(self.cert_paths["private_key"]),
+        )
+
     def _get_ssm_parameter(self, param_name: str, *, decrypt: bool = True) -> str:
         try:
             client = boto3.client("ssm")
@@ -81,10 +88,9 @@ class EligibilityApiClient:
         verify: bool | str = str(self.cert_paths["ca_cert"]) if strict_ssl else False
 
         try:
-            response = requests.request(
+            response = self.session.request(
                 method=method.upper(),
                 url=url,
-                cert=cert,
                 verify=verify,
                 json=payload,
                 headers=headers,
