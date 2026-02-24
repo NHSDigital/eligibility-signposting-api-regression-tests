@@ -284,17 +284,6 @@ def insert_into_dynamo(data):
         _cached_dynamo_helper = DynamoDBHelper(dynamodb_table_name, environment)
 
     table = _cached_dynamo_helper
-    if len(data) > 1:
-        try:
-            table.insert_items(data)
-            logger.debug("✅ Batch inserted %d items", len(data))
-            return
-        except ClientError as e:
-            logger.warning(
-                "Batch insert failed, falling back to individual inserts: %s",
-                e.response["Error"]["Message"],
-            )
-
     for item in data:
         try:
             table.insert_item(item)

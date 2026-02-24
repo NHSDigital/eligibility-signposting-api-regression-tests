@@ -14,9 +14,6 @@ from utils.placeholder_context import PlaceholderDTO
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-# In-process cache: tracks the set of config filenames currently in S3
-# so we can skip redundant uploads when consecutive tests use the same configs.
-_last_uploaded_config_key: tuple[str, ...] | None = None
 _cached_s3_config_manager: "S3ConfigManager | None" = None
 
 
@@ -162,13 +159,7 @@ def upload_config_to_s3(local_path: Path) -> None:
 def upload_configs_to_s3(
     config_files: list[str], config_path: str | Path | None = None
 ) -> None:
-    global _last_uploaded_config_key, _cached_s3_config_manager
-
-    # Build a cache key from sorted filenames so we can skip if unchanged
-    cache_key = tuple(sorted(config_files))
-    if cache_key == _last_uploaded_config_key:
-        logger.debug("S3 configs unchanged (%s), skipping upload.", cache_key)
-        return
+    global _cached_s3_config_manager
 
     if config_path:
         base = Path(config_path)
@@ -183,7 +174,6 @@ def upload_configs_to_s3(
         _cached_s3_config_manager = S3ConfigManager(bucket)
 
     _cached_s3_config_manager.upload_all_configs(local_paths)
-    _last_uploaded_config_key = cache_key
 
 
 def delete_all_configs_from_s3() -> None:
