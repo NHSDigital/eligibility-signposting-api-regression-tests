@@ -20,6 +20,7 @@ def _(parser):
 
 with open("temp/nhs_numbers.csv", newline="") as csvFile:
     reader = csv.reader(csvFile)
+    next(reader, None)
     csvData = list(reader)
 
 

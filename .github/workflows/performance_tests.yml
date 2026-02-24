@@ -125,7 +125,7 @@ jobs:
             env="$ENVIRONMENT" \
             log_level="$LOG_LEVEL" \
             users="$USERS" \
-            spawn_rate="$SPWAN_RATE" \
+            spawn_rate="$SPAWN_RATE" \
             run_time="$RUN_TIME"
 
       - name: Upload Locust Performance Report

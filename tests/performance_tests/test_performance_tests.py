@@ -1,18 +1,31 @@
 import csv
+import logging
 import os
 import subprocess
+import time
+from datetime import datetime
 from pathlib import Path
+from typing import Dict, Tuple
 
+import boto3
 import pytest
-import logging
+
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
-import boto3
-from datetime import datetime
-import time
 
-# Update the below with the configuration values specified in test_config.py
+
+SLA_MAX_MS = 600
+SLA_AVG_MS = 200
+CW_REGION = "eu-west-2"
+CW_LOG_GROUP = "/aws/apigateway/default-eligibility-signposting-api"
+LOCUST_FILE = "tests/performance_tests/locust.py"
+LOCUST_CSV_PREFIX = "temp/locust_results"
+LOCUST_HTML_REPORT = "temp/locust_report.html"
+AWS_HTML_REPORT = "temp/aws_logs_report.html"
+CW_INGESTION_WAIT_S = 150
+CW_QUERY_POLL_S = 1
+
 all_data, dto = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
 config_path = test_config.PERFORMANCE_TEST_CONFIGS
 upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
@@ -24,32 +37,198 @@ id_list = [
 ]
 
 
-def write_request_params_to_csv(nhs_number: str, request_headers: str, csv_path: Path):
+def _epoch_now() -> int:
+    return int(datetime.now().timestamp())
+
+
+def _build_locust_command(
+    perf_users: str,
+    perf_spawn_rate: str,
+    perf_run_time: str,
+    csv_prefix: str,
+    html_report: str,
+) -> list[str]:
+    return [
+        "locust",
+        "-f",
+        LOCUST_FILE,
+        "--headless",
+        "-u",
+        str(perf_users),
+        "-r",
+        str(perf_spawn_rate),
+        "-t",
+        str(perf_run_time),
+        "--csv",
+        csv_prefix,
+        "--html",
+        html_report,
+        "--stop-timeout",
+        "30"
+    ]
+
+
+def _run_locust(command: list[str], env: Dict[str, str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(command, capture_output=True, text=True, env=env)
+
+
+def _read_locust_aggregated_stats(stats_file: Path) -> Dict[str, float]:
+    """
+    Returns dict with keys: avg, min, max, failures
+    """
+    with stats_file.open(mode="r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row.get("Name") == "Aggregated":
+                return {
+                    "avg": float(row["Average Response Time"]),
+                    "min": float(row["Min Response Time"]),
+                    "max": float(row["Max Response Time"]),
+                    "failures": int(row["Failure Count"]),
+                }
+
+    raise AssertionError(f"Could not find 'Aggregated' row in {stats_file}")
+
+
+def _warn_on_locust_sla(locust_stats: Dict[str, float], sla_ms: float = SLA_AVG_MS) -> None:
+    failures = int(locust_stats.get("failures", 0))
+    avg = float(locust_stats.get("avg", 0.0))
+
+    if failures != 0:
+        logging.warning("Test had %s failures. Full stats: %s", failures, locust_stats)
+
+    if avg > sla_ms:
+        logging.warning(
+            "LOCUST LOGS: Average response time was %.2fms (Max allowed: %.0fms). Full stats: %s",
+            avg,
+            sla_ms,
+            locust_stats,
+        )
+
+
+def _logs_insights_query_string() -> str:
+    return (
+        "stats avg(integrationLatency) as avgIntegrationLatency,"
+        " max(integrationLatency) as maxIntegrationLatency,"
+        " min(integrationLatency) as minIntegrationLatency,"
+        " avg(responseLatency) as avgResponseLatency,"
+        " max(responseLatency) as maxResponseLatency,"
+        " min(responseLatency) as minResponseLatency,"
+        " count_distinct(requestId) as recordCount"
+    )
+
+
+def _run_logs_insights_query(
+    client,
+    *,
+    log_group: str,
+    start_time: int,
+    end_time: int,
+    query: str,
+    poll_interval_s: int = CW_QUERY_POLL_S,
+    timeout_s: int = 60,
+) -> dict:
+    response = client.start_query(
+        logGroupName=log_group,
+        startTime=start_time,
+        endTime=end_time,
+        queryString=query,
+    )
+    query_id = response["queryId"]
+
+    deadline = time.time() + timeout_s
+    while True:
+        result = client.get_query_results(queryId=query_id)
+        if result.get("status") == "Complete":
+            return result
+
+        if time.time() >= deadline:
+            raise AssertionError(
+                "CloudWatch Logs Insights query timed out. "
+                f"Status={result.get('status')} start_time={start_time} end_time={end_time} "
+                f"query_id={query_id}"
+            )
+
+        time.sleep(poll_interval_s)
+
+
+def _parse_aws_log_stats(insights_result: dict) -> Dict[str, float]:
+    if not insights_result.get("results"):
+        raise AssertionError(
+            "CloudWatch Logs Insights returned no rows. "
+            f"Status={insights_result.get('status')}"
+        )
+
+    row = insights_result["results"][0]
+    row_dict = {field["field"]: field.get("value") for field in row}
+
+    return {
+        "avg_integration": float(row_dict.get("avgIntegrationLatency") or 0.0),
+        "min_integration": float(row_dict.get("minIntegrationLatency") or 0.0),
+        "max_integration": float(row_dict.get("maxIntegrationLatency") or 0.0),
+        "avg_response": float(row_dict.get("avgResponseLatency") or 0.0),
+        "min_response": float(row_dict.get("minResponseLatency") or 0.0),
+        "max_response": float(row_dict.get("maxResponseLatency") or 0.0),
+        "record_count": int(float(row_dict.get("recordCount") or 0.0)),
+    }
+
+
+def _warn_on_aws_sla(
+    aws_log_stats: Dict[str, float],
+    avg_sla_ms: float = SLA_AVG_MS,
+    max_sla_ms: float = SLA_MAX_MS,
+) -> None:
+    if aws_log_stats["record_count"] <= 0:
+        logging.warning(
+            "No CloudWatch log records found. Stats: %s",
+            aws_log_stats,
+        )
+
+    checks = [
+        ("avg_integration", "Average integration latency", avg_sla_ms),
+        ("avg_response", "Average response latency", avg_sla_ms),
+        ("max_integration", "Max integration latency", max_sla_ms),
+        ("max_response", "Max response latency", max_sla_ms),
+    ]
+
+    for key, label, threshold in checks:
+        if aws_log_stats[key] >= threshold:
+            logging.warning(
+                "CLOUDWATCH LOGS: %s was %sms (Max allowed: %.0fms). Stats: %s",
+                label,
+                aws_log_stats[key],
+                threshold,
+                aws_log_stats,
+            )
+
+
+def write_request_params_to_csv(nhs_number: str, request_headers: str, csv_path: Path) -> None:
+    file_exists = csv_path.exists()
     with csv_path.open(mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        if not csv_path.exists():
-            writer.writerow(["NhsNumber"])
+        if not file_exists:
+            writer.writerow(["NhsNumber", "RequestHeaders"])
         writer.writerow([nhs_number, request_headers])
 
 
 @pytest.fixture(scope="function")
-def temp_csv_path():
+def temp_csv_path() -> Path:
     temp_dir = Path("temp")
-    file_path = temp_dir / "nhs_numbers.csv"
     temp_dir.mkdir(parents=True, exist_ok=True)
-    return file_path
+    return temp_dir / "nhs_numbers.csv"
 
 
 @pytest.fixture(scope="function")
-def test_data(get_scenario_params, temp_csv_path):
-    for filename, scenario in param_list:
+def test_data(get_scenario_params, temp_csv_path) -> None:
+    for _, scenario in param_list:
         (
             nhs_number,
-            config_filenames,
+            _config_filenames,
             request_headers,
-            query_params,
-            expected_response_code,
+            _query_params,
+            _expected_response_code,
         ) = get_scenario_params(scenario, config_path)
+
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
@@ -58,158 +237,52 @@ def test_locust_run_and_csv_exists(
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
-    locust_report = "temp/locust_results"
 
-    start_time = int(datetime.now().timestamp())
 
-    locust_command = [
-        "locust",
-        "-f",
-        "tests/performance_tests/locust.py",
-        "--headless",
-        "-u",
-        perf_users,
-        "-r",
-        perf_spawn_rate,
-        "-t",
-        perf_run_time,
-        "--csv",
-        locust_report,
-        "--html",
-        "temp/locust_report.html",
-    ]
 
-    result = subprocess.run(
-        locust_command, capture_output=True, text=True, env=custom_env
+    locust_command = _build_locust_command(
+        perf_users=perf_users,
+        perf_spawn_rate=perf_spawn_rate,
+        perf_run_time=perf_run_time,
+        csv_prefix=LOCUST_CSV_PREFIX,
+        html_report=LOCUST_HTML_REPORT,
     )
 
-    end_time = int(datetime.now().timestamp())
+    start_time = _epoch_now()
+    logging.warning("LOCUST TEST STARTING: start_time=%s", start_time)
 
-    assert result.returncode == 0, f"Locust failed: {result.stderr}"
-    stats_file = Path(f"{locust_report}_stats.csv")
+    proc = _run_locust(locust_command, env=custom_env)
 
-    locust_stats = {}
+    end_time = _epoch_now()
+    logging.warning("LOCUST TEST FINISHED: end_time=%s", end_time)
 
-    with open(stats_file, mode="r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row["Name"] == "Aggregated":
-                locust_stats = {
-                    "avg": float(row["Average Response Time"]),
-                    "min": float(row["Min Response Time"]),
-                    "max": float(row["Max Response Time"]),
-                    "failures": int(row["Failure Count"]),
-                }
-                break
+    assert proc.returncode == 0, f"Locust failed: {proc.stderr}"
 
-    if locust_stats["failures"] != 0:
-        logging.warning(
-            "Test had %s failures. Full stats: %s",
-            locust_stats["failures"],
-            locust_stats,
-        )
+    stats_file = Path(f"{LOCUST_CSV_PREFIX}_stats.csv")
+    assert stats_file.exists(), f"Locust stats CSV not found: {stats_file}"
 
-    if locust_stats["avg"] > 600:
-        logging.warning(
-            "SLA Violated: Average response time was %.2fms (Max allowed: 600ms). "
-            "Full stats: %s",
-            locust_stats["avg"],
-            locust_stats,
-        )
+    locust_stats = _read_locust_aggregated_stats(stats_file)
+    _warn_on_locust_sla(locust_stats, sla_ms=SLA_AVG_MS)
 
-    time.sleep(100)
+    # CloudWatch logs can arrive late
+    time.sleep(CW_INGESTION_WAIT_S)
 
-    query = (
-        "stats avg(integrationLatency) as avgIntegrationLatency,"
-        " max(integrationLatency) as maxIntegrationLatency,"
-        " min(integrationLatency) as minIntegrationLatency,"
-        " avg(responseLatency) as avgResponseLatency,"
-        " max(responseLatency) as maxResponseLatency,"
-        " min(responseLatency) as minResponseLatency,"
-        " count(*) as recordCount"
+    logs_client = boto3.client("logs", region_name=CW_REGION)
+    insights_result = _run_logs_insights_query(
+        logs_client,
+        log_group=CW_LOG_GROUP,
+        start_time=start_time,
+        end_time=end_time,
+        query=_logs_insights_query_string(),
+        poll_interval_s=CW_QUERY_POLL_S,
+        timeout_s=60,
     )
 
-    client = boto3.client("logs", region_name="eu-west-2")
+    aws_log_stats = _parse_aws_log_stats(insights_result)
 
-    print(start_time, end_time)
-
-    response = client.start_query(
-        logGroupName="/aws/apigateway/default-eligibility-signposting-api",
-        startTime=start_time,
-        endTime=end_time,
-        queryString=query,
-    )
-
-    query_id = response["queryId"]
-
-    # Poll for query completion
-    while True:
-        result = client.get_query_results(queryId=query_id)
-        if result["status"] == "Complete":
-            break
-        time.sleep(1)
-
-    if not result.get("results"):
-        raise AssertionError(
-            "CloudWatch Logs Insights returned no rows. "
-            f"Status={result.get('status')} "
-            f"start_time={start_time} end_time={end_time}"
-        )
-
-    # AWS log results
-    aws_log_stats = {}
-
-    # log results
-    for row in result["results"]:
-        row_dict = {field["field"]: field.get("value") for field in row}
-
-        aws_log_stats = {
-            "avg_integration": float(row_dict.get("avgIntegrationLatency")),
-            "min_integration": float(row_dict.get("minIntegrationLatency")),
-            "max_integration": float(row_dict.get("maxIntegrationLatency")),
-            "avg_response": float(row_dict.get("avgResponseLatency")),
-            "min_response": float(row_dict.get("minResponseLatency")),
-            "max_response": float(row_dict.get("maxResponseLatency")),
-            "record_count": int(row_dict.get("recordCount")),
-        }
-
-        break
-
-    output_results_html("temp/aws_logs_report.html", locust_stats, aws_log_stats)
-
-    if aws_log_stats["record_count"] <= 0:
-        logging.warning(
-            "No CloudWatch log records found. Stats: %s",
-            aws_log_stats,
-        )
-
-    if aws_log_stats["avg_integration"] >= 600:
-        logging.warning(
-            "Average integration latency was %sms (Max allowed: 600ms). " "Stats: %s",
-            aws_log_stats["avg_integration"],
-            aws_log_stats,
-        )
-
-    if aws_log_stats["max_integration"] >= 600:
-        logging.warning(
-            "Max integration latency was %sms (Max allowed: 600ms). " "Stats: %s",
-            aws_log_stats["max_integration"],
-            aws_log_stats,
-        )
-
-    if aws_log_stats["avg_response"] >= 600:
-        logging.warning(
-            "Average response latency was %sms (Max allowed: 600ms). " "Stats: %s",
-            aws_log_stats["avg_response"],
-            aws_log_stats,
-        )
-
-    if aws_log_stats["max_response"] >= 600:
-        logging.warning(
-            "Max response latency was %sms (Max allowed: 600ms). " "Stats: %s",
-            aws_log_stats["max_response"],
-            aws_log_stats,
-        )
+    output_results_html(AWS_HTML_REPORT, locust_stats, aws_log_stats)
+    _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
+    assert False
 
 
 def output_results_html(
