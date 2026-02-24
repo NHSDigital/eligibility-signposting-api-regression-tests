@@ -268,16 +268,20 @@ def load_information_from_backup_files(dynamo_db_table: DynamoDBHelper):
     )
 
 
+_cached_dynamo_helper: "DynamoDBHelper | None" = None
+
+
 def insert_into_dynamo(data):
-    logger.debug("Inserting into Dynamo: %s", data)
+    global _cached_dynamo_helper
+    logger.debug("Inserting %d items into Dynamo", len(data))
     environment = os.getenv("ENVIRONMENT")
     dynamodb_table_name = os.getenv("DYNAMODB_TABLE_NAME")
-    table = DynamoDBHelper(dynamodb_table_name, environment)
-    for item in data:
-        try:
-            table.insert_item(item)
-            logger.debug("✅ Inserted: %s", item)
-        except ClientError as e:
-            logger.exception(
-                "❌ Failed to insert %s: %s", item, e.response["Error"]["Message"]
-            )
+
+    if (
+        _cached_dynamo_helper is None
+        or _cached_dynamo_helper.table_name != dynamodb_table_name
+    ):
+        _cached_dynamo_helper = DynamoDBHelper(dynamodb_table_name, environment)
+
+    table = _cached_dynamo_helper
+    table.insert_items(data)

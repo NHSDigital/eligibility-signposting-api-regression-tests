@@ -33,5 +33,5 @@ CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.j
 INT_TEST_CONFIG_PATHS: list[str] = [
     "data/configs/nbsIntegrationTestConfigs/NBS_RSV_Config_April2026_v0.7WIP.json",
     "data/configs/nbsIntegrationTestConfigs/NBS_COVID_Config_Spring2026_v0.2WIP.json",
-    "data/configs/vitaIntegrationTestConfigs/RSV_Config_v2.0WIP.json",
+    "data/configs/vitaIntegrationTestConfigs/RSV_Config_v2.0WIP_v0.2.json",
 ]

@@ -16,11 +16,6 @@
             "condition": "RSV",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "rsv_age",
-                    "cohortStatus": "NotActionable",
-                    "cohortText": "are aged 75 or over"
-                },
-                {
                     "cohortCode": "rsv_care_home_residents",
                     "cohortStatus": "NotActionable",
                     "cohortText": "live in a care home for older adults"
