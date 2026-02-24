@@ -24,13 +24,26 @@ def initialise_tests(folder):
     folder_path = Path(folder).resolve()
     all_data, dto = load_all_test_scenarios(folder_path)
 
+    # Skip DynamoDB insertion if data was preloaded in a dedicated step
+    if os.getenv("DYNAMO_PRELOADED", "").lower() == "true":
+        logger.info("Skipping DynamoDB insertion (data preloaded)")
+        return all_data, dto
+
+    _insert_scenarios_into_dynamo(all_data)
+    return all_data, dto
+
+
+def _insert_scenarios_into_dynamo(all_data):
+    """Hash NHS numbers (if required) and insert all scenario data into DynamoDB."""
     # Setup AWS Secrets
     secrets_manager = SecretsManagerClient(AWS_REGION)
     secret_keys = secrets_manager.initialise_secret_keys(
         f"eligibility-signposting-api-{os.getenv('ENVIRONMENT')}/hashing_secret"
     )
 
-    logger.info("Encrypting NHS numbers (if required) and inserting data into DynamoDB")
+    all_items = []
+
+    logger.info("Encrypting NHS numbers (if required) and preparing DynamoDB items")
     for scenario in all_data.values():
         # get the scenario data items to be stored in dynamo
         dynamo_items = scenario["dynamo_items"]
@@ -54,9 +67,28 @@ def initialise_tests(folder):
         else:
             raise ValueError(f"Unknown secret_version: {scenario_secret_version}")
 
-        insert_into_dynamo(items_to_insert)
+        all_items.extend(items_to_insert)
+
+    insert_into_dynamo(all_items)
     logger.info("Data Added to Dynamo")
-    return all_data, dto
+
+
+def preload_all_dynamo_data(folders):
+    """Load and insert DynamoDB data from multiple test suite folders at once.
+
+    Uses a single SecretsManager call and batch DynamoDB writes for efficiency.
+    """
+    combined_data = {}
+    for folder in folders:
+        folder_path = Path(folder).resolve()
+        if not folder_path.exists() or not any(folder_path.glob("*.json")):
+            logger.info("Skipping empty folder: %s", folder)
+            continue
+        all_data, _ = load_all_test_scenarios(folder_path)
+        combined_data.update(all_data)
+
+    logger.info("Preloading %d scenarios into DynamoDB", len(combined_data))
+    _insert_scenarios_into_dynamo(combined_data)
 
 
 def resolve_placeholders_in_data(data, context, file_name):

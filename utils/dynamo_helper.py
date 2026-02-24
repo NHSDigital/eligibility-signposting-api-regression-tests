@@ -273,7 +273,7 @@ _cached_dynamo_helper: "DynamoDBHelper | None" = None
 
 def insert_into_dynamo(data):
     global _cached_dynamo_helper
-    logger.debug("Inserting into Dynamo: %s", data)
+    logger.debug("Inserting %d items into Dynamo", len(data))
     environment = os.getenv("ENVIRONMENT")
     dynamodb_table_name = os.getenv("DYNAMODB_TABLE_NAME")
 
@@ -284,11 +284,4 @@ def insert_into_dynamo(data):
         _cached_dynamo_helper = DynamoDBHelper(dynamodb_table_name, environment)
 
     table = _cached_dynamo_helper
-    for item in data:
-        try:
-            table.insert_item(item)
-            logger.debug("✅ Inserted: %s", item)
-        except ClientError as e:
-            logger.exception(
-                "❌ Failed to insert %s: %s", item, e.response["Error"]["Message"]
-            )
+    table.insert_items(data)
