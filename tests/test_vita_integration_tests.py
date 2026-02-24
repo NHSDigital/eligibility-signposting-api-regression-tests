@@ -4,7 +4,6 @@ import pytest
 
 from tests import test_config
 from utils.data_helper import initialise_tests, load_all_expected_responses
-from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 
 # Update the below with the configuration values specified in test_config.py
 all_data, dto = initialise_tests(test_config.VITA_INTEGRATION_TEST_DATA)
@@ -12,8 +11,6 @@ all_expected_responses = load_all_expected_responses(
     test_config.VITA_INTEGRATION_RESPONSES
 )
 config_path = test_config.VITA_INTEGRATION_CONFIGS
-
-upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 param_list = list(all_data.items())
 id_list = [
