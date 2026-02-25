@@ -1,0 +1,131 @@
+name: Performance Tests
+
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+        default: "dev"
+      users:
+        description: 'Number of users to simulate'
+        type: number
+        required: true
+        default: 100
+      spawn_rate:
+        description: 'Rate to spawn users'
+        type: number
+        required: true
+        default: 20
+      run_time:
+        description: 'Duration to run the test for (e.g. 1m, 30s, 1h)'
+        type: string
+        required: true
+        default: "30s"
+      github_tag:
+        description: 'The github tag to run the test pack from'
+        required: true
+        default: "main"
+
+jobs:
+  performance_tests:
+    permissions:
+      id-token: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: show_input_parameters
+        env:
+          environment: ${{ inputs.environment }}
+          log_level: "INFO"
+          github_tag: ${{ inputs.github_tag }}
+          run_time : ${{ inputs.run_time }}
+          users: ${{ inputs.users }}
+          spawn_rate: ${{ inputs.spawn_rate }}
+
+        run: |
+          echo "environment: ${environment}"
+          echo "log_level: ${log_level}"
+          echo "github_tag: ${github_tag}"
+          echo "run_time: ${run_time}"
+          echo "users: ${users}"
+          echo "spawn_rate: ${spawn_rate}"
+
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          ref: ${{ inputs.github_tag }}
+
+      # using git commit sha for version of action to ensure we have stable version
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+
+      - name: Cache asdf
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.asdf
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+
+      - name: Install asdf dependencies in .tool-versions
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+        with:
+          asdf_version: 0.18.0
+        env:
+          PYTHON_CONFIGURE_OPTS: --enable-shared
+
+      - name: Cache Virtualenv
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: make install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.0 # NOSONAR
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
+          aws-region: eu-west-2
+
+      - name: Performance Tests
+        id: tests
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+          LOG_LEVEL: "INFO"
+          INPUT_TAG: "@performance"
+          USERS: ${{ inputs.users }}
+          SPAWN_RATE: ${{ inputs.spawn_rate }}
+          RUN_TIME: ${{ inputs.run_time }}
+        run: |
+          make run-performance-tests \
+            env="$ENVIRONMENT" \
+            log_level="$LOG_LEVEL" \
+            users="$USERS" \
+            spawn_rate="$SPAWN_RATE" \
+            run_time="$RUN_TIME"
+
+      - name: Upload Locust Performance Report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-locust-report
+          path: temp/locust_report.html
+
+      - name: Upload AWS Logs Performance Report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-awslogs-report
+          path: temp/aws_logs_report.html
