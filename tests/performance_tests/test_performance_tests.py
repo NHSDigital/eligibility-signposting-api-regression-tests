@@ -17,8 +17,8 @@ from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 
 SLA_MAX_MS = 600
 SLA_AVG_MS = 200
-CW_REGION = "eu-west-2"
-CW_LOG_GROUP = "/aws/apigateway/default-eligibility-signposting-api"  # NOSONAR
+CW_REGION = "eu-west-2"  # NOSONAR
+CW_LOG_GROUP = "/aws/apigateway/default-eligibility-signposting-api"
 LOCUST_FILE = "tests/performance_tests/locust.py"
 LOCUST_CSV_PREFIX = "temp/locust_results"
 LOCUST_HTML_REPORT = "temp/locust_report.html"
