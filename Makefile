@@ -72,26 +72,22 @@ deep-clean-install:
 pre-commit:
 	poetry run pre-commit run --all-files
 
-clear-db: guard-env guard-log_level
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_reset_db.py
+setup-db: guard-env guard-log_level
+	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_reset_db.py tests/test_preload_data.py
 
-run-tests: guard-env guard-log_level clear-db
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_story_tests.py
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_error_scenario_tests.py
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_vita_integration_tests.py
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_nbs_integration_tests.py
+run-tests: guard-env guard-log_level setup-db
+	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_story_tests.py tests/test_error_scenario_tests.py tests/test_vita_integration_tests.py tests/test_nbs_integration_tests.py
 
 run-performance-tests: guard-env guard-log_level clear-db
 	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/performance_tests/test_performance_tests.py
 
 ifeq ($(filter $(env),test dev),$(env))
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_hashing_tests.py
+	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_hashing_tests.py
 endif
 
 ifeq ($(filter $(env),preprod),$(env))
-	poetry run pytest --env=${env} --log-cli-level=${log_level} -s tests/test_upload_consumer_configs.py
+	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_upload_consumer_configs.py
 endif
 
 run-vita-preprod-tests:
-	poetry run pytest --env=preprod --log-cli-level=info -s tests/test_vita_integration_tests.py
-	poetry run pytest --env=preprod --log-cli-level=info -s tests/test_upload_consumer_configs.py
+	poetry run pytest --env=preprod --log-cli-level=info tests/test_vita_integration_tests.py tests/test_upload_consumer_configs.py

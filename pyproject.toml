@@ -14,7 +14,7 @@ build-backend = "poetry.core.masonry.api"
 python = "^3.13"
 pytest-nhsd-apim = "^5.0.5"
 pytest = "^8.4.1"
-nhs-number-generator = {git = "https://github.com/Iain-S/nhs_number_generator.git"}
+nhs-number-generator = { git = "https://github.com/Iain-S/nhs_number_generator.git" }
 flake8 = "^7.3.0"
 isort = "^6.1.0"
 black = "^25.9.0"
@@ -35,12 +35,7 @@ pre-commit = "^4.2.0"
 
 [tool.pyright]
 include = ["src"]
-exclude = ["**/.*",
-    "**/__pycache__",
-    "**/venv",
-    "**/.venv",
-    "**/node_modules"
-]
+exclude = ["**/.*", "**/__pycache__", "**/venv", "**/.venv", "**/node_modules"]
 venvPath = "."
 venv = ".venv"
 defineConstant = { DEBUG = true }

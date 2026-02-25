@@ -15,7 +15,7 @@
         {
           "actionCode": "BookNBSInfoText",
           "actionType": "ButtonWithAuthLinkWithInfoText",
-          "description": "### Book an appointment online\n\nYou can book an appointment online at some pharmacies, GP surgeries and vaccination centres.",
+          "description": "### Book an appointment online at a pharmacy\n\nYou can book an appointment online at a pharmacy that offers the RSV vaccination. You need to be registered with a GP to do this.",
           "urlLabel": "Continue to booking",
           "urlLink": "https://www.nhswebsite-staging.nhs.uk/nbs/nhs-app/vita/rsv"
         },
@@ -39,7 +39,7 @@
         {
           "cohortCode": "rsv_age",
           "cohortStatus": "Actionable",
-          "cohortText": "are aged between 75 and 79"
+          "cohortText": "are aged 75 or over"
         }
       ],
       "status": "Actionable",
