@@ -42,32 +42,20 @@ jobs:
     steps:
       - name: show_input_parameters
         env:
-          tags: "@performance"
           environment: ${{ inputs.environment }}
           log_level: "INFO"
-          id: "manual run"
           github_tag: ${{ inputs.github_tag }}
+          run_time : ${{ inputs.run_time }}
+          users: ${{ inputs.users }}
+          spawn_rate: ${{ inputs.spawn_rate }}
+
         run: |
-          echo "tags: ${tags}"
           echo "environment: ${environment}"
           echo "log_level: ${log_level}"
-          echo "id: ${id}"
           echo "github_tag: ${github_tag}"
-          # output to summary
-          # shellcheck disable=SC2129
-          echo "tags: ${tags}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "environment: ${environment}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "log_level: ${log_level}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "id: ${id}"  >> "$GITHUB_STEP_SUMMARY"
-          echo "github_tag: ${github_tag}"  >> "$GITHUB_STEP_SUMMARY"
-
-      - name: ${{github.event.inputs.id}}
-        env:
-          ID: ${{github.event.inputs.id}}
-          ENV: ${{ inputs.environment }}
-        run: |
-          echo run identifier "$ID"-"$ENV"
-          echo run identifier "$ID"-"$ENV"  >> "$GITHUB_STEP_SUMMARY"
+          echo "run_time: ${run_time}"
+          echo "users: ${users}"
+          echo "spawn_rate: ${spawn_rate}"
 
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
