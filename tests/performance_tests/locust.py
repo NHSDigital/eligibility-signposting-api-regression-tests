@@ -1,10 +1,10 @@
 import ast
 import csv
 import os
-import random
 from pathlib import Path
 
 import urllib3
+import secrets
 
 # Use pip and venv to get access to the Locust library
 from locust import HttpUser, task, constant_throughput, events
@@ -40,9 +40,9 @@ class GetPatientId(HttpUser):
     def getPatientData(self):
 
         # Gets a new random NHS Number
-        csvRow = random.choice(csvData)
-        PatientId = csvRow[0]
-        header = ast.literal_eval(csvRow[1])
+        csv_row = secrets.choice(csvData)
+        patient_id = csv_row[0]
+        header = ast.literal_eval(csv_row[1])
 
         PROJECT_ROOT = Path(__file__).resolve().parents[2]  # adjust depth if needed
 
@@ -51,8 +51,8 @@ class GetPatientId(HttpUser):
 
         # The request is getting sent is here
         with self.client.get(
-            name="{PatientId}",
-            url=f"{PatientId}",
+            name="{patient_id}",
+            url=f"{patient_id}",
             headers=header,
             cert=(client_cert_path, private_key_path),
             verify=False,
@@ -61,6 +61,6 @@ class GetPatientId(HttpUser):
             # This is checking asserting the response has the word cohortText, which shows on a valid request
             if "processedSuggestions" not in response.text:
                 response.failure(
-                    f"Response didn't contain processedSuggestions (expected), nhsNumber was {PatientId}. "
+                    f"Response didn't contain processedSuggestions (expected), nhsNumber was {patient_id}. "
                     f"Response was {response.text}"
                 )
