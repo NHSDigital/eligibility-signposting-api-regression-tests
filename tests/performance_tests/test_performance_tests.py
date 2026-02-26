@@ -271,7 +271,7 @@ def test_locust_run_and_csv_exists(
     # CloudWatch logs can arrive late
     time.sleep(CW_INGESTION_WAIT_S)
 
-    logs_client = boto3.client("logs", region_name=CW_REGION) # NOSONAR
+    logs_client = boto3.client("logs", region_name=CW_REGION)  # NOSONAR
     insights_result = _run_logs_insights_query(
         logs_client,
         log_group=CW_LOG_GROUP,
@@ -286,7 +286,6 @@ def test_locust_run_and_csv_exists(
 
     output_results_html(AWS_HTML_REPORT, locust_stats, aws_log_stats)
     _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
-    assert False
 
 
 def output_results_html(
