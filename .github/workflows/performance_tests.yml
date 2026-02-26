@@ -94,7 +94,7 @@ jobs:
         run: make install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5.1.0 # NOSONAR
+        uses: aws-actions/configure-aws-credentials@v6.0.0 # NOSONAR
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
