@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          ref: ${{ env.BRANCH_NAME }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Install asdf
@@ -71,6 +71,7 @@ jobs:
       - name: SonarQube
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: SonarQube Scan
