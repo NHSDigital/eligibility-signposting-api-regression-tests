@@ -1,0 +1,41 @@
+{
+    "meta": {
+        "lastUpdated": "2026-02-20T11:50:34.146537+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "ManagedSettingInfo",
+                    "actionType": "InfoText",
+                    "description": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/vaccinations/check-and-book-an-rsv-vaccination).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged 75 or over"
+                },
+                {
+                    "cohortCode": "rsv_care_home_residents",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "live in a care home for older adults"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "CareSetting",
+                    "ruleText": "### Getting the vaccine\n\nSpeak to your GP or a member of staff where you live about getting the RSV vaccine.",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "9881e097-587c-48cb-b834-32919aeaf351"
+}
