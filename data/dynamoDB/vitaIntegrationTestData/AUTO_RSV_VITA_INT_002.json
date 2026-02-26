@@ -6,7 +6,7 @@
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v1.2.json"
+        "RSV_Config_v2.0WIP_v0.2.json"
     ],
     "data": [
         {
@@ -14,7 +14,7 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_75to79_plus1day",
+                    "COHORT_LABEL": "rsv_75+_plus1day",
                     "DATE_JOINED": "20231020"
                 }
             ]
