@@ -75,9 +75,6 @@ pre-commit:
 setup-db: guard-env guard-log_level
 	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_reset_db.py tests/test_preload_data.py
 
-run-tests: guard-env guard-log_level setup-db
-	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_story_tests.py tests/test_error_scenario_tests.py tests/test_vita_integration_tests.py tests/test_nbs_integration_tests.py
-
 run-performance-tests: guard-env guard-log_level guard-users guard-spawn_rate guard-run_time
 	poetry run pytest \
 --env=${env} \
@@ -86,6 +83,9 @@ run-performance-tests: guard-env guard-log_level guard-users guard-spawn_rate gu
 --perf-spawn-rate=${spawn_rate} \
 --perf-run-time=${run_time} \
  -s tests/performance_tests/test_performance_tests.py
+
+run-tests: guard-env guard-log_level setup-db
+	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_story_tests.py tests/test_error_scenario_tests.py tests/test_vita_integration_tests.py tests/test_nbs_integration_tests.py
 
 ifeq ($(filter $(env),test dev),$(env))
 	DYNAMO_PRELOADED=true poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_hashing_tests.py
