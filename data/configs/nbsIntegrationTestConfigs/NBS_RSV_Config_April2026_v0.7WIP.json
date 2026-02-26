@@ -1,8 +1,8 @@
 {
     "CampaignConfig": {
-        "ID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d1",
+        "ID": "NBS_Campaign_Config_ID_RSV",
         "Version": 1,
-        "Name": "EliD NBS RSV example config",
+        "Name": "EliD NBS RSV campaign config Release 1",
         "Type": "V",
         "Target": "RSV",
         "Manager": [
@@ -17,20 +17,20 @@
         "IterationFrequency": "X",
         "IterationType": "O",
         "IterationTime": "07:00:00",
-        "StartDate": "<<DATE_DAY_-90>>",
+        "StartDate": "<<DATE_DAY_-100>>",
         "EndDate": "20350401",
         "ApprovalMinimum": 0,
         "ApprovalMaximum": 0,
         "DefaultCommsRouting": "PLACEHOLDER_COMMS_ROUTING",
         "Iterations": [
             {
-                "ID": "2pcb742b-45ya-9e0d-8p2p-9c0epb1p46d1",
+                "ID": "1acb742b-45ea-9e0d-8b2b-9c0eab1e96d1",
                 "DefaultCommsRouting": "BOOK_NBS",
                 "DefaultNotActionableRouting": "",
                 "DefaultNotEligibleRouting": "",
                 "Version": 1,
-                "Name": "EliD NBS RSV example config",
-                "IterationDate": "<<DATE_DAY_-90>>",
+                "Name": "EliD NBS RSV campaign config Release 1",
+                "IterationDate": "<<DATE_DAY_-100>>",
                 "IterationNumber": 1,
                 "CommsType": "I",
                 "ApprovalMinimum": 0,
@@ -136,9 +136,7 @@
                         "AttributeTarget": "RSV",
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
                         "Operator": "D<",
-                        "Comparator": "-196",
-                        "CohortLabel": "elid_all_people",
-                        "RuleStop": "Y"
+                        "Comparator": "-196"
                     },
                     {
                         "Type": "F",
@@ -148,9 +146,7 @@
                         "AttributeLevel": "PERSON",
                         "AttributeName": "DATE_OF_BIRTH",
                         "Operator": "Y>",
-                        "Comparator": "-75",
-                        "CohortLabel": "elid_all_people",
-                        "RuleStop": "Y"
+                        "Comparator": "-75"
                     },
                     {
                         "Type": "F",
@@ -159,10 +155,8 @@
                         "Priority": 180,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
-                        "Comparator": "care_home_residents_older_adults",
-                        "CohortLabel": "elid_all_people",
-                        "RuleStop": "Y"
+                        "Operator": "not_in",
+                        "Comparator": "care_home_residents_older_adults"
                     },
                     {
                         "Type": "S",
@@ -174,7 +168,6 @@
                         "AttributeName": "LAST_SUCCESSFUL_DATE",
                         "Operator": "D>=",
                         "Comparator": "-196",
-                        "CohortLabel": "elid_all_people",
                         "RuleStop": "Y"
                     },
                     {
@@ -186,7 +179,6 @@
                         "AttributeName": "DATE_OF_BIRTH",
                         "Operator": "Y>",
                         "Comparator": "-75",
-                        "CohortLabel": "elid_all_people",
                         "RuleStop": "Y"
                     },
                     {
@@ -196,9 +188,8 @@
                         "Priority": 500,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
+                        "Operator": "not_in",
                         "Comparator": "care_home_residents_older_adults",
-                        "CohortLabel": "elid_all_people",
                         "RuleStop": "Y"
                     },
                     {
@@ -291,60 +282,39 @@
                         "Priority": 3000,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
+                        "Operator": "not_in",
                         "Comparator": "care_home_residents_older_adults",
                         "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE"
                     },
                     {
                         "Type": "Y",
-                        "Name": "LastVaccinationDate",
-                        "Description": "Last vaccination date",
-                        "Priority": 3100,
-                        "AttributeLevel": "TARGET",
-                        "AttributeTarget": "RSV",
-                        "AttributeName": "LAST_SUCCESSFUL_DATE",
-                        "Operator": "Y>=",
-                        "Comparator": "-25",
-                        "CommsRouting": "LAST_VACCINATION_DATE"
-                    },
-                    {
-                        "Type": "Y",
                         "Name": "FutureBookingDate",
                         "Description": "Future booking date",
-                        "Priority": 3200,
+                        "Priority": 3100,
                         "AttributeLevel": "TARGET",
                         "AttributeTarget": "RSV",
                         "AttributeName": "BOOKED_APPOINTMENT_DATE",
                         "Operator": "D>=",
                         "Comparator": "0",
                         "CommsRouting": "FUTURE_APPOINTMENT_DATE"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "LastVaccinationDate",
+                        "Description": "Last vaccination date",
+                        "Priority": 3200,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "RSV",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "Y>=",
+                        "Comparator": "-25",
+                        "CommsRouting": "LAST_VACCINATION_DATE"
                     }
                 ],
                 "ActionsMapper": {
                     "BOOK_NBS": {
                         "ExternalRoutingCode": "BookNBS",
                         "ActionDescription": "Eligible to try and book",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "NOT_NBS": {
-                        "ExternalRoutingCode": "NotNBS",
-                        "ActionDescription": "Eligible outside of CP Expansion",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "AMEND_NBS": {
-                        "ExternalRoutingCode": "AmendNBS",
-                        "ActionDescription": "Future NBS booking",
-                        "ActionType": "InfoText",
-                        "UrlLink": null,
-                        "UrlLabel": ""
-                    },
-                    "MANAGE_LOCAL": {
-                        "ExternalRoutingCode": "ManageLocal",
-                        "ActionDescription": "Future local booking",
                         "ActionType": "InfoText",
                         "UrlLink": null,
                         "UrlLabel": ""

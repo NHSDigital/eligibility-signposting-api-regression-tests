@@ -25,7 +25,7 @@
                 {
                     "cohortCode": "covid_clinical_risk",
                     "cohortStatus": "NotActionable",
-                    "cohortText": "are aged 16 or over and immunosuppressed"
+                    "cohortText": "have a weakened immune system because of a health condition or treatment"
                 }
             ],
             "status": "NotActionable",
