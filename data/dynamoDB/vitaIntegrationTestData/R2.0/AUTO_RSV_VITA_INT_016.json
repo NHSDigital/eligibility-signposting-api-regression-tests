@@ -1,21 +1,16 @@
 {
-    "scenario_name": "RSV - Vita Integration - NotActionable - You should have the RSV vaccine (already vaccinated) - empty cohorts - AlreadyVaccinated",
+    "scenario_name": "RSV - Vita Integration - Actionable - Manage your appointment - NBS E2E",
     "request_headers": {
-        "nhs-login-nhs-number": "9466447939",
+        "nhs-login-nhs-number": "9735548844",
         "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "RSV_Config_v1.2.json"
+        "RSV_Config_v2.0WIP_v0.2.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9466447939",
-            "ATTRIBUTE_TYPE": "RSV",
-            "LAST_SUCCESSFUL_DATE": "20250403"
-        },
-        {
-            "NHS_NUMBER": "9466447939",
+            "NHS_NUMBER": "9735548844",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "2",
@@ -29,8 +24,14 @@
             "ICB": "QUE",
             "COMMISSIONING_REGION": "Y61",
             "13Q_FLAG": "N",
-            "CARE_HOME_FLAG": "Y",
+            "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9735548844",
+            "ATTRIBUTE_TYPE": "RSV",
+            "BOOKED_APPOINTMENT_DATE": "20351212",
+            "BOOKED_APPOINTMENT_PROVIDER": "NBS"
         }
     ]
 }
