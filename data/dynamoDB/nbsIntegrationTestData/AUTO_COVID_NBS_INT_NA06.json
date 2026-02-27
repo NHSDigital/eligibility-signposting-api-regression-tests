@@ -5,7 +5,7 @@
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_COVID_Config_Spring2026_v0.2WIP.json"
+        "NBS_COVID_Config_Spring2026_v0.4PlanBWIP.json"
     ],
     "data": [
         {
@@ -35,7 +35,17 @@
         {
             "NHS_NUMBER": "9900059315",
             "ATTRIBUTE_TYPE": "COVID",
-            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-100>>"
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-92>>"
+        },
+        {
+            "NHS_NUMBER": "9900059315",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "covid_16+_unknown",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-03T09:08:13.590109+00:00"
+        "lastUpdated": "2026-02-05T13:40:15.127256+00:00"
     },
     "processedSuggestions": [
         {
@@ -8,28 +8,28 @@
                 {
                     "actionCode": "BookNBS",
                     "actionType": "InfoText",
-                    "description": "Eligible within CP Expansion",
+                    "description": "Eligible to try and book",
                     "urlLabel": "",
                     "urlLink": ""
                 }
             ],
-            "condition": "COVID",
+            "condition": "RSV",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "covid_age",
+                    "cohortCode": "rsv_age",
                     "cohortStatus": "Actionable",
-                    "cohortText": "are aged 75 or over (including those who will be 75 by 30 June 2026)"
+                    "cohortText": "are aged 75 or over"
                 },
                 {
-                    "cohortCode": "covid_clinical_risk",
+                    "cohortCode": "rsv_care_home_residents",
                     "cohortStatus": "Actionable",
-                    "cohortText": "have a weakened immune system because of a health condition or treatment"
+                    "cohortText": "live in a care home for older adults"
                 }
             ],
             "status": "Actionable",
-            "statusText": "You should have the COVID-19 vaccine",
+            "statusText": "You should have the RSV vaccine",
             "suitabilityRules": []
         }
     ],
-    "responseId": "c776978d-8f9c-4c70-ac3c-d070c46b9a33"
+    "responseId": "39405012-7197-4e33-a170-22945e170fc4"
 }

@@ -1,37 +1,41 @@
 {
-  "meta": {
-    "lastUpdated": "2025-08-29T15:36:03.086801+00:00"
-  },
-  "processedSuggestions": [
-    {
-      "actions": [
+    "meta": {
+        "lastUpdated": "2026-02-20T11:50:34.146537+00:00"
+    },
+    "processedSuggestions": [
         {
-          "actionCode": "BookLocal",
-          "actionType": "InfoText",
-          "description": "### Getting the vaccine\n\nYou can get an RSV vaccination at your GP surgery.\n\nYour GP surgery may contact you about getting the RSV vaccine. This may be by letter, text, phone call, email or through the NHS App. You do not need to wait to be contacted before booking your vaccination.",
-          "urlLabel": "",
-          "urlLink": ""
-        },
-        {
-          "actionCode": "HelpSupportInfo",
-          "actionType": "InfoText",
-          "description": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/vaccinations/check-and-book-an-rsv-vaccination).",
-          "urlLabel": "",
-          "urlLink": ""
+            "actions": [
+                {
+                    "actionCode": "ManagedSettingInfo",
+                    "actionType": "InfoText",
+                    "description": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/vaccinations/check-and-book-an-rsv-vaccination).",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "are aged 75 or over"
+                },
+                {
+                    "cohortCode": "rsv_care_home_residents",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "live in a care home for older adults"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "CareSetting",
+                    "ruleText": "### Getting the vaccine\n\nSpeak to your GP or a member of staff where you live about getting the RSV vaccine.",
+                    "ruleType": "S"
+                }
+            ]
         }
-      ],
-      "condition": "RSV",
-      "eligibilityCohorts": [
-        {
-          "cohortCode": "rsv_age_catchup",
-          "cohortStatus": "Actionable",
-          "cohortText": "turned 80 after 1st September 2024"
-        }
-      ],
-      "status": "Actionable",
-      "statusText": "You should have the RSV vaccine",
-      "suitabilityRules": []
-    }
-  ],
-  "responseId": "d149d5a0-fd89-4015-80db-c249ab8a324f"
+    ],
+    "responseId": "9881e097-587c-48cb-b834-32919aeaf351"
 }
