@@ -43,7 +43,7 @@ jobs:
           echo "Workflow triggered by allowed repository: $CALLER_REPO"
 
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: NHSDigital/eligibility-signposting-api-regression-tests
           ref: main
