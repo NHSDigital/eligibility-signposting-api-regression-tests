@@ -118,14 +118,14 @@ jobs:
 
       - name: Upload Locust Performance Report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: performance-locust-report
           path: temp/locust_report.html
 
       - name: Upload AWS Logs Performance Report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: performance-awslogs-report
           path: temp/aws_logs_report.html
