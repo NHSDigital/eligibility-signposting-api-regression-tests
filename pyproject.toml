@@ -24,7 +24,7 @@ requests = "^2.32.4"
 jsonschema = "^4.25.0"
 pip-licenses = "^5.0.0"
 requests-oauthlib = "^2.0.0"
-pre-commit = "^4.2.0"
+pre-commit = "^4.5.1"
 boto3 = "^1.42.45"
 faker = "^37.5.3"
 pyright = "^1.1.406"
@@ -32,7 +32,7 @@ pyflakes = "^3.4.0"
 locust = "^2.43.2"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^4.2.0"
+pre-commit = "^4.5.1"
 
 [tool.pyright]
 include = ["src"]
