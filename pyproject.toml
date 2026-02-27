@@ -17,7 +17,7 @@ pytest-nhsd-apim = "^6.0.7"
 pytest = "^8.4.1"
 nhs-number-generator = { git = "https://github.com/Iain-S/nhs_number_generator.git" }
 flake8 = "^7.3.0"
-isort = "^6.1.0"
+isort = "^8.0.0"
 black = "^25.9.0"
 assertpy = "^1.1"
 requests = "^2.32.4"
