@@ -469,7 +469,7 @@
                 "DefaultNotEligibleRouting": "CHECK_CORRECT_X",
                 "Version": 1,
                 "Name": "EliD RSV for Older Adult My Vaccines Iteration 2 April 2026 changes",
-                "IterationDate": "<<DATE_DAY_-10>>",
+                "IterationDate": "<<DATE_DAY_+10>>",
                 "IterationNumber": 2,
                 "CommsType": "I",
                 "ApprovalMinimum": 0,
