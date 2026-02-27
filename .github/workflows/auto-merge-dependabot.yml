@@ -33,13 +33,15 @@ jobs:
         if: ${{steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' && steps.dependabot-metadata.outputs.dependency-type == 'direct:production'}}
         run: |
           gh pr comment "$PR_URL" --body "I'm **not approving** this PR because **it includes a major update of a dependency used in production**"
-          gh pr edit "$PR_URL" --add-label "requires-manual-qa"
+          gh label create "requires-manual-qa" --color "e4e669" --description "Requires manual QA before merging" --force
+          PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
+          gh api --method POST "/repos/${{ github.repository }}/issues/$PR_NUMBER/labels" -f 'labels[]=requires-manual-qa'
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       # enable auto merge on all dependabot prs
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
