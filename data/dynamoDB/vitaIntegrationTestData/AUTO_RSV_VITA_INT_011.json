@@ -32,7 +32,7 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_75+_plus1day",
+                    "COHORT_LABEL": "rsv_75to79_plus1day",
                     "DATE_JOINED": "20231020"
                 }
             ]
