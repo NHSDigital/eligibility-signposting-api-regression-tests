@@ -75,7 +75,7 @@ pre-commit:
 setup-db: guard-env guard-log_level
 	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_reset_db.py tests/test_preload_data.py
 
-run-performance-tests: guard-env guard-log_level guard-users guard-spawn_rate guard-run_time
+run-performance-tests: guard-env guard-log_level guard-users guard-spawn_rate guard-run_time setup-db
 	poetry run pytest \
 --env=${env} \
 --log-cli-level=${log_level} \
