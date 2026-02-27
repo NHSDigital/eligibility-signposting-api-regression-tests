@@ -33,7 +33,7 @@ jobs:
         if: ${{steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' && steps.dependabot-metadata.outputs.dependency-type == 'direct:production'}}
         run: |
           gh pr comment "$PR_URL" --body "I'm **not approving** this PR because **it includes a major update of a dependency used in production**"
-          gh label create "requires-manual-qa" --color "e4e669" --description "Requires manual QA before merging" --force
+          gh label create "requires-manual-qa" --color "e4e669" --description "Requires manual QA before merging" --force --repo "${{ github.repository }}"
           PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
           gh api --method POST "/repos/${{ github.repository }}/issues/$PR_NUMBER/labels" -f 'labels[]=requires-manual-qa'
         env:
