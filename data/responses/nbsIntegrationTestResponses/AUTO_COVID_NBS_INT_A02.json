@@ -16,11 +16,6 @@
             "condition": "COVID",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "covid_age",
-                    "cohortStatus": "Actionable",
-                    "cohortText": "are aged 75 or over (including those who will be 75 by 30 June 2026)"
-                },
-                {
                     "cohortCode": "covid_clinical_risk",
                     "cohortStatus": "Actionable",
                     "cohortText": "have a weakened immune system because of a health condition or treatment"

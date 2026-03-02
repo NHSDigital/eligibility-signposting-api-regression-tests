@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-03T09:09:18.929890+00:00"
+        "lastUpdated": "2026-02-03T09:08:13.590109+00:00"
     },
     "processedSuggestions": [
         {
@@ -16,9 +16,14 @@
             "condition": "COVID",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "care_home_residents",
+                    "cohortCode": "covid_age",
                     "cohortStatus": "Actionable",
-                    "cohortText": "live in a care home for older adults"
+                    "cohortText": "are aged 75 or over (including those who will be 75 by 30 June 2026)"
+                },
+                {
+                    "cohortCode": "covid_clinical_risk",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "have a weakened immune system because of a health condition or treatment"
                 }
             ],
             "status": "Actionable",
@@ -26,5 +31,5 @@
             "suitabilityRules": []
         }
     ],
-    "responseId": "7df31c9f-9938-4ce9-843c-95a3cc4af4b0"
+    "responseId": "c776978d-8f9c-4c70-ac3c-d070c46b9a33"
 }
