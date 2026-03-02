@@ -1,23 +1,27 @@
 {
-    "scenario_name": "RSV - NBS Integration - NA04 - NotActionable - Under 75 and Vaccinated within last 28 weeks",
+    "scenario_name": "RSV - NBS Integration - NA04 - NotActionable - Future booking (NBS)",
     "request_headers": {
         "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_RSV_Config_April2026_v0.7WIP.json"
+        "NBS_RSV_Config_April2026_v0.8WIP.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9100670131",
+            "NHS_NUMBER": "9900069514",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "covid_16+_immunosuppression",
+                    "DATE_JOINED": "20231020"
+                }
             ]
         },
         {
-            "NHS_NUMBER": "9100670131",
+            "NHS_NUMBER": "9900069514",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>",
+            "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
             "POSTCODE": "SG8 6EG",
             "POSTCODE_SECTOR": "SG86",
@@ -34,9 +38,10 @@
             "DE_FLAG": "N"
         },
         {
-            "NHS_NUMBER": "9100670131",
+            "NHS_NUMBER": "9900069514",
             "ATTRIBUTE_TYPE": "RSV",
-            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-196>>"
+            "BOOKED_APPOINTMENT_DATE": "<<DATE_DAY_10>>",
+            "BOOKED_APPOINTMENT_PROVIDER": "MYA"
         }
     ]
 }

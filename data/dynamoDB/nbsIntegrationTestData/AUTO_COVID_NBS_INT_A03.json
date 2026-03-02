@@ -1,11 +1,11 @@
 {
-    "scenario_name": "COVID - NBS Integration - A03 - Actionable - You should have the COVID vaccine - care home residents eligible cohort",
+    "scenario_name": "COVID - NBS Integration - A03 - Actionable - Eligible, within multiple eligible cohorts",
     "request_headers": {
         "NHSE-Product-ID": "P.XWA-VFF",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [
-        "NBS_COVID_Config_Spring2026_v0.4PlanBWIP.json"
+        "NBS_COVID_Config_Spring2026_v0.5WIP.json"
     ],
     "data": [
         {
@@ -13,7 +13,11 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "care_home_residents_older_adults",
+                    "COHORT_LABEL": "covid_75+_Spring2026",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "covid_16+_immunosuppression",
                     "DATE_JOINED": "20231020"
                 }
             ]

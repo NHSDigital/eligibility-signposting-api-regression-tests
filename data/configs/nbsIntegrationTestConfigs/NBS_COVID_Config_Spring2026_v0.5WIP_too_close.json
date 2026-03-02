@@ -132,18 +132,6 @@
                         "Priority": 140
                     },
                     {
-                        "Type": "F",
-                        "Name": "Remove from eligible cohorts if future booking",
-                        "Description": "Remove anyone with a future booking from eligible cohorts",
-                        "Operator": "D>=",
-                        "Comparator": "0",
-                        "AttributeTarget": "COVID",
-                        "AttributeLevel": "TARGET",
-                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
-                        "CohortLabel": "covid_75+_Spring2026,covid_16+_immunosuppression,covid_under16_immunosuppression,care_home_residents_older_adults",
-                        "Priority": 160
-                    },
-                    {
                         "Type": "S",
                         "Name": "AlreadyVaccinated",
                         "Description": "AlreadyVaccinated",
@@ -193,9 +181,32 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "FutureBookingLocal",
+                        "Name": "FutureBookingLocalInEligibleCohort",
                         "Description": "Local future booking",
                         "Priority": 750,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocalInEligibleCohort",
+                        "Description": "Local future booking",
+                        "Priority": 750,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "covid_75+_Spring2026,covid_16+_immunosuppression,covid_under16_immunosuppression,care_home_residents_older_adults",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocalNotInEligibleCohort",
+                        "Description": "Local future booking",
+                        "Priority": 770,
                         "Operator": "D>=",
                         "Comparator": "0",
                         "AttributeTarget": "COVID",

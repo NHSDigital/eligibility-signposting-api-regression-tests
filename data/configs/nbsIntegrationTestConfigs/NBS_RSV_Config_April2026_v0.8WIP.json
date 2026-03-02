@@ -117,18 +117,6 @@
                     },
                     {
                         "Type": "F",
-                        "Name": "Remove from rsv age and care home residents eligible cohorts if future booking",
-                        "Description": "Remove anyone with a future booking from eligible cohorts",
-                        "Operator": "D>=",
-                        "Comparator": "0",
-                        "AttributeTarget": "RSV",
-                        "AttributeLevel": "TARGET",
-                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
-                        "CohortLabel": "rsv_75+_plus1day,care_home_residents_older_adults",
-                        "Priority": 160
-                    },
-                    {
-                        "Type": "F",
                         "Name": "Under75Vaccinated28Weeks+",
                         "Description": "Under 75 years old and vaccinated more than 28 weeks ago",
                         "Priority": 180,
@@ -206,7 +194,7 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked NBS Appointment",
+                        "Name": "FutureBookingNBS",
                         "Description": "NBS future booking",
                         "Priority": 540,
                         "Operator": "D>=",
@@ -218,7 +206,7 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked NBS Appointment",
+                        "Name": "FutureBookingNBS",
                         "Description": "NBS future booking",
                         "Priority": 540,
                         "Operator": "in",
@@ -230,9 +218,32 @@
                     },
                     {
                         "Type": "S",
-                        "Name": "Future Booked Local Appointment",
-                        "Description": "Local future booking",
+                        "Name": "FutureBookingLocalInEligibleCohort",
+                        "Description": "Local future booking within eligible cohort",
                         "Priority": 560,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "RSV",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocalInEligibleCohort",
+                        "Description": "Local future booking within eligible cohort",
+                        "Priority": 560,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "rsv_75+_plus1day,care_home_residents_older_adults",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocalNotInEligibleCohort",
+                        "Description": "Local future booking",
+                        "Priority": 580,
                         "Operator": "D>=",
                         "Comparator": "0",
                         "AttributeTarget": "RSV",

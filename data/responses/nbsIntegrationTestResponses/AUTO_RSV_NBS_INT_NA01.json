@@ -1,14 +1,21 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-05T13:41:58.225180+00:00"
+        "lastUpdated": "2026-02-06T15:19:24.951290+00:00"
     },
     "processedSuggestions": [
         {
             "actions": [
                 {
-                    "actionCode": "FutureBookingDate",
+                    "actionCode": "DateOfLastVaccination",
                     "actionType": "DataValue",
-                    "description": "<<NBSDATE_DAY_10>>",
+                    "description": "<<NBSDATE_DAY_-196>>",
+                    "urlLabel": "",
+                    "urlLink": ""
+                },
+                {
+                    "actionCode": "DateOfNextEarliestVaccination",
+                    "actionType": "DataValue",
+                    "description": "<<NBSDATE_DAY_1>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
@@ -19,12 +26,12 @@
             "statusText": "You should have the RSV vaccine",
             "suitabilityRules": [
                 {
-                    "ruleCode": "Future Booked NBS Appointment",
-                    "ruleText": "NBS future booking",
+                    "ruleCode": "Under75VaccinatedInPast28Weeks",
+                    "ruleText": "Under 75 years old and vaccinated within the past 28 weeks",
                     "ruleType": "S"
                 }
             ]
         }
     ],
-    "responseId": "eb4734b1-10f9-46b8-a019-84e4efbe9f52"
+    "responseId": "121a2e7a-b453-4bd2-9869-13764d8c3787"
 }

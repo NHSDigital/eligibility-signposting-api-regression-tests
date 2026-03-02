@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-04T15:18:43.802008+00:00"
+        "lastUpdated": "2026-02-03T09:17:04.886172+00:00"
     },
     "processedSuggestions": [
         {
@@ -8,7 +8,7 @@
                 {
                     "actionCode": "FutureBookingDate",
                     "actionType": "DataValue",
-                    "description": "<<NBSDATE_DAY_10>>",
+                    "description": "<<NBSDATE_DAY_11>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
@@ -19,12 +19,12 @@
             "statusText": "You should have the COVID-19 vaccine",
             "suitabilityRules": [
                 {
-                    "ruleCode": "FutureBookingLocal",
+                    "ruleCode": "FutureBookingLocalNotInEligibleCohort",
                     "ruleText": "Local future booking",
                     "ruleType": "S"
                 }
             ]
         }
     ],
-    "responseId": "7cfe0362-7ea6-4b14-8407-2baa9e6017ea"
+    "responseId": "e22fe313-8954-456d-90cb-dab39be370c7"
 }

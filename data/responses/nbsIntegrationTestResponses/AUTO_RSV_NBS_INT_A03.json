@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-02-05T13:41:17.659519+00:00"
+        "lastUpdated": "2026-02-05T13:40:15.127256+00:00"
     },
     "processedSuggestions": [
         {
@@ -16,6 +16,11 @@
             "condition": "RSV",
             "eligibilityCohorts": [
                 {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "are aged 75 or over"
+                },
+                {
                     "cohortCode": "rsv_care_home_residents",
                     "cohortStatus": "Actionable",
                     "cohortText": "live in a care home for older adults"
@@ -26,5 +31,5 @@
             "suitabilityRules": []
         }
     ],
-    "responseId": "6cf50f1f-07f7-44e9-88fe-05d677a4e741"
+    "responseId": "39405012-7197-4e33-a170-22945e170fc4"
 }
