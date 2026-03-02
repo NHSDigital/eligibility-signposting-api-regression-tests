@@ -159,7 +159,7 @@
                         "Priority": 180,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
+                        "Operator": "NotMemberOf",
                         "Comparator": "care_home_residents_older_adults",
                         "CohortLabel": "elid_all_people",
                         "RuleStop": "Y"
@@ -196,7 +196,7 @@
                         "Priority": 500,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
+                        "Operator": "NotMemberOf",
                         "Comparator": "care_home_residents_older_adults",
                         "CohortLabel": "elid_all_people",
                         "RuleStop": "Y"
@@ -291,7 +291,7 @@
                         "Priority": 3000,
                         "AttributeLevel": "COHORT",
                         "AttributeName": "COHORT_LABEL",
-                        "Operator": "NotaMemberOf",
+                        "Operator": "NotMemberOf",
                         "Comparator": "care_home_residents_older_adults",
                         "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE"
                     },
