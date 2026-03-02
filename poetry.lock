@@ -1974,14 +1974,14 @@ test = ["coverage", "mypy", "ruff", "wheel"]
 
 [[package]]
 name = "pyright"
-version = "1.1.406"
+version = "1.1.408"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "pyright-1.1.406-py3-none-any.whl", hash = "sha256:1d81fb43c2407bf566e97e57abb01c811973fdb21b2df8df59f870f688bdca71"},
-    {file = "pyright-1.1.406.tar.gz", hash = "sha256:c4872bc58c9643dac09e8a2e74d472c62036910b3bd37a32813989ef7576ea2c"},
+    {file = "pyright-1.1.408-py3-none-any.whl", hash = "sha256:090b32865f4fdb1e0e6cd82bf5618480d48eecd2eb2e70f960982a3d9a4c17c1"},
+    {file = "pyright-1.1.408.tar.gz", hash = "sha256:f28f2321f96852fa50b5829ea492f6adb0e6954568d1caa3f3af3a5f555eb684"},
 ]
 
 [package.dependencies]
@@ -2881,4 +2881,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "a47d6b1b9d0953c71ad4580ce211eba1697683d55d49b9c5fea036e777da92d2"
+content-hash = "ef9cdf3568b260b3269d3a0a6b05d357518a00821a00e6361f8ae8ad32a6682e"
