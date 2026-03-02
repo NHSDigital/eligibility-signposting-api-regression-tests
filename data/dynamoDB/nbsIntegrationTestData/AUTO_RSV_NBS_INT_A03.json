@@ -1,29 +1,29 @@
 {
-    "scenario_name": "RSV - NBS Integration - A03 - Actionable - You should have the RSV vaccine - care home residents eligible cohort",
-    "request_headers": {
-        "NHSE-Product-ID": "P.XWA-VFF",
-        "nhsd-End-User-Organisation-ods": "elid_automation"
-    },
+    "scenario_name": "RSV - NBS Integration - A03 - Actionable - Eligible, within multiple eligible cohorts",
+        "request_headers": {
+            "NHSE-Product-ID": "P.XWA-VFF",
+            "nhsd-End-User-Organisation-ods": "elid_automation"
+        },
     "config_filenames": [
-        "NBS_RSV_Config_April2026_v0.7WIP.json"
+        "NBS_RSV_Config_April2026_v0.8WIP.json"
     ],
     "data": [
         {
-            "NHS_NUMBER": "9900067003",
+            "NHS_NUMBER": "9900069503",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "care_home_residents_older_adults",
+                    "COHORT_LABEL": "rsv_75+_plus1day",
                     "DATE_JOINED": "20231020"
                 },
                 {
-                    "COHORT_LABEL": "covid_16+_immunosuppression",
+                    "COHORT_LABEL": "care_home_residents_older_adults",
                     "DATE_JOINED": "20231020"
                 }
             ]
         },
         {
-            "NHS_NUMBER": "9900067003",
+            "NHS_NUMBER": "9900069503",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_75>>",
             "GENDER": "0",
