@@ -30,7 +30,8 @@
         {
             "NHS_NUMBER": "9450114080",
             "ATTRIBUTE_TYPE": "RSV",
-            "LAST_SUCCESSFUL_DATE": "20250403"
+            "LAST_SUCCESSFUL_DATE": "20250403",
+            "BOOKED_APPOINTMENT_DATE": null
         }
     ]
 }

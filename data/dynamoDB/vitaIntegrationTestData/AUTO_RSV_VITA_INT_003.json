@@ -36,6 +36,13 @@
             "13Q_FLAG": "N",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9658218873",
+            "ATTRIBUTE_TYPE": "RSV",
+            "BOOKED_APPOINTMENT_DATE": null,
+            "BOOKED_APPOINTMENT_PROVIDER": null,
+            "LAST_SUCCESSFUL_DATE": null
         }
     ]
 }
