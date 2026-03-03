@@ -31,6 +31,13 @@
             "13Q_FLAG": "N",
             "CARE_HOME_FLAG": "Y",
             "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9466447939",
+            "ATTRIBUTE_TYPE": "RSV",
+            "BOOKED_APPOINTMENT_DATE": null,
+            "BOOKED_APPOINTMENT_PROVIDER": null,
+            "LAST_SUCCESSFUL_DATE": null
         }
     ]
 }

@@ -31,7 +31,8 @@
             "NHS_NUMBER": "9735548844",
             "ATTRIBUTE_TYPE": "RSV",
             "BOOKED_APPOINTMENT_DATE": "20351212",
-            "BOOKED_APPOINTMENT_PROVIDER": "NBS"
+            "BOOKED_APPOINTMENT_PROVIDER": "NBS",
+            "LAST_SUCCESSFUL_DATE": null
         }
     ]
 }
