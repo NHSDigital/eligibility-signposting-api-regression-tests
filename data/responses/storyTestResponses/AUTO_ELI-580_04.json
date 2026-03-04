@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "lastUpdated": "2026-03-04T15:59:26.598781+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "DateOfLastVaccination",
+                    "actionType": "DataValue",
+                    "description": "2026-02-03",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "FLU",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "flu_clinical_risk",
+                    "cohortStatus": "NotActionable",
+                    "cohortText": "have a weakened immune system because of a health condition or treatment"
+                }
+            ],
+            "status": "NotActionable",
+            "statusText": "You should have the Flu vaccine",
+            "suitabilityRules": [
+                {
+                    "ruleCode": "AlreadyVaccinatedNoAdditionalDose",
+                    "ruleText": "AlreadyVaccinatedNoAdditionalDose",
+                    "ruleType": "S"
+                }
+            ]
+        }
+    ],
+    "responseId": "f6bc9522-f92c-4b0a-9108-b3a89cb36ca4"
+}

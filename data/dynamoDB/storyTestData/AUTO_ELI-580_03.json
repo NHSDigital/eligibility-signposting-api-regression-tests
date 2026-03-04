@@ -1,0 +1,53 @@
+{
+    "scenario_name": "ELI-580 - Actionable - Not vaccinated in any previous campaign, single dose in current campaign",
+    "request_headers": {
+        "nhs-login-nhs-number": "9000058003",
+        "nhsd-End-User-Organisation-ods": "elid_automation"
+    },
+    "config_filenames": [
+        "AUTO_ELI-580.json"
+    ],
+    "data": [
+        {
+            "NHS_NUMBER": "9000058003",
+            "ATTRIBUTE_TYPE": "PERSON",
+            "DATE_OF_BIRTH": "<<DATE_AGE_9-TOMORROW>>",
+            "GENDER": "2",
+            "POSTCODE": "CB3 8DX",
+            "POSTCODE_SECTOR": "CB38",
+            "POSTCODE_OUTCODE": "CB3",
+            "MSOA": "E02007085",
+            "LSOA": "E01018223",
+            "GP_PRACTICE_CODE": "D81046",
+            "PCN": "U75549",
+            "ICB": "QUE",
+            "COMMISSIONING_REGION": "Y61",
+            "13Q_FLAG": "N",
+            "CARE_HOME_FLAG": "N",
+            "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9000058003",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "flu_immunosuppression",
+                    "DATE_JOINED": "20240101"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9000058003",
+            "ATTRIBUTE_TYPE": "FLU",
+            "BOOKED_APPOINTMENT_DATE": null,
+            "BOOKED_APPOINTMENT_PROVIDER": null,
+            "INVALID_DOSES_COUNT": null,
+            "LAST_INVITE_DATE": null,
+            "LAST_INVITE_STATUS": null,
+            "LAST_SUCCESSFUL_DATE": "<<DATE_DAY_-29>>",
+            "LAST_VALID_DOSE_DATE": null,
+            "SUCCESSFUL_PROCEDURE_COUNT": "1",
+            "VALID_DOSES_COUNT": null
+        }
+    ]
+}
