@@ -8,7 +8,7 @@
                 {
                     "actionCode": "DateOfLastVaccination",
                     "actionType": "DataValue",
-                    "description": "2026-02-03",
+                    "description": "<<NBSDATE_DAY_-29>>",
                     "urlLabel": "",
                     "urlLink": ""
                 }
