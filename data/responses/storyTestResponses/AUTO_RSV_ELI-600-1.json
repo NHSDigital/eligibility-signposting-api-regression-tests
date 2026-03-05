@@ -1,30 +1,27 @@
 {
     "meta": {
-        "lastUpdated": "2026-01-16T16:54:02.523794+00:00"
+        "lastUpdated": "2026-03-04T16:54:31.097818+00:00"
     },
     "processedSuggestions": [
         {
-            "actions": [
-                {
-                    "actionCode": "Yesterday",
-                    "actionType": "ButtonWithAuthLink",
-                    "description": "This is the yesterday ActionDescription",
-                    "urlLabel": "Manage your appointment",
-                    "urlLink": "http://www.nhs.uk/book-rsv"
-                }
-            ],
+            "actions": [],
             "condition": "RSV",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "eli_600_yesterday_group",
-                    "cohortStatus": "Actionable",
-                    "cohortText": "You are currently in eli_600_yesterday"
+                    "cohortCode": "eli_600_today_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_600_today"
+                },
+                {
+                    "cohortCode": "eli_600_all_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_600_all"
                 }
             ],
-            "status": "Actionable",
-            "statusText": "You should have the RSV vaccine",
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
             "suitabilityRules": []
         }
     ],
-    "responseId": "1fc60ad9-be6e-41f7-9eb9-564c600d5e59"
+    "responseId": "982ab7bf-aa1b-4c3a-bcc2-d14400f7949f"
 }
