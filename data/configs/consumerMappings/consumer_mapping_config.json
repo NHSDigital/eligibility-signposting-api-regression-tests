@@ -83,22 +83,6 @@
         {
             "CampaignConfigID": "ELI-600-3",
             "Description": "Specific Configs for testing muliple configs for single consumer"
-        },
-        {
-            "CampaignConfigID": "ELI-600-4",
-            "Description": "Specific Configs for testing muliple configs for single consumer"
-        },
-        {
-            "CampaignConfigID": "ELI-600-4-1",
-            "Description": "Specific Configs for testing muliple configs for single consumer"
-        },
-        {
-            "CampaignConfigID": "ELI-600-5",
-            "Description": "Specific Configs for testing muliple configs for single consumer"
-        },
-        {
-            "CampaignConfigID": "ELI-600-5-1",
-            "Description": "Specific Configs for testing muliple configs for single consumer"
         }
     ]
 }
