@@ -238,8 +238,53 @@ def test_data(get_scenario_params, temp_csv_path) -> None:
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
+@pytest.fixture(scope="function")
+def xray_sampling_rate():
+    """
+    Temporarily set the default X-Ray sampling rule to 100% for the duration
+    of the test, then restore previous values.
+    """
+    xray_client = boto3.client("xray", region_name=CW_REGION)
+    sample_rule_name = "Default"
+    rules = xray_client.get_sampling_rules()["SamplingRuleRecords"]
+    default_rule = next(
+        r["SamplingRule"] for r in rules if r["SamplingRule"]["RuleName"] == "Default"
+    )
+    original_fixed_rate = default_rule["FixedRate"]
+
+    logging.warning(
+        "XRAY SAMPLING: setting rule '%s' to 100%% (was FixedRate=%s)",
+        sample_rule_name,
+        original_fixed_rate,
+    )
+    xray_client.update_sampling_rule(
+        SamplingRuleUpdate={
+            "RuleName": sample_rule_name,
+            "FixedRate": 1.0,
+        }
+    )
+    try:
+        yield
+    finally:
+        logging.warning(
+            "XRAY SAMPLING: Restoring sampling rate to %s",
+            original_fixed_rate,
+        )
+        xray_client.update_sampling_rule(
+            SamplingRuleUpdate={
+                "RuleName": "Default",
+                "FixedRate": original_fixed_rate,
+            }
+        )
+
+
 def test_locust_run_and_csv_exists(
-    test_data, eligibility_client, perf_run_time, perf_users, perf_spawn_rate
+    test_data,
+    eligibility_client,
+    perf_run_time,
+    perf_users,
+    perf_spawn_rate,
+    xray_sampling_rate,
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
