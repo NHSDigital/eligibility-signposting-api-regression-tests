@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 
 from .data_template_resolver import TemplateEngine
 from .dynamo_helper import insert_into_dynamo
-from .placeholder_context import ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
 from .secrets_helper import SecretsManagerClient
 
@@ -118,22 +117,6 @@ def resolve_placeholders_in_data(data, file_name):
     if isinstance(data, list):
         return [resolve_placeholders_in_data(item, file_name) for item in data]
     return resolve_placeholders(data, file_name)
-
-
-def load_test_scenario(file_path):
-    with Path.open(file_path) as f:
-        raw_data = json.load(f)
-
-    file_name = Path(file_path).name
-    context = ResolvedPlaceholderContext()
-    resolved_data = resolve_placeholders_in_data(raw_data["data"], file_name)
-
-    return {
-        "file": file_name,
-        "scenario_name": raw_data.get("scenario_name"),
-        "data": resolved_data,
-        "placeholders": context.all(),  # Now just placeholder → value
-    }
 
 
 def extract_nhs_number_from_data(data):
