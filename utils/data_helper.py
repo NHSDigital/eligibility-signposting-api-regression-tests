@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 from .data_template_resolver import TemplateEngine
 from .dynamo_helper import insert_into_dynamo
-from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
+from .placeholder_context import ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
 from .secrets_helper import SecretsManagerClient
 
@@ -23,15 +23,16 @@ logger = logging.getLogger(__name__)
 
 def initialise_tests(folder):
     folder_path = Path(folder).resolve()
-    all_data, dto = load_all_test_scenarios(folder_path)
+    all_data = load_all_test_scenarios(folder_path)
 
     # Skip DynamoDB insertion if data was preloaded in a dedicated step
     if os.getenv("DYNAMO_PRELOADED", "").lower() == "true":
         logger.info("Skipping DynamoDB insertion (data preloaded)")
-        return all_data, dto
+        return all_data
 
     _insert_scenarios_into_dynamo(all_data)
-    return all_data, dto
+
+    return all_data
 
 
 def _insert_scenarios_into_dynamo(all_data):
@@ -111,15 +112,12 @@ def preload_all_dynamo_data(folders):
     _insert_scenarios_into_dynamo(combined_data)
 
 
-def resolve_placeholders_in_data(data, context, file_name):
+def resolve_placeholders_in_data(data, file_name):
     if isinstance(data, dict):
-        return {
-            k: resolve_placeholders_in_data(v, context, file_name)
-            for k, v in data.items()
-        }
+        return {k: resolve_placeholders_in_data(v, file_name) for k, v in data.items()}
     if isinstance(data, list):
-        return [resolve_placeholders_in_data(item, context, file_name) for item in data]
-    return resolve_placeholders(data, context, file_name)
+        return [resolve_placeholders_in_data(item, file_name) for item in data]
+    return resolve_placeholders(data, file_name)
 
 
 def load_test_scenario(file_path):
@@ -128,7 +126,7 @@ def load_test_scenario(file_path):
 
     file_name = Path(file_path).name
     context = ResolvedPlaceholderContext()
-    resolved_data = resolve_placeholders_in_data(raw_data["data"], context, file_name)
+    resolved_data = resolve_placeholders_in_data(raw_data["data"], file_name)
 
     return {
         "file": file_name,
@@ -160,7 +158,6 @@ def extract_nhs_number_from_data(data):
 
 def load_all_expected_responses(folder_path):
     all_data = {}
-    dto = PlaceholderDTO()  # Shared across all files
 
     for path in Path(folder_path).iterdir():
         if path.suffix != ".json":
@@ -169,7 +166,7 @@ def load_all_expected_responses(folder_path):
         with path.open() as f:
             raw_json = json.load(f)
 
-        resolved_data = resolve_placeholders_in_data(raw_json, dto, path.name)
+        resolved_data = resolve_placeholders_in_data(raw_json, path.name)
         cleaned_data = clean_responses(data=resolved_data, ignore_keys=keys_to_ignore)
 
         all_data[path.name] = {"response_items": cleaned_data}
@@ -179,7 +176,6 @@ def load_all_expected_responses(folder_path):
 
 def load_all_test_scenarios(folder_path):
     all_data = {}
-    dto = PlaceholderDTO()  # Shared across all files
 
     data_builder = TemplateEngine.create()
 
@@ -203,8 +199,8 @@ def load_all_test_scenarios(folder_path):
         if not any(k == "NHSE-Product-ID" for k in request_headers):
             request_headers["NHSE-Product-ID"] = "Story_Test_Consumer_ID"
 
-        # Resolve placeholders with shared DTO
-        resolved_data = resolve_placeholders_in_data(templated_data, dto, path.name)
+        # Resolve placeholders
+        resolved_data = resolve_placeholders_in_data(templated_data, path.name)
 
         # Extract NHS number
         nhs_number = extract_nhs_number_from_data(resolved_data)
@@ -221,11 +217,10 @@ def load_all_test_scenarios(folder_path):
             "secret_version": secret_version,
         }
 
-    return all_data, dto
+    return all_data
 
 
 def load_data_items_to_dynamo(folder_path):
-    dto = PlaceholderDTO()  # Shared across all files
 
     for path in Path(folder_path).iterdir():
         if path.suffix != ".json":
@@ -237,7 +232,7 @@ def load_data_items_to_dynamo(folder_path):
         raw_data = raw_json["data"]
 
         # Resolve placeholders with shared DTO
-        resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)
+        resolved_data = resolve_placeholders_in_data(raw_data, path.name)
 
         # Insert immediately
         insert_into_dynamo(resolved_data)

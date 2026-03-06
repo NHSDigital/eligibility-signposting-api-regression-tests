@@ -26,7 +26,7 @@ AWS_HTML_REPORT = "temp/aws_logs_report.html"
 CW_INGESTION_WAIT_S = 150
 CW_QUERY_POLL_S = 1
 
-all_data, dto = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
+all_data = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
 config_path = test_config.PERFORMANCE_TEST_CONFIGS
 upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 

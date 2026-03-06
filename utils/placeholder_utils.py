@@ -25,8 +25,6 @@ def resolve_placeholders(value, context=None, file_name=None):
             logger.exception("[ERROR] Could not resolve placeholder %s:", placeholder)
             return match.group(0)  # leave placeholder unchanged
         else:
-            if context:
-                context.add(placeholder, resolved, file_name)
             return resolved
 
     return re.sub(r"<<(.*?)>>", replacer, value)

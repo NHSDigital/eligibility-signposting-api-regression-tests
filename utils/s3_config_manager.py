@@ -9,7 +9,8 @@ import botocore.exceptions
 from dotenv import load_dotenv
 
 from utils.data_helper import resolve_placeholders_in_data
-from utils.placeholder_context import PlaceholderDTO
+
+# from utils.placeholder_context import PlaceholderDTO
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -102,7 +103,6 @@ class S3ConfigManager:
         desired_keys = {self._s3_key(name) for name in desired_filenames}
 
         # Resolve all configs locally first
-        dto = PlaceholderDTO()
         resolved_configs: dict[str, str] = {}
         for path in local_paths:
             filename = path.name
@@ -113,7 +113,7 @@ class S3ConfigManager:
             with path.open() as f:
                 raw_data = json.load(f)
 
-            resolved = resolve_placeholders_in_data(raw_data, dto, filename)
+            resolved = resolve_placeholders_in_data(raw_data, filename)
             resolved_configs[s3_key] = json.dumps(resolved, indent=2)
 
         # Check if the desired state matches what we've already uploaded
