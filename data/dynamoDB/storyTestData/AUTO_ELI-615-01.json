@@ -1,6 +1,7 @@
 {
     "scenario_name": "RSV - Ensure the Correct RSV Iteration is Selected from 3 campaigns and 4 iterations",
     "config_filenames": [
+        "AUTO_ELI-615-7.json",
         "AUTO_ELI-615-6.json",
         "AUTO_ELI-615-3.json",
         "AUTO_ELI-615-2.json",

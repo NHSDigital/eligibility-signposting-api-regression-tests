@@ -1,6 +1,7 @@
 {
     "scenario_name": "RSV - 2 Active Iterations over 2 configs  - 500 Error",
     "config_filenames": [
+        "AUTO_ELI-615-7.json",
         "AUTO_ELI-615-2.json",
         "AUTO_ELI-615-2a.json",
         "AUTO_ELI-615-5.json"
