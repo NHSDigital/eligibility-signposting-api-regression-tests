@@ -9,6 +9,7 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
+from .data_template_resolver import TemplateEngine
 from .dynamo_helper import insert_into_dynamo
 from .placeholder_context import PlaceholderDTO, ResolvedPlaceholderContext
 from .placeholder_utils import resolve_placeholders
@@ -180,6 +181,8 @@ def load_all_test_scenarios(folder_path):
     all_data = {}
     dto = PlaceholderDTO()  # Shared across all files
 
+    data_builder = TemplateEngine.create()
+
     # Sort files alphabetically by filename
     for path in sorted(Path(folder_path).iterdir(), key=lambda p: p.name.lower()):
         if path.suffix != ".json":
@@ -188,7 +191,7 @@ def load_all_test_scenarios(folder_path):
         with path.open() as f:
             raw_json = json.load(f)
 
-        raw_data = raw_json["data"]
+        templated_data = data_builder.apply(raw_json["data"])
 
         config_filenames = raw_json.get("config_filenames")
         scenario_name = raw_json.get("scenario_name")
@@ -201,7 +204,7 @@ def load_all_test_scenarios(folder_path):
             request_headers["NHSE-Product-ID"] = "Story_Test_Consumer_ID"
 
         # Resolve placeholders with shared DTO
-        resolved_data = resolve_placeholders_in_data(raw_data, dto, path.name)
+        resolved_data = resolve_placeholders_in_data(templated_data, dto, path.name)
 
         # Extract NHS number
         nhs_number = extract_nhs_number_from_data(resolved_data)
