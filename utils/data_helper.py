@@ -104,7 +104,7 @@ def preload_all_dynamo_data(folders):
         if not folder_path.exists() or not any(folder_path.glob("*.json")):
             logger.info("Skipping empty folder: %s", folder)
             continue
-        all_data, _ = load_all_test_scenarios(folder_path)
+        all_data = load_all_test_scenarios(folder_path)
         combined_data.update(all_data)
 
     logger.info("Preloading %d scenarios into DynamoDB", len(combined_data))
