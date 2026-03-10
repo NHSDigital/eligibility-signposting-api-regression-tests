@@ -14,7 +14,6 @@ from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 
-
 SLA_MAX_MS = 600
 SLA_AVG_MS = 200
 CW_REGION = "eu-west-2"  # NOSONAR
