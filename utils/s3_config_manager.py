@@ -22,9 +22,6 @@ class S3ConfigManager:
     def __init__(self, bucket_name: str) -> None:
         self.bucket_name: str = bucket_name
         self.s3_client = boto3.client("s3")
-        # In-memory tracking of what we've uploaded to S3.
-        # Maps s3_key -> resolved JSON string. Avoids redundant list/get/put calls
-        # when consecutive tests use the same config set.
         self._uploaded_configs: dict[str, str] = {}
 
     def _s3_key(self, filename: str) -> str:
