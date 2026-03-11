@@ -10,8 +10,6 @@ from dotenv import load_dotenv
 
 from utils.data_helper import resolve_placeholders_in_data
 
-# from utils.placeholder_context import PlaceholderDTO
-
 load_dotenv()
 logger = logging.getLogger(__name__)
 
