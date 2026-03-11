@@ -1,0 +1,485 @@
+{
+    "CampaignConfig": {
+        "ID": "Story_Campaign_Config_ID",
+        "Version": 1,
+        "Name": "EliD NBS Flu campaign config Release 1",
+        "Type": "V",
+        "Target": "FLU",
+        "Manager": [
+            "example@nhs.net"
+        ],
+        "Approver": [
+            "example@nhs.net"
+        ],
+        "Reviewer": [
+            "example@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "StartDate": "<<DATE_DAY_-50>>",
+        "EndDate": "<<DATE_DAY_30>>",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "DefaultCommsRouting": "BOOK_NBS",
+        "Iterations": [
+            {
+                "ID": "2834b74a-4170-4594-9d2c-9e6d9af41d20",
+                "DefaultCommsRouting": "BOOK_NBS",
+                "DefaultNotActionableRouting": "",
+                "DefaultNotEligibleRouting": "",
+                "Version": 1,
+                "Name": "EliD NBS Flu campaign config Release 1",
+                "IterationDate": "<<DATE_DAY_-50>>",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "StatusText": {
+                    "NotEligible": "We do not believe you can have it",
+                    "NotActionable": "You should have the Flu vaccine",
+                    "Actionable": "You should have the Flu vaccine"
+                },
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "flu_65+_autumnwinter2026",
+                        "CohortGroup": "flu_age",
+                        "PositiveDescription": "are aged 65 or over (including those who will be 65 by 31 March 2027)",
+                        "NegativeDescription": "are not aged 65 or over (including those who will be 65 by 31 March 2027)",
+                        "Priority": 10,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "flu_immunosuppression",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
+                        "Priority": 20,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "flu_diabetes",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a weakened immune system because of a health condition or treatment",
+                        "NegativeDescription": "do not have a weakened immune system because of a health condition or treatment",
+                        "Priority": 30,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "care_home_residents_older_adults",
+                        "CohortGroup": "care_home_residents",
+                        "PositiveDescription": "live in a care home for older adults",
+                        "NegativeDescription": "do not live in a care home for older adults",
+                        "Priority": 40,
+                        "Virtual": "N"
+                    },
+                    {
+                        "CohortLabel": "elid_all_people",
+                        "CohortGroup": "magic_cohort",
+                        "PositiveDescription": "",
+                        "NegativeDescription": "",
+                        "Priority": 50,
+                        "Virtual": "Y"
+                    }
+                ],
+                "IterationRules": [
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
+                        "Operator": "<",
+                        "Comparator": "<<DATE_DAY_-50>>[[NVL:18000101]]",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone without a future booking from magic cohort",
+                        "Operator": "D<",
+                        "Comparator": "0[[NVL:18000101]]",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove under 65 Years at end of campaign",
+                        "Description": "Ensure anyone who has a PDS date of birth which determines their age to be less than 65 years at the end of campaign is filtered out.",
+                        "Priority": 120,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": ">=",
+                        "Comparator": "19620401",
+                        "CohortLabel": "flu_65+_autumnwinter2026"
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if future booking",
+                        "Description": "Remove anyone with a future booking from eligible cohorts",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "flu_65+_autumnwinter2026,flu_2to3_autumnwinter2025,flu_4to16_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_morbid_obesity,flu_immunosuppression",
+                        "Priority": 160
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "TooCloseForAdditionalDoseWithin4weeks",
+                        "Priority": 500,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "TooCloseForAdditionalDoseWithin4weeks",
+                        "Priority": 500,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "-28",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "TooCloseForAdditionalDoseWithin4weeks",
+                        "Priority": 500,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y>",
+                        "Comparator": "-9",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "TooCloseForAdditionalDoseWithin4weeks",
+                        "Priority": 500,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "flu_immunosuppression",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "TooCloseForAdditionalDoseWithin4weeks",
+                        "Priority": 500,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "SUCCESSFUL_PROCEDURE_COUNT",
+                        "Operator": "=",
+                        "Comparator": "1",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinated",
+                        "Description": "AlreadyVaccinated",
+                        "Priority": 520,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinated",
+                        "Description": "AlreadyVaccinated",
+                        "Priority": 520,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y<=",
+                        "Comparator": "-9",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinatedNoAdditionalDose",
+                        "Description": "AlreadyVaccinatedNoAdditionalDose",
+                        "Priority": 540,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinatedNoAdditionalDose",
+                        "Description": "AlreadyVaccinatedNoAdditionalDose",
+                        "Priority": 540,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y>",
+                        "Comparator": "-9",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinatedNoAdditionalDose",
+                        "Description": "AlreadyVaccinatedNoAdditionalDose",
+                        "Priority": 540,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "SUCCESSFUL_PROCEDURE_COUNT",
+                        "Operator": ">=",
+                        "Comparator": "2",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingNBS",
+                        "Description": "NBS future booking",
+                        "Priority": 700,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingNBS",
+                        "Description": "NBS future booking",
+                        "Priority": 700,
+                        "Operator": "in",
+                        "Comparator": "NBS,MYA",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_PROVIDER",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "FutureBookingLocal",
+                        "Description": "Local future booking",
+                        "Priority": 750,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "AdditionalDoseRequired",
+                        "Description": "AdditionalDoseRequired",
+                        "Priority": 1000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "CommsRouting": "ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "AdditionalDoseRequired",
+                        "Description": "AdditionalDoseRequired",
+                        "Priority": 1000,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y>",
+                        "Comparator": "-9",
+                        "CommsRouting": "BOOK_NBS|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "AdditionalDoseRequired",
+                        "Description": "AdditionalDoseRequired",
+                        "Priority": 1000,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "flu_immunosuppression",
+                        "CommsRouting": "BOOK_NBS|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "AdditionalDoseRequired",
+                        "Description": "AdditionalDoseRequired",
+                        "Priority": 1000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "SUCCESSFUL_PROCEDURE_COUNT",
+                        "Operator": "=",
+                        "Comparator": "1",
+                        "CommsRouting": "BOOK_NBS|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "X",
+                        "Name": "MayRequireAdditionalDose",
+                        "Description": "Under9and<2PreviousVaccinations",
+                        "Priority": 3000,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y<",
+                        "Comparator": "-9",
+                        "CommsRouting": "MAY_REQUIRE_ADDITIONAL_DOSE"
+                    },
+                    {
+                        "Type": "X",
+                        "Name": "MayRequireAdditionalDose",
+                        "Description": "Under9and<2PreviousVaccinations",
+                        "Priority": 3000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "SUCCESSFUL_PROCEDURE_COUNT",
+                        "Operator": "<",
+                        "Comparator": "2",
+                        "CommsRouting": "MAY_REQUIRE_ADDITIONAL_DOSE"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "TooCloseForAdditionalDoseAction",
+                        "Description": "TooCloseForAdditionalDoseAction",
+                        "Priority": 3100,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "TooCloseForAdditionalDoseAction",
+                        "Description": "TooCloseForAdditionalDoseAction",
+                        "Priority": 3100,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "-28",
+                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "TooCloseForAdditionalDoseAction",
+                        "Description": "TooCloseForAdditionalDoseAction",
+                        "Priority": 3100,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": "Y>",
+                        "Comparator": "-9",
+                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "TooCloseForAdditionalDoseAction",
+                        "Description": "TooCloseForAdditionalDoseAction",
+                        "Priority": 3100,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "flu_immunosuppression",
+                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "TooCloseForAdditionalDoseAction",
+                        "Description": "TooCloseForAdditionalDoseAction",
+                        "Priority": 3100,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "SUCCESSFUL_PROCEDURE_COUNT",
+                        "Operator": "<",
+                        "Comparator": "2",
+                        "CommsRouting": "LAST_VACCINATION_DATE|EARLIEST_NEXT_VACCINATION_DATE|ADDITIONAL_DOSE_REQUIRED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Already vaccinated default text",
+                        "Description": "Already vaccinated default text",
+                        "Priority": 3200,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "<<DATE_DAY_-50>>",
+                        "CommsRouting": "LAST_VACCINATION_DATE"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "FutureBookingDate",
+                        "Description": "Future booking date",
+                        "Priority": 3300,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "CommsRouting": "FUTURE_APPOINTMENT_DATE"
+                    }
+                ],
+                "ActionsMapper": {
+                    "BOOK_NBS": {
+                        "ExternalRoutingCode": "BookNBS",
+                        "ActionDescription": "Eligible to book",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "LAST_VACCINATION_DATE": {
+                        "ExternalRoutingCode": "DateOfLastVaccination",
+                        "ActionDescription": "[[TARGET.FLU.LAST_SUCCESSFUL_DATE:DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "EARLIEST_NEXT_VACCINATION_DATE": {
+                        "ExternalRoutingCode": "DateOfNextEarliestVaccination",
+                        "ActionDescription": "[[TARGET.FLU.NEXT_DOSE_DUE:ADD_DAYS(29):DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "ADDITIONAL_DOSE_REQUIRED": {
+                        "ExternalRoutingCode": "AdditionalDoseRequired",
+                        "ActionDescription": "Yes",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "MAY_REQUIRE_ADDITIONAL_DOSE": {
+                        "ExternalRoutingCode": "AdditionalDoseRequired",
+                        "ActionDescription": "Maybe",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "FUTURE_APPOINTMENT_DATE": {
+                        "ExternalRoutingCode": "FutureBookingDate",
+                        "ActionDescription": "[[TARGET.FLU.BOOKED_APPOINTMENT_DATE:DATE(%Y-%m-%d)]]",
+                        "ActionType": "DataValue",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    }
+                }
+            }
+        ]
+    }
+}

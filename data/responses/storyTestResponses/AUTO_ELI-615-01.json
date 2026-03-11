@@ -1,0 +1,52 @@
+{
+    "meta": {
+        "lastUpdated": "2026-03-05T14:40:02.088895+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "CovidAction",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the CovidAction ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "COVID",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_615_covid_cohort_group",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "You are currently in eli_615_covid_cohort"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the COVID vaccine",
+            "suitabilityRules": []
+        },
+        {
+            "actions": [
+                {
+                    "actionCode": "OpenCampaignActiveIteration",
+                    "actionType": "ButtonWithAuthLink",
+                    "description": "This is the OpenCampaignActiveIteration ActionDescription",
+                    "urlLabel": "Manage your appointment",
+                    "urlLink": "http://www.nhs.uk/book-rsv"
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "eli_615_cohort_group",
+                    "cohortStatus": "NotEligible",
+                    "cohortText": "You are not currently in eli_615_cohort"
+                }
+            ],
+            "status": "NotEligible",
+            "statusText": "We do not believe you can have it",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "c53f40ee-8af8-43cc-abaa-a04f31f000d9"
+}
