@@ -12,7 +12,6 @@ from utils.s3_config_manager import (
     upload_consumer_mapping_file_to_s3,
 )
 
-
 load_dotenv()
 
 

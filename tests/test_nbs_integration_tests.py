@@ -6,7 +6,7 @@ from tests import test_config
 from utils.data_helper import initialise_tests, load_all_expected_responses
 
 # Update the below with the configuration values specified in test_config.py
-all_data, dto = initialise_tests(test_config.NBS_INTEGRATION_TEST_DATA)
+all_data = initialise_tests(test_config.NBS_INTEGRATION_TEST_DATA)
 all_expected_responses = load_all_expected_responses(
     test_config.NBS_INTEGRATION_RESPONSES
 )

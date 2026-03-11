@@ -40,10 +40,7 @@
         },
         {
             "NHS_NUMBER": "9735548852",
-            "ATTRIBUTE_TYPE": "RSV",
-            "BOOKED_APPOINTMENT_DATE": null,
-            "BOOKED_APPOINTMENT_PROVIDER": null,
-            "LAST_SUCCESSFUL_DATE": null
+            "ATTRIBUTE_TYPE": "RSV"
         }
     ]
 }
