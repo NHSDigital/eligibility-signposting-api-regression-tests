@@ -255,5 +255,5 @@ vscode
 # Node Modules
 node_modules
 /certs/
-*temp*
+temp*
 inProgress*

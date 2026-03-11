@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 logger = logging.getLogger(__name__)
 
 
-def resolve_placeholders(value, context=None, file_name=None):
+def resolve_placeholders(value, file_name):
     """
     Replace placeholders of the form <<PLACEHOLDER>> in a string with resolved values.
     If resolution fails, the original placeholder text is left unchanged.
@@ -22,11 +22,13 @@ def resolve_placeholders(value, context=None, file_name=None):
         try:
             resolved = _resolve_placeholder_value(placeholder)
         except Exception:
-            logger.exception("[ERROR] Could not resolve placeholder %s:", placeholder)
+            logger.exception(
+                "[ERROR] Could not resolve placeholder %s: in %s:",
+                placeholder,
+                file_name,
+            )
             return match.group(0)  # leave placeholder unchanged
         else:
-            if context:
-                context.add(placeholder, resolved, file_name)
             return resolved
 
     return re.sub(r"<<(.*?)>>", replacer, value)
