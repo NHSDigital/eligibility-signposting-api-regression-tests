@@ -12,7 +12,7 @@
     ],
     "data": [
         {
-            "NHS_NUMBER": "9900069521",
+            "NHS_NUMBER": "9735415917",
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
@@ -22,23 +22,14 @@
             ]
         },
         {
-            "NHS_NUMBER": "9900069521",
+            "NHS_NUMBER": "9735415917",
             "ATTRIBUTE_TYPE": "PERSON",
-            "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>",
-            "GENDER": "0",
-            "POSTCODE": "SG8 6EG",
-            "POSTCODE_SECTOR": "SG86",
-            "POSTCODE_OUTCODE": "SG8",
-            "MSOA": "E02003792",
-            "LSOA": "E01018267",
-            "LOCAL_AUTHORITY": "E08000011",
-            "GP_PRACTICE_CODE": "D81046",
-            "PCN": "U75549",
-            "ICB": "QUE",
-            "COMMISSIONING_REGION": "Y61",
-            "13Q_FLAG": "Y",
-            "CARE_HOME_FLAG": "N",
-            "DE_FLAG": "N"
+            "DATE_OF_BIRTH": "<<DATE_AGE_75-TOMORROW>>"
+        },
+        {
+            "NHS_NUMBER": "9735415917",
+            "ATTRIBUTE_TYPE": "RSV"
         }
+
     ]
 }
