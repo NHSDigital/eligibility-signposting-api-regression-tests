@@ -244,7 +244,7 @@ def xray_sampling_rate():
     Temporarily set the default X-Ray sampling rule to 100% for the duration
     of the test, then restore previous values.
     """
-    xray_client = boto3.client("xray", region_name=CW_REGION)
+    xray_client = boto3.client("xray", region_name=CW_REGION)  # NOSONAR
     sample_rule_name = "Default"
     rules = xray_client.get_sampling_rules()["SamplingRuleRecords"]
     default_rule = next(

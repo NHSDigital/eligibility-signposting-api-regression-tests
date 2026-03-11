@@ -149,52 +149,79 @@ def _format_table(rows: list[dict[str, Any]], limit: int = 10) -> list[str]:
     return lines
 
 
+def _load_segment_document(
+    segment: dict[str, Any],
+    trace_id: str | None,
+) -> dict[str, Any] | None:
+    document = segment.get("Document")
+    if not document:
+        return None
+
+    try:
+        return json.loads(document)
+    except json.JSONDecodeError:
+        logger.warning(
+            "XRAY: Could not parse segment document for trace %s",
+            trace_id,
+        )
+        return None
+
+
+def _update_trace_bounds(
+    parsed_segment: dict[str, Any],
+    trace_min_start: float | None,
+    trace_max_end: float | None,
+) -> tuple[float | None, float | None]:
+    segment_start = parsed_segment.get("start_time")
+    segment_end = parsed_segment.get("end_time")
+
+    if segment_start is not None:
+        trace_min_start = (
+            segment_start
+            if trace_min_start is None
+            else min(trace_min_start, segment_start)
+        )
+
+    if segment_end is not None:
+        trace_max_end = (
+            segment_end if trace_max_end is None else max(trace_max_end, segment_end)
+        )
+
+    return trace_min_start, trace_max_end
+
+
+def _collect_node_durations(
+    parsed_segment: dict[str, Any],
+    durations_by_name: dict[str, list[float]],
+) -> None:
+    nodes = [parsed_segment, *walk_subsegments(parsed_segment)]
+
+    for node in nodes:
+        name = normalise_subsegment_name(node)
+        duration_ms = subsegment_duration_ms(node)
+
+        if duration_ms > 0:
+            durations_by_name[name].append(duration_ms)
+
+
 def _parse_trace(trace: dict[str, Any]) -> tuple[float | None, dict[str, list[float]]]:
     trace_id = trace.get("Id")
     durations_by_name: dict[str, list[float]] = defaultdict(list)
 
-    trace_min_start = None
-    trace_max_end = None
+    trace_min_start: float | None = None
+    trace_max_end: float | None = None
 
     for segment in trace.get("Segments", []) or []:
-        document = segment.get("Document")
-        if not document:
+        parsed_segment = _load_segment_document(segment, trace_id)
+        if parsed_segment is None:
             continue
 
-        try:
-            parsed_segment = json.loads(document)
-        except json.JSONDecodeError:
-            logger.warning(
-                "XRAY: Could not parse segment document for trace %s",
-                trace_id,
-            )
-            continue
-
-        segment_start = parsed_segment.get("start_time")
-        segment_end = parsed_segment.get("end_time")
-
-        if segment_start is not None:
-            trace_min_start = (
-                segment_start
-                if trace_min_start is None
-                else min(trace_min_start, segment_start)
-            )
-
-        if segment_end is not None:
-            trace_max_end = (
-                segment_end
-                if trace_max_end is None
-                else max(trace_max_end, segment_end)
-            )
-
-        nodes = [parsed_segment, *walk_subsegments(parsed_segment)]
-
-        for node in nodes:
-            name = normalise_subsegment_name(node)
-            duration_ms = subsegment_duration_ms(node)
-
-            if duration_ms > 0:
-                durations_by_name[name].append(duration_ms)
+        trace_min_start, trace_max_end = _update_trace_bounds(
+            parsed_segment,
+            trace_min_start,
+            trace_max_end,
+        )
+        _collect_node_durations(parsed_segment, durations_by_name)
 
     if trace_min_start is None or trace_max_end is None:
         return None, durations_by_name
