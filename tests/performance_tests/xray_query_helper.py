@@ -209,7 +209,7 @@ def _parse_trace(trace: dict[str, Any]) -> tuple[float | None, dict[str, list[fl
     """
     Returns a tuple like:
     (
-        request_duration = 700,
+        700,
         {
             "CampaignRepo": [250],
             "Lambda": [390],
@@ -228,6 +228,8 @@ def _parse_trace(trace: dict[str, Any]) -> tuple[float | None, dict[str, list[fl
         if parsed_segment is None:
             continue
 
+        # this is calculating the overall trace duration
+        # by finding the earliest start time and latest end time
         trace_min_start, trace_max_end = _update_trace_bounds(
             parsed_segment,
             trace_min_start,
