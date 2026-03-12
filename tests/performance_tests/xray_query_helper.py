@@ -206,6 +206,17 @@ def _collect_node_durations(
 
 
 def _parse_trace(trace: dict[str, Any]) -> tuple[float | None, dict[str, list[float]]]:
+    """
+    Returns a tuple like:
+    (
+        request_duration = 700,
+        {
+            "CampaignRepo": [250],
+            "Lambda": [390],
+            "SecretRepo": [30],
+        }
+    )
+    """
     trace_id = trace.get("Id")
     durations_by_name: dict[str, list[float]] = defaultdict(list)
 
@@ -281,6 +292,9 @@ def collect_xray_metrics(
         trace_response_ms, durations_by_name = _parse_trace(trace)
 
         for name, durations in durations_by_name.items():
+            # this is building a list of durations for each
+            # subsegment name across all traces,
+            # e.g. "CampaignRepo": [250, 300, 200, ...]
             subsegment_durations[name].extend(durations)
 
         if trace_response_ms is None:
@@ -325,13 +339,12 @@ def collect_xray_metrics(
         if is_application_subsegment(name):
             app_rows.append(row)
 
-    all_rows_by_avg = sorted(all_rows, key=lambda row: row["avg_ms"], reverse=True)
+    # sorts the application segments for the table later
     app_rows_by_avg = sorted(app_rows, key=lambda row: row["avg_ms"], reverse=True)
-
-    init_row = next((row for row in all_rows_by_avg if row["name"] == "Init"), None)
-    lambda_row = next(
-        (row for row in all_rows_by_avg if row["name"] == "local:Lambda"), None
-    )
+    # find the cold starts
+    init_row = next((row for row in all_rows if row["name"] == "Init"), None)
+    # find all lambda executions
+    lambda_row = next((row for row in all_rows if row["name"] == "local:Lambda"), None)
 
     return {
         "trace_count": len(traces),
