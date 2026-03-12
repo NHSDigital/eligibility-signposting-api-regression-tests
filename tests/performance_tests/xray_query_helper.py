@@ -2,7 +2,7 @@ import json
 import logging
 import math
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
 import boto3
@@ -397,27 +397,3 @@ def log_xray_metrics(
     )
 
     logger.info("\n%s", "\n".join(lines))
-
-
-if __name__ == "__main__":
-    START_EPOCH = 1773063695
-    END_EPOCH = 1773063726
-    CW_REGION = "eu-west-2"
-
-    test_start_time = datetime.fromtimestamp(START_EPOCH, tz=timezone.utc)
-    test_end_time = datetime.fromtimestamp(END_EPOCH, tz=timezone.utc)
-
-    test_metrics = collect_xray_metrics(
-        start_time=test_start_time,
-        end_time=test_end_time,
-        region_name=CW_REGION,
-        filter_expression='service("eligibility_signposting_api")',
-    )
-
-    log_xray_metrics(
-        test_metrics,
-        limit=10,
-        start_time=test_start_time,
-        end_time=test_end_time,
-        filter_expression='service("eligibility_signposting_api")',
-    )

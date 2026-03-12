@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
 
@@ -13,6 +13,7 @@ import pytest
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
+from .xray_query_helper import collect_xray_metrics, log_xray_metrics
 
 
 SLA_MAX_MS = 600
@@ -35,10 +36,6 @@ id_list = [
     f"{filename} - {scenario.get('scenario_name', 'No Scenario')}"
     for filename, scenario in param_list
 ]
-
-
-def _epoch_now() -> int:
-    return int(datetime.now().timestamp())
 
 
 def _build_locust_command(
@@ -297,12 +294,12 @@ def test_locust_run_and_csv_exists(
         html_report=LOCUST_HTML_REPORT,
     )
 
-    start_time = _epoch_now()
+    start_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST STARTING: start_time=%s", start_time)
 
     proc = _run_locust(locust_command, env=custom_env)
 
-    end_time = _epoch_now()
+    end_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST FINISHED: end_time=%s", end_time)
 
     assert proc.returncode == 0, f"Locust failed: {proc.stderr}"
@@ -320,8 +317,8 @@ def test_locust_run_and_csv_exists(
     insights_result = _run_logs_insights_query(
         logs_client,
         log_group=CW_LOG_GROUP,
-        start_time=start_time,
-        end_time=end_time,
+        start_time=int(start_time.timestamp()),
+        end_time=int(end_time.timestamp()),
         query=_logs_insights_query_string(),
         poll_interval_s=CW_QUERY_POLL_S,
         timeout_s=60,
@@ -331,6 +328,20 @@ def test_locust_run_and_csv_exists(
 
     output_results_html(AWS_HTML_REPORT, locust_stats, aws_log_stats)
     _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
+
+    xray_metrics = collect_xray_metrics(
+        start_time=start_time,
+        end_time=end_time,
+        region_name=CW_REGION,
+        filter_expression='service("eligibility_signposting_api")',
+    )
+    log_xray_metrics(
+        xray_metrics,
+        limit=10,
+        start_time=start_time,
+        end_time=end_time,
+        filter_expression='service("eligibility_signposting_api")',
+    )
 
 
 def output_results_html(
