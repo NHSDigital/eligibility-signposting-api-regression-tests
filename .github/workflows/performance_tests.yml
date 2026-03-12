@@ -116,16 +116,13 @@ jobs:
             spawn_rate="$SPAWN_RATE" \
             run_time="$RUN_TIME"
 
-      - name: Upload Locust Performance Report
+      - name: Upload Performance Report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: performance-locust-report
-          path: temp/locust_report.html
-
-      - name: Upload AWS Logs Performance Report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: performance-awslogs-report
-          path: temp/aws_logs_report.html
+          path: |
+            temp/locust_report.html
+            temp/xray_metrics.json
+            temp/aws_logs_report.html
+            temp/locust_results.csv

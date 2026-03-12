@@ -3,6 +3,7 @@ import logging
 import math
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 import boto3
@@ -397,3 +398,10 @@ def log_xray_metrics(
     )
 
     logger.info("\n%s", "\n".join(lines))
+
+
+def write_xray_metrics_to_file(metrics, output_path: Path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with output_path.open("w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2)

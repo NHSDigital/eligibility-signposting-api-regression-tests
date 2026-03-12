@@ -13,7 +13,11 @@ import pytest
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
-from .xray_query_helper import collect_xray_metrics, log_xray_metrics
+from .xray_query_helper import (
+    collect_xray_metrics,
+    log_xray_metrics,
+    write_xray_metrics_to_file,
+)
 
 SLA_MAX_MS = 600
 SLA_AVG_MS = 200
@@ -333,6 +337,10 @@ def test_locust_run_and_csv_exists(
         end_time=end_time,
         region_name=CW_REGION,
         filter_expression='service("eligibility_signposting_api")',
+    )
+    write_xray_metrics_to_file(
+        xray_metrics,
+        Path("temp/xray_metrics.json"),
     )
     log_xray_metrics(
         xray_metrics,
