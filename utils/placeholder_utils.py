@@ -2,6 +2,7 @@ import logging
 import re
 from calendar import isleap
 from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
@@ -36,7 +37,7 @@ def resolve_placeholders(value, file_name):
 
 def _resolve_placeholder_value(placeholder: str) -> str:
     placeholder_parts_length = 3
-    valid_placeholder_types = ["DATE", "RDATE", "IGNORE", "NBSDATE"]
+    valid_placeholder_types = ["DATE", "RDATE", "IGNORE", "NBSDATE", "TIME"]
     result = f"<<{placeholder}>>"  # Default fallback
 
     if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE"]:
@@ -49,20 +50,23 @@ def _resolve_placeholder_value(placeholder: str) -> str:
     ):
         return result
 
-    today = datetime.now(UTC)
-    date_type, arg = parts[1], parts[2]
+    today = datetime.now(ZoneInfo("Europe/London"))
+    unit_type, unit, shift = parts[0], parts[1], parts[2]
 
     try:
-        if date_type == "AGE":
-            result = _resolve_age_placeholder(today, arg, parts[0])
-        elif date_type == "DAY":
-            result = _format_date(today + timedelta(days=int(arg)), parts[0])
-        elif date_type == "WEEK":
-            result = _format_date(today + timedelta(weeks=int(arg)), parts[0])
-        elif date_type == "MONTH":
-            result = _format_date(today + relativedelta(months=int(arg)), parts[0])
-        elif date_type == "YEAR":
-            result = _format_date(today + relativedelta(years=int(arg)), parts[0])
+        if unit_type == "TIME":
+            return _resolve_time_placeholder(today, unit, shift)
+
+        if unit == "AGE":
+            result = _resolve_age_placeholder(today, shift, unit_type)
+        elif unit == "DAY":
+            result = _format_date(today + timedelta(days=int(shift)), unit_type)
+        elif unit == "WEEK":
+            result = _format_date(today + timedelta(weeks=int(shift)), unit_type)
+        elif unit == "MONTH":
+            result = _format_date(today + relativedelta(months=int(shift)), unit_type)
+        elif unit == "YEAR":
+            result = _format_date(today + relativedelta(years=int(shift)), unit_type)
     except Exception:
         logger.exception("Failed to resolve placeholder: %s", placeholder)
         raise
@@ -118,3 +122,24 @@ def _format_date(date: datetime, format_type: str) -> str:
 
     fmt = formats.get(format_type, "%Y%m%d")
     return date.strftime(fmt)
+
+
+def _resolve_time_placeholder(now: datetime, unit: str, arg: str) -> str:
+    """
+    Supports:
+      TIME_HOUR_±X
+      TIME_MINUTE_±X
+      TIME_SECOND_±X
+    Returns HH:MM:SS (24h)
+    """
+    delta_map = {
+        "HOUR": timedelta(hours=int(arg)),
+        "MINUTE": timedelta(minutes=int(arg)),
+        "SECOND": timedelta(seconds=int(arg)),
+    }
+
+    if unit not in delta_map:
+        return f"<<TIME_{unit}_{arg}>>"  # fallback
+
+    new_time = now + delta_map[unit]
+    return new_time.strftime("%H:%M:%S")
