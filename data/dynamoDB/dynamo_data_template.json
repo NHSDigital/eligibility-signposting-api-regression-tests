@@ -1,0 +1,54 @@
+[
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "PERSON",
+    "13Q_FLAG": "N",
+    "CARE_HOME_FLAG": "N",
+    "COMMISSIONING_REGION": "Y63",
+    "DATE_OF_BIRTH": "19700101",
+    "DE_FLAG": "N",
+    "GENDER": "1",
+    "GP_PRACTICE_CODE": "B81087",
+    "ICB": "QOQ",
+    "ICB_OF_RESIDENCE": "QHM",
+    "LOCAL_AUTHORITY": "E06000047",
+    "LSOA": "E01034495",
+    "MSOA": "E02004316",
+    "PCN": "U93843",
+    "POSTCODE": "DH7 7HT",
+    "POSTCODE_OUTCODE": "DH7",
+    "POSTCODE_SECTOR": "DH77"
+  },
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "VACCINE_BASE",
+    "BOOKED_APPOINTMENT_DATE": null,
+    "BOOKED_APPOINTMENT_PROVIDER": null,
+    "INVALID_DOSES_COUNT": null,
+    "LAST_INVITE_DATE": null,
+    "LAST_INVITE_STATUS": null,
+    "LAST_SUCCESSFUL_DATE": null,
+    "LAST_VALID_DOSE_DATE": null,
+    "SUCCESSFUL_PROCEDURE_COUNT": null,
+    "VALID_DOSES_COUNT": null
+  },
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "RSV"
+  },
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "COVID"
+  },
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "FLU"
+  },
+  {
+    "NHS_NUMBER": null,
+    "ATTRIBUTE_TYPE": "COHORTS",
+    "COHORT_MEMBERSHIPS": [
+      { "COHORT_LABEL": null, "DATE_JOINED": null }
+    ]
+  }
+]
