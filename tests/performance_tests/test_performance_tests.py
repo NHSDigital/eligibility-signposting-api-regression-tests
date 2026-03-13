@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
 
@@ -13,6 +13,11 @@ import pytest
 from tests import test_config
 from utils.data_helper import initialise_tests
 from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
+from .xray_query_helper import (
+    collect_xray_metrics,
+    log_xray_metrics,
+    write_xray_metrics_to_file,
+)
 
 SLA_MAX_MS = 600
 SLA_AVG_MS = 200
@@ -34,10 +39,6 @@ id_list = [
     f"{filename} - {scenario.get('scenario_name', 'No Scenario')}"
     for filename, scenario in param_list
 ]
-
-
-def _epoch_now() -> int:
-    return int(datetime.now().timestamp())
 
 
 def _build_locust_command(
@@ -237,8 +238,53 @@ def test_data(get_scenario_params, temp_csv_path) -> None:
         write_request_params_to_csv(nhs_number, request_headers, temp_csv_path)
 
 
+@pytest.fixture(scope="function")
+def xray_sampling_rate():
+    """
+    Temporarily set the default X-Ray sampling rule to 100% for the duration
+    of the test, then restore previous values.
+    """
+    xray_client = boto3.client("xray", region_name=CW_REGION)  # NOSONAR
+    sample_rule_name = "Default"
+    rules = xray_client.get_sampling_rules()["SamplingRuleRecords"]
+    default_rule = next(
+        r["SamplingRule"] for r in rules if r["SamplingRule"]["RuleName"] == "Default"
+    )
+    original_fixed_rate = default_rule["FixedRate"]
+
+    logging.warning(
+        "XRAY SAMPLING: setting rule '%s' to 100%% (was FixedRate=%s)",
+        sample_rule_name,
+        original_fixed_rate,
+    )
+    xray_client.update_sampling_rule(
+        SamplingRuleUpdate={
+            "RuleName": sample_rule_name,
+            "FixedRate": 1.0,
+        }
+    )
+    try:
+        yield
+    finally:
+        logging.warning(
+            "XRAY SAMPLING: Restoring sampling rate to %s",
+            original_fixed_rate,
+        )
+        xray_client.update_sampling_rule(
+            SamplingRuleUpdate={
+                "RuleName": "Default",
+                "FixedRate": original_fixed_rate,
+            }
+        )
+
+
 def test_locust_run_and_csv_exists(
-    test_data, eligibility_client, perf_run_time, perf_users, perf_spawn_rate
+    test_data,
+    eligibility_client,
+    perf_run_time,
+    perf_users,
+    perf_spawn_rate,
+    xray_sampling_rate,
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
@@ -251,12 +297,12 @@ def test_locust_run_and_csv_exists(
         html_report=LOCUST_HTML_REPORT,
     )
 
-    start_time = _epoch_now()
+    start_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST STARTING: start_time=%s", start_time)
 
     proc = _run_locust(locust_command, env=custom_env)
 
-    end_time = _epoch_now()
+    end_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST FINISHED: end_time=%s", end_time)
 
     assert proc.returncode == 0, f"Locust failed: {proc.stderr}"
@@ -274,8 +320,8 @@ def test_locust_run_and_csv_exists(
     insights_result = _run_logs_insights_query(
         logs_client,
         log_group=CW_LOG_GROUP,
-        start_time=start_time,
-        end_time=end_time,
+        start_time=int(start_time.timestamp()),
+        end_time=int(end_time.timestamp()),
         query=_logs_insights_query_string(),
         poll_interval_s=CW_QUERY_POLL_S,
         timeout_s=60,
@@ -285,6 +331,24 @@ def test_locust_run_and_csv_exists(
 
     output_results_html(AWS_HTML_REPORT, locust_stats, aws_log_stats)
     _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
+
+    xray_metrics = collect_xray_metrics(
+        start_time=start_time,
+        end_time=end_time,
+        region_name=CW_REGION,
+        filter_expression='service("eligibility_signposting_api")',
+    )
+    write_xray_metrics_to_file(
+        xray_metrics,
+        Path("temp/xray_metrics.json"),
+    )
+    log_xray_metrics(
+        xray_metrics,
+        limit=10,
+        start_time=start_time,
+        end_time=end_time,
+        filter_expression='service("eligibility_signposting_api")',
+    )
 
 
 def output_results_html(
