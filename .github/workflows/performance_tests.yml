@@ -22,7 +22,7 @@ on:
         required: true
         default: 20
       run_time:
-        description: 'Duration to run the test for (e.g. 1m, 30s, 1h)'
+        description: 'Duration to run the test for (e.g. 1m, 30s)'
         type: string
         required: true
         default: "30s"
