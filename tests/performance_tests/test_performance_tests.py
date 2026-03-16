@@ -251,6 +251,13 @@ def xray_sampling_rate():
         r["SamplingRule"] for r in rules if r["SamplingRule"]["RuleName"] == "Default"
     )
     original_fixed_rate = default_rule["FixedRate"]
+    original_reservoir_size = default_rule["ReservoirSize"]
+
+    logging.warning(
+        "XRAY SAMPLING: setting rule '%s' reservoir to 100 (was %s)",
+        sample_rule_name,
+        original_reservoir_size,
+    )
 
     logging.warning(
         "XRAY SAMPLING: setting rule '%s' to 100%% (was FixedRate=%s)",
@@ -261,19 +268,22 @@ def xray_sampling_rate():
         SamplingRuleUpdate={
             "RuleName": sample_rule_name,
             "FixedRate": 1.0,
+            "ReservoirSize": 400,
         }
     )
     try:
         yield
     finally:
         logging.warning(
-            "XRAY SAMPLING: Restoring sampling rate to %s",
+            "XRAY SAMPLING: Restoring sampling rate to %s and reservoir to %s",
             original_fixed_rate,
+            original_reservoir_size,
         )
         xray_client.update_sampling_rule(
             SamplingRuleUpdate={
                 "RuleName": "Default",
                 "FixedRate": original_fixed_rate,
+                "ReservoirSize": original_reservoir_size,
             }
         )
 
