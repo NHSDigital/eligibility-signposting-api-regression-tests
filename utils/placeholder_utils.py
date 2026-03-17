@@ -41,6 +41,7 @@ def _resolve_placeholder_value(placeholder: str) -> str:
 
     parts = placeholder.split("_")
     if len(parts) != 3:
+        logger.exception("Failed to resolve placeholder: %s", placeholder)
         return f"<<{placeholder}>>"
 
     placeholder_type, unit, shift = parts
@@ -54,6 +55,7 @@ def _resolve_placeholder_value(placeholder: str) -> str:
 
     handler = function_type.get(placeholder_type)
     if handler is None:
+        logger.exception("Failed to resolve placeholder: %s", placeholder)
         return f"<<{placeholder}>>"
 
     try:
