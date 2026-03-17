@@ -51,13 +51,6 @@ jobs:
           echo "users: ${users}"
           echo "spawn_rate: ${spawn_rate}"
 
-      - name: Validate performance test inputs
-        env:
-          USERS: ${{ inputs.users }}
-          SPAWN_RATE: ${{ inputs.spawn_rate }}
-          RUN_TIME: ${{ inputs.run_time }}
-        run: python tests/performance_tests/validate_inputs.py
-
       - name: Checkout
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
@@ -97,6 +90,13 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
+
+      - name: Validate performance test inputs
+        env:
+          USERS: ${{ inputs.users }}
+          SPAWN_RATE: ${{ inputs.spawn_rate }}
+          RUN_TIME: ${{ inputs.run_time }}
+        run: python tests/performance_tests/validate_inputs.py
 
       - name: Performance Tests
         id: tests
