@@ -6,7 +6,6 @@ authors = ["SeanSteberis <sean.steberis@airelogic.com>"]
 readme = "README.md"
 package-mode = false
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -25,7 +24,7 @@ jsonschema = "^4.26.0"
 pip-licenses = "^5.5.1"
 requests-oauthlib = "^2.0.0"
 pre-commit = "^4.5.1"
-boto3 = "^1.42.68"
+boto3 = "^1.42.69"
 faker = "^40.11.0"
 pyright = "^1.1.408"
 pyflakes = "^3.4.0"
