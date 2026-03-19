@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "lastUpdated": "2026-03-16T14:50:48.380666+00:00"
+    },
+    "processedSuggestions": [
+        {
+            "actions": [
+                {
+                    "actionCode": "Iteration2",
+                    "actionType": "Iteration2",
+                    "description": "This is the Description for Iteration 2",
+                    "urlLabel": "",
+                    "urlLink": ""
+                }
+            ],
+            "condition": "RSV",
+            "eligibilityCohorts": [
+                {
+                    "cohortCode": "rsv_age",
+                    "cohortStatus": "Actionable",
+                    "cohortText": "are in the cohort"
+                }
+            ],
+            "status": "Actionable",
+            "statusText": "You should have the RSV vaccine",
+            "suitabilityRules": []
+        }
+    ],
+    "responseId": "faaf26e1-c948-48e6-81be-83288b0bcb47"
+}
