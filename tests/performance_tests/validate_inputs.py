@@ -2,7 +2,6 @@ import os
 import re
 import sys
 
-
 MAX_USERS = 400
 MAX_SPAWN_RATE = 100
 MAX_RUN_TIME_SECONDS = 1800  # 30 minutes
