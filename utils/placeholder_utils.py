@@ -38,7 +38,7 @@ def resolve_placeholders(value, file_name):
 
 def _resolve_placeholder_value(placeholder: str) -> str:
 
-    if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE", "RANDOM_GUID"]:
+    if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE", "RANDOM_GUID", "IGNORE_ID"]:
         return placeholder
 
     parts = placeholder.split("_")
