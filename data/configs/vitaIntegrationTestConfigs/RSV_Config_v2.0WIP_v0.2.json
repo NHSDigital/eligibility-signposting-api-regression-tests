@@ -16,7 +16,7 @@
         ],
         "IterationFrequency": "X",
         "IterationType": "O",
-        "IterationTime": "07:00:00",
+        "IterationTime": "<<TIME_HOUR_1>>",
         "StartDate": "<<DATE_DAY_-100>>",
         "EndDate": "20350717",
         "ApprovalMinimum": 0,
