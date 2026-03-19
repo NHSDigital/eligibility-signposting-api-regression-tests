@@ -1,0 +1,29 @@
+{
+    "scenario_name": "ELI-764 - Invalid Campaign Config Time - 500 Response",
+    "request_headers": {
+        "NHSE-Product-ID": "Story_Test_Consumer_ID",
+        "nhsd-End-User-Organisation-ods": "elid_automation"
+    },
+    "expected_response_code": 500,
+    "config_filenames": [
+        "ELI-674_08.json"
+    ],
+    "secret_version": null,
+    "data": [
+        {
+            "NHS_NUMBER": "9000076408",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "cohort_a",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
+        },
+        {
+            "NHS_NUMBER": "9000076408",
+            "ATTRIBUTE_TYPE": "PERSON",
+            "DATE_OF_BIRTH": "<<DATE_AGE_25>>"
+        }
+    ]
+}
