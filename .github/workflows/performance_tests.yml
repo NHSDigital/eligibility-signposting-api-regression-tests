@@ -22,14 +22,10 @@ on:
         required: true
         default: 20
       run_time:
-        description: 'Duration to run the test for (e.g. 1m, 30s, 1h)'
+        description: 'Duration to run the test for (e.g. 1m, 30s)'
         type: string
         required: true
         default: "30s"
-      github_tag:
-        description: 'The github tag to run the test pack from'
-        required: true
-        default: "main"
 
 jobs:
   performance_tests:
@@ -44,7 +40,6 @@ jobs:
         env:
           environment: ${{ inputs.environment }}
           log_level: "INFO"
-          github_tag: ${{ inputs.github_tag }}
           run_time : ${{ inputs.run_time }}
           users: ${{ inputs.users }}
           spawn_rate: ${{ inputs.spawn_rate }}
@@ -52,15 +47,12 @@ jobs:
         run: |
           echo "environment: ${environment}"
           echo "log_level: ${log_level}"
-          echo "github_tag: ${github_tag}"
           echo "run_time: ${run_time}"
           echo "users: ${users}"
           echo "spawn_rate: ${spawn_rate}"
 
       - name: Checkout
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
-        with:
-          ref: ${{ inputs.github_tag }}
 
       # using git commit sha for version of action to ensure we have stable version
       - name: Install asdf
@@ -99,6 +91,13 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Eligibility-Signposting-API-E2E-Regression-Tests
           aws-region: eu-west-2
 
+      - name: Validate performance test inputs
+        env:
+          USERS: ${{ inputs.users }}
+          SPAWN_RATE: ${{ inputs.spawn_rate }}
+          RUN_TIME: ${{ inputs.run_time }}
+        run: python tests/performance_tests/validate_inputs.py
+
       - name: Performance Tests
         id: tests
         env:
@@ -116,16 +115,13 @@ jobs:
             spawn_rate="$SPAWN_RATE" \
             run_time="$RUN_TIME"
 
-      - name: Upload Locust Performance Report
+      - name: Upload Performance Report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: performance-locust-report
-          path: temp/locust_report.html
-
-      - name: Upload AWS Logs Performance Report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: performance-awslogs-report
-          path: temp/aws_logs_report.html
+          path: |
+            temp/locust_report.html
+            temp/xray_metrics.json
+            temp/aws_logs_report.html
+            temp/locust_results.csv

@@ -1,11 +1,14 @@
 import logging
 import re
 from calendar import isleap
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
 logger = logging.getLogger(__name__)
+
+FAILED_PLACEHOLDER_MSG = "Failed to resolve placeholder: %s"
 
 
 def resolve_placeholders(value, file_name):
@@ -27,56 +30,84 @@ def resolve_placeholders(value, file_name):
                 placeholder,
                 file_name,
             )
-            return match.group(0)  # leave placeholder unchanged
-        else:
-            return resolved
+            return match.group(0)  # leave unchanged
+        return resolved
 
     return re.sub(r"<<(.*?)>>", replacer, value)
 
 
 def _resolve_placeholder_value(placeholder: str) -> str:
-    placeholder_parts_length = 3
-    valid_placeholder_types = ["DATE", "RDATE", "IGNORE", "NBSDATE"]
-    result = f"<<{placeholder}>>"  # Default fallback
 
-    if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE"]:
+    if placeholder in ["IGNORE_RESPONSE_ID", "IGNORE_DATE", "RANDOM_GUID", "IGNORE_ID"]:
         return placeholder
 
     parts = placeholder.split("_")
-    if (
-        len(parts) != placeholder_parts_length
-        or parts[0] not in valid_placeholder_types
-    ):
-        return result
+    if len(parts) != 3:
+        logger.exception(FAILED_PLACEHOLDER_MSG, placeholder)
+        return f"<<{placeholder}>>"
 
-    today = datetime.now(UTC)
-    date_type, arg = parts[1], parts[2]
+    placeholder_type, unit, shift = parts
+
+    function_type = {
+        "TIME": _resolve_time,
+        "DATE": _resolve_date,
+        "RDATE": _resolve_date,
+        "NBSDATE": _resolve_date,
+    }
+
+    handler = function_type.get(placeholder_type)
+    if handler is None:
+        logger.exception(FAILED_PLACEHOLDER_MSG, placeholder)
+        return f"<<{placeholder}>>"
 
     try:
-        if date_type == "AGE":
-            result = _resolve_age_placeholder(today, arg, parts[0])
-        elif date_type == "DAY":
-            result = _format_date(today + timedelta(days=int(arg)), parts[0])
-        elif date_type == "WEEK":
-            result = _format_date(today + timedelta(weeks=int(arg)), parts[0])
-        elif date_type == "MONTH":
-            result = _format_date(today + relativedelta(months=int(arg)), parts[0])
-        elif date_type == "YEAR":
-            result = _format_date(today + relativedelta(years=int(arg)), parts[0])
+        return handler(placeholder_type, unit, shift)
     except Exception:
-        logger.exception("Failed to resolve placeholder: %s", placeholder)
-        raise
-    return result
+        logger.exception(FAILED_PLACEHOLDER_MSG, placeholder)
+        return f"<<{placeholder}>>"
+
+
+def _resolve_time(_type: str, unit: str, shift: str) -> str:
+    now = datetime.now(ZoneInfo("Europe/London"))
+
+    handlers = {
+        "HOUR": lambda n, s: n + timedelta(hours=int(s)),
+        "MINUTE": lambda n, s: n + timedelta(minutes=int(s)),
+        "SECOND": lambda n, s: n + timedelta(seconds=int(s)),
+    }
+
+    fn = handlers.get(unit)
+    if fn is None:
+        return f"<<TIME_{unit}_{shift}>>"
+
+    new_time = fn(now, shift)
+    return new_time.strftime("%H:%M:%S")
+
+
+def _resolve_date(date_type: str, unit: str, shift: str) -> str:
+    now = datetime.now(ZoneInfo("Europe/London"))
+
+    handlers = {
+        "AGE": lambda n, s: _resolve_age_placeholder(n, s, date_type),
+        "DAY": lambda n, s: n + timedelta(days=int(s)),
+        "WEEK": lambda n, s: n + timedelta(weeks=int(s)),
+        "MONTH": lambda n, s: n + relativedelta(months=int(s)),
+        "YEAR": lambda n, s: n + relativedelta(years=int(s)),
+    }
+
+    fn = handlers.get(unit)
+    if fn is None:
+        return f"<<{date_type}_{unit}_{shift}>>"
+
+    result = fn(now, shift)
+
+    if isinstance(result, str):
+        return result  # AGE returns final formatted date
+
+    return _format_date(result, date_type)
 
 
 def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) -> str:
-    """
-    Resolve placeholders like:
-      - DATE_AGE_75
-      - DATE_AGE_75-TOMORROW
-      - DATE_AGE_75-YESTERDAY
-    """
-
     offset_days = 0
 
     if age_str.endswith("-TOMORROW"):
@@ -89,17 +120,12 @@ def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) ->
         age = int(age_str)
 
     target_year = today.year - age
-    february = 2
-    leap_year_day = 29
+
     try:
         result_date = today.replace(year=target_year)
     except ValueError:
-        if (
-            today.month == february
-            and today.day == leap_year_day
-            and not isleap(target_year)
-        ):
-            result_date = datetime(target_year, 2, 28, tzinfo=UTC)
+        if today.month == 2 and today.day == 29 and not isleap(target_year):
+            result_date = datetime(target_year, 2, 28, tzinfo=today.tzinfo)
         else:
             raise
 
@@ -111,9 +137,9 @@ def _resolve_age_placeholder(today: datetime, age_str: str, format_type: str) ->
 
 def _format_date(date: datetime, format_type: str) -> str:
     formats = {
-        "RDATE": "%-d %B %Y",  # e.g. 3 February 2026
-        "NBSDATE": "%Y-%m-%d",  # e.g. 2026-02-03
-        "DATE": "%Y%m%d",  # default format if needed explicitly
+        "RDATE": "%-d %B %Y",
+        "NBSDATE": "%Y-%m-%d",
+        "DATE": "%Y%m%d",
     }
 
     fmt = formats.get(format_type, "%Y%m%d")
