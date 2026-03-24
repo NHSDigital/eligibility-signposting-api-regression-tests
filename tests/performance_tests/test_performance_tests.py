@@ -296,6 +296,7 @@ def test_locust_run_and_csv_exists(
     perf_spawn_rate,
     xray_sampling_rate,
 ):
+    global proc
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
 
@@ -310,7 +311,14 @@ def test_locust_run_and_csv_exists(
     start_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST STARTING: start_time=%s", start_time)
 
-    proc = _run_locust(locust_command, env=custom_env)
+    try:
+        proc = _run_locust(locust_command, env=custom_env)
+    except FileNotFoundError:
+        pytest.fail(
+            "Locust executable not found. Ensure locust is installed and in PATH."
+        )
+    except subprocess.SubprocessError as e:
+        pytest.fail(f"Failed to execute Locust subprocess: {e}")
 
     end_time = datetime.now(timezone.utc)
     logging.warning("LOCUST TEST FINISHED: end_time=%s", end_time)
