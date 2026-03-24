@@ -15,6 +15,9 @@ jobs:
       (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]') ||
       (github.event_name == 'pull_request_target' && github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository)
     uses: ./.github/workflows/quality-checks.yml
+    with:
+      sonar_organisation_key: nhsdigital
+      sonar_project_key: NHSDigital_eligibility-signposting-api-regression-tests
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
