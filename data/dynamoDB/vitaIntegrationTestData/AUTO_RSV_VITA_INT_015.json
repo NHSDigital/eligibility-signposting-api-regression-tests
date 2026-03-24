@@ -37,6 +37,10 @@
             "13Q_FLAG": "N",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
+        },
+        {
+            "NHS_NUMBER": "9735548852",
+            "ATTRIBUTE_TYPE": "RSV"
         }
     ]
 }
