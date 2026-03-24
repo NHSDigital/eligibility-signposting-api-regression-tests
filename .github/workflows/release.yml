@@ -2,7 +2,7 @@ name: release workflow
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   BRANCH_NAME: ${{ github.event.ref.BRANCH_NAME }}
@@ -10,6 +10,9 @@ env:
 jobs:
   quality_checks:
     uses: ./.github/workflows/quality-checks.yml
+    with:
+      sonar_organisation_key: nhsdigital
+      sonar_project_key: NHSDigital_eligibility-signposting-api-regression-tests
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
