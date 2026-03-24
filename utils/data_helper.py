@@ -145,9 +145,15 @@ def load_all_expected_responses(folder_path):
     for path in Path(folder_path).iterdir():
         if path.suffix != ".json":
             continue
-
-        with path.open() as f:
-            raw_json = json.load(f)
+        try:
+            with path.open() as f:
+                raw_json = json.load(f)
+        except (OSError, IOError) as e:
+            logger.error("Failed to read expected response file %s: %s", path, e)
+            continue
+        except json.JSONDecodeError as e:
+            logger.error("Invalid JSON in expected response file %s: %s", path, e)
+            continue
 
         resolved_data = resolve_placeholders_in_data(raw_json, path.name)
         cleaned_data = clean_responses(data=resolved_data, ignore_keys=keys_to_ignore)
@@ -157,48 +163,69 @@ def load_all_expected_responses(folder_path):
     return all_data
 
 
+def _load_json_file(path: Path):
+    try:
+        with path.open() as f:
+            return json.load(f)
+    except (OSError, IOError) as e:
+        logger.error("Failed to read test scenario file %s: %s", path, e)
+    except json.JSONDecodeError as e:
+        logger.error("Invalid JSON in test scenario file %s: %s", path, e)
+    return None
+
+
+def _ensure_default_product_id(request_headers: dict) -> dict:
+    if not any(k == "NHSE-Product-ID" for k in request_headers):
+        request_headers["NHSE-Product-ID"] = "Story_Test_Consumer_ID"
+    return request_headers
+
+
+def _build_test_scenario_entry(raw_json: dict, resolved_data, path_name: str) -> dict:
+    return {
+        "dynamo_items": resolved_data,
+        "nhs_number": extract_nhs_number_from_data(resolved_data),
+        "config_filenames": raw_json.get("config_filenames"),
+        "expected_response_code": raw_json.get("expected_response_code"),
+        "request_headers": _ensure_default_product_id(
+            raw_json.get("request_headers") or {}
+        ),
+        "query_params": raw_json.get("query_params"),
+        "scenario_name": raw_json.get("scenario_name"),
+        "secret_version": raw_json.get("secret_version"),
+    }
+
+
 def load_all_test_scenarios(folder_path):
     all_data = {}
 
-    data_builder = TemplateEngine.create()
+    try:
+        data_builder = TemplateEngine.create()
+    except Exception as e:
+        logger.error("Failed to initialise template engine: %s", e)
+        raise
 
     # Sort files alphabetically by filename
     for path in sorted(Path(folder_path).iterdir(), key=lambda p: p.name.lower()):
         if path.suffix != ".json":
             continue
 
-        with path.open() as f:
-            raw_json = json.load(f)
+        raw_json = _load_json_file(path)
+        if raw_json is None:
+            continue
 
-        templated_data = data_builder.apply(raw_json["data"])
-
-        config_filenames = raw_json.get("config_filenames")
-        scenario_name = raw_json.get("scenario_name")
-        request_headers = raw_json.get("request_headers") or {}
-        expected_response_code = raw_json.get("expected_response_code")
-        query_params = raw_json.get("query_params")
-        secret_version = raw_json.get("secret_version")
-
-        if not any(k == "NHSE-Product-ID" for k in request_headers):
-            request_headers["NHSE-Product-ID"] = "Story_Test_Consumer_ID"
+        try:
+            templated_data = data_builder.apply(raw_json["data"])
+        except ValueError as e:
+            logger.error("Failed to apply template to test scenario %s: %s", path, e)
+            continue
 
         # Resolve placeholders
         resolved_data = resolve_placeholders_in_data(templated_data, path.name)
 
-        # Extract NHS number
-        nhs_number = extract_nhs_number_from_data(resolved_data)
-
         # Add resolved scenario
-        all_data[path.name] = {
-            "dynamo_items": resolved_data,
-            "nhs_number": nhs_number,
-            "config_filenames": config_filenames,
-            "expected_response_code": expected_response_code,
-            "request_headers": request_headers,
-            "query_params": query_params,
-            "scenario_name": scenario_name,
-            "secret_version": secret_version,
-        }
+        all_data[path.name] = _build_test_scenario_entry(
+            raw_json, resolved_data, path.name
+        )
 
     return all_data
 

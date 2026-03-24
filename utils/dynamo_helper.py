@@ -194,6 +194,8 @@ def file_backup_exists(dynamo_db_table: DynamoDBHelper):
         return True
     except FileNotFoundError:
         return False
+    except json.JSONDecodeError as e:
+        logger.warning(f"Corrupted backup file detected: {e}")
 
 
 def reset_dynamo_tables():
@@ -250,22 +252,28 @@ def reset_dynamo_tables():
 
 def load_information_from_backup_files(dynamo_db_table: DynamoDBHelper):
     logger.warning("Table information taken from backup files")
-    dynamo_db_table.tags = json.loads(
-        load_from_file(f"{DYNAMO_TEMP_LOCATION}tags-{dynamo_db_table.environment}.json")
-    )
-    dynamo_db_table.attribute_definitions = json.loads(
-        load_from_file(
-            f"{DYNAMO_TEMP_LOCATION}attribute_definitions-{dynamo_db_table.environment}.json"
+    try:
+        dynamo_db_table.tags = json.loads(
+            load_from_file(
+                f"{DYNAMO_TEMP_LOCATION}tags-{dynamo_db_table.environment}.json"
+            )
         )
-    )
-    dynamo_db_table.key_schema = json.loads(
-        load_from_file(
-            f"{DYNAMO_TEMP_LOCATION}key_schema-{dynamo_db_table.environment}.json"
+        dynamo_db_table.attribute_definitions = json.loads(
+            load_from_file(
+                f"{DYNAMO_TEMP_LOCATION}attribute_definitions-{dynamo_db_table.environment}.json"
+            )
         )
-    )
-    dynamo_db_table.table_arn = load_from_file(
-        f"{DYNAMO_TEMP_LOCATION}table_arn-{dynamo_db_table.environment}.json"
-    )
+        dynamo_db_table.key_schema = json.loads(
+            load_from_file(
+                f"{DYNAMO_TEMP_LOCATION}key_schema-{dynamo_db_table.environment}.json"
+            )
+        )
+        dynamo_db_table.table_arn = load_from_file(
+            f"{DYNAMO_TEMP_LOCATION}table_arn-{dynamo_db_table.environment}.json"
+        )
+    except json.JSONDecodeError as e:
+        logger.error(f"Failed to parse JSON from backup files: {e}")
+        raise ValueError(f"Corrupted DynamoDB backup files: {e}")
 
 
 _cached_dynamo_helper: "DynamoDBHelper | None" = None
