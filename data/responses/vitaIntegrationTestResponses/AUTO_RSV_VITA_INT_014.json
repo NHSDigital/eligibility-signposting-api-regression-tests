@@ -18,12 +18,12 @@
         {
           "cohortCode": "rsv_age",
           "cohortStatus": "NotEligible",
-          "cohortText": "are not aged 75 to 79"
+          "cohortText": "are not aged 75 or over"
         },
         {
-          "cohortCode": "rsv_age_catchup",
+          "cohortCode": "rsv_care_home_residents",
           "cohortStatus": "NotEligible",
-          "cohortText": "did not turn 80 after 1 September 2024"
+          "cohortText": "do not live in a care home for older adults"
         }
       ],
       "status": "NotEligible",

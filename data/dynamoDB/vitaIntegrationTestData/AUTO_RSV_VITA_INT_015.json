@@ -14,7 +14,7 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_75to79_plus1day",
+                    "COHORT_LABEL": "rsv_75+_plus1day",
                     "DATE_JOINED": "20231020"
                 }
             ]
@@ -37,10 +37,6 @@
             "13Q_FLAG": "N",
             "CARE_HOME_FLAG": "N",
             "DE_FLAG": "N"
-        },
-        {
-            "NHS_NUMBER": "9735548852",
-            "ATTRIBUTE_TYPE": "RSV"
         }
     ]
 }

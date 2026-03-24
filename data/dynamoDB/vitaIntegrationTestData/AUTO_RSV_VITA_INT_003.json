@@ -1,5 +1,5 @@
 {
-    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( out CP area ) - age catchup - BookLocal",
+    "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( out CP area ) - care_home_residents_older_adults - BookLocal",
     "request_headers": {
         "nhs-login-nhs-number": "9658218873",
         "NHSE-Product-ID": "P.WTJ-FJT",
@@ -14,7 +14,11 @@
             "ATTRIBUTE_TYPE": "COHORTS",
             "COHORT_MEMBERSHIPS": [
                 {
-                    "COHORT_LABEL": "rsv_80_2024_plus1day",
+                    "COHORT_LABEL": "care_home_residents_older_adults",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "rsv_75+_plus1day",
                     "DATE_JOINED": "20231020"
                 }
             ]
@@ -23,12 +27,19 @@
             "NHS_NUMBER": "9658218873",
             "ATTRIBUTE_TYPE": "PERSON",
             "DATE_OF_BIRTH": "<<DATE_AGE_80>>",
+            "GENDER": "2",
+            "POSTCODE": "CB3 8DX",
+            "POSTCODE_SECTOR": "CB38",
+            "POSTCODE_OUTCODE": "CB3",
+            "MSOA": "E02007085",
+            "LSOA": "E01018223",
+            "GP_PRACTICE_CODE": "D81046",
+            "PCN": "U75549",
             "ICB": "QUE",
-            "COMMISSIONING_REGION": "Y61"
-        },
-        {
-            "NHS_NUMBER": "9658218873",
-            "ATTRIBUTE_TYPE": "RSV"
+            "COMMISSIONING_REGION": "Y61",
+            "13Q_FLAG": "N",
+            "CARE_HOME_FLAG": "Y",
+            "DE_FLAG": "N"
         }
     ]
 }

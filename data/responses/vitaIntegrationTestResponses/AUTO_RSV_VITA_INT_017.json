@@ -16,14 +16,19 @@
             "condition": "RSV",
             "eligibilityCohorts": [
                 {
-                    "cohortCode": "rsv_age",
+                    "cohortCode": "rsv_care_home_residents",
                     "cohortStatus": "NotActionable",
-                    "cohortText": "are aged 75 or over"
+                    "cohortText": "live in a care home for older adults"
                 }
             ],
             "status": "NotActionable",
             "statusText": "You should have the RSV vaccine",
             "suitabilityRules": [
+                {
+                    "ruleCode": "CareSetting",
+                    "ruleText": "### Getting the vaccine\n\nSpeak to your GP or a member of staff where you live about getting the RSV vaccine.",
+                    "ruleType": "S"
+                }
             ]
         }
     ],
