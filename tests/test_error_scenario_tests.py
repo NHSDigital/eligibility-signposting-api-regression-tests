@@ -362,6 +362,9 @@ def test_no_config_error(eligibility_client):
         raise_on_error=False,
     )
 
+    # this one is failing because I added graceful handling for no configs in s3,
+    # without realising we wanted this behaviour, so I will make a reversion ticket
+    # in the api code base
     assert response["status_code"] == http.HTTPStatus.INTERNAL_SERVER_ERROR
     assert response["body"] == expected_response
     assert response["headers"].get("Content-Type".lower()) == "application/fhir+json"
