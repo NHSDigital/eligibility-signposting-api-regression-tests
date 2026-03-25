@@ -25,7 +25,7 @@
         {
           "cohortCode": "rsv_age",
           "cohortStatus": "Actionable",
-          "cohortText": "are aged between 75 and 79"
+          "cohortText": "are aged 75 or over"
         }
       ],
       "status": "Actionable",

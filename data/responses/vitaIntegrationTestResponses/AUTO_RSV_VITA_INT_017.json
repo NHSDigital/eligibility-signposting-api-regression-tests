@@ -1,6 +1,6 @@
 {
     "meta": {
-        "lastUpdated": "2026-03-24T11:10:30.320719+00:00"
+        "lastUpdated": "2026-02-20T11:50:34.146537+00:00"
     },
     "processedSuggestions": [
         {
@@ -15,11 +15,6 @@
             ],
             "condition": "RSV",
             "eligibilityCohorts": [
-                {
-                    "cohortCode": "rsv_age",
-                    "cohortStatus": "NotActionable",
-                    "cohortText": "are aged 75 or over"
-                },
                 {
                     "cohortCode": "rsv_care_home_residents",
                     "cohortStatus": "NotActionable",
@@ -37,5 +32,5 @@
             ]
         }
     ],
-    "responseId": "b901de38-6bbd-4bd0-9a77-9db698cac27b"
+    "responseId": "9881e097-587c-48cb-b834-32919aeaf351"
 }
