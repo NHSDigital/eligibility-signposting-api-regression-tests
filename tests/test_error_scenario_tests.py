@@ -357,14 +357,11 @@ def test_no_config_error(eligibility_client):
         nhs_number="9990032010",
         headers={
             "nhs-login-nhs-number": "9990032010",
-            "NHSE-Product-ID": "Story_Test_Consumer_ID",
+            "NHSE-Product-ID": "test-Story_Test_Consumer_ID",
         },
         raise_on_error=False,
     )
 
-    # this one is failing because I added graceful handling for no configs in s3,
-    # without realising we wanted this behaviour, so I will make a reversion ticket
-    # in the api code base
     assert response["status_code"] == http.HTTPStatus.INTERNAL_SERVER_ERROR
     assert response["body"] == expected_response
     assert response["headers"].get("Content-Type".lower()) == "application/fhir+json"
