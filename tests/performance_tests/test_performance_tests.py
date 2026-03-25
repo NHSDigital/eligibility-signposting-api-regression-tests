@@ -12,7 +12,6 @@ import pytest
 
 from tests import test_config
 from utils.data_helper import initialise_tests
-from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 from .xray_query_helper import (
     collect_xray_metrics,
     log_xray_metrics,
@@ -32,7 +31,6 @@ CW_QUERY_POLL_S = 1
 
 all_data = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
 config_path = test_config.PERFORMANCE_TEST_CONFIGS
-upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 param_list = list(all_data.items())
 id_list = [
@@ -295,6 +293,7 @@ def test_locust_run_and_csv_exists(
     perf_users,
     perf_spawn_rate,
     xray_sampling_rate,
+    perf_mapping_upload,
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url

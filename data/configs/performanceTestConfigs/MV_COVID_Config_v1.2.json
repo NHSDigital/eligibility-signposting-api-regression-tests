@@ -1,0 +1,364 @@
+{
+    "CampaignConfig": {
+        "ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d1",
+        "Version": 1,
+        "Name": "EliD COVID-19 campaign example config",
+        "Type": "V",
+        "Target": "COVID",
+        "Manager": [
+            "example@nhs.net"
+        ],
+        "Approver": [
+            "example@nhs.net"
+        ],
+        "Reviewer": [
+            "example@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "StartDate": "20251001",
+        "EndDate": "20270331",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "DefaultCommsRouting": "PLACEHOLDER_COMMS_ROUTING",
+        "Iterations": [
+            {
+                "ID": "8ecb742b-45ea-4f0d-8e2e-9c2feb1e46d1",
+                "DefaultCommsRouting": "CONTACT_GP|BOOK_NBS_INFO|WALKIN|HELP_SUPPORT",
+                "DefaultNotActionableRouting": "",
+                "DefaultNotEligibleRouting": "CHECK_CORRECT_X",
+                "Version": 1,
+                "Name": "EliD COVID-19 campaign example config",
+                "IterationDate": "20251001",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "StatusText": {
+                    "NotEligible": "MV - We do not believe you can have the COVID-19 vaccine",
+                    "NotActionable": "MV - You should have the COVID-19 vaccine",
+                    "Actionable": "MV - You should have the COVID-19 vaccine"
+                },
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "covid_75+_AutumnWinter2025",
+                        "CohortGroup": "covid_age",
+                        "PositiveDescription": "are aged 75 or over (including those who will be 75 by 31 January 2026)",
+                        "NegativeDescription": "are not aged 75 or over by 31 January 2026",
+                        "Priority": 10
+                    },
+                    {
+                        "CohortLabel": "covid_16+_immunosuppression",
+                        "CohortGroup": "covid_clinical_risk",
+                        "PositiveDescription": "are aged 16 or over and immunosuppressed",
+                        "NegativeDescription": "are not aged 16 or over and immunosuppressed",
+                        "Priority": 20
+                    },
+                    {
+                        "CohortLabel": "covid_under16_immunosuppression",
+                        "CohortGroup": "covid_clinical_risk",
+                        "PositiveDescription": "are aged under 16 and immunosuppressed",
+                        "NegativeDescription": "are not aged under 16 and immunosuppressed",
+                        "Priority": 30
+                    },
+                    {
+                        "CohortLabel": "elid_all_people",
+                        "CohortGroup": "magic_cohort",
+                        "PositiveDescription": "",
+                        "NegativeDescription": "",
+                        "Priority": 40,
+                        "Virtual": "Y"
+                    }
+                ],
+                "IterationRules": [
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
+                        "Operator": "<",
+                        "Comparator": "20251001[[NVL:18000101]]",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone without a future booking from magic cohort",
+                        "Operator": "D<",
+                        "Comparator": "0[[NVL:18000101]]",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 100
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove under 75 Years at end of campaign",
+                        "Description": "Ensure anyone who has a PDS date of birth which determines their age to be less than 75 years at the end of campaign is filtered out.",
+                        "Priority": 120,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": ">=",
+                        "Comparator": "19510201",
+                        "CohortLabel": "covid_75+_AutumnWinter2025"
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if already vaccinated",
+                        "Description": "Remove anyone already vaccinated from eligible cohorts",
+                        "Operator": ">=",
+                        "Comparator": "20251001",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "covid_75+_AutumnWinter2025,covid_16+_immunosuppression,covid_under16_immunosuppression",
+                        "Priority": 140
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if future booking",
+                        "Description": "Remove anyone with a future booking from eligible cohorts",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "covid_75+_AutumnWinter2025,covid_16+_immunosuppression,covid_under16_immunosuppression",
+                        "Priority": 160
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinated",
+                        "Description": "## You've had your COVID-19 vaccination\n\nWe believe you were vaccinated against COVID-19 on [[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
+                        "Priority": 500,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "20251001",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "TooClose",
+                        "Description": "## Too close to previous vaccination\n\nIt is less than 3 months since your last COVID-19 vaccination. You must wait at least 3 months between COVID-19 vaccinations. We believe you were last vaccinated against COVID-19 on [[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
+                        "Priority": 600,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "-91",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 700,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "CARE_HOME_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "covid_75+_AutumnWinter2025,covid_16+_immunosuppression,covid_under16_immunosuppression",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 720,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DE_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "covid_75+_AutumnWinter2025,covid_16+_immunosuppression,covid_under16_immunosuppression",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 740,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "13Q_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "covid_75+_AutumnWinter2025,covid_16+_immunosuppression,covid_under16_immunosuppression",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked NBS Appointment",
+                        "Description": "Amend NBS future booking",
+                        "Priority": 1000,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CommsRouting": "AMEND_NBS"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked NBS Appointment",
+                        "Description": "Amend NBS future booking",
+                        "Priority": 1000,
+                        "Operator": "in",
+                        "Comparator": "MYA,NBS",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_PROVIDER",
+                        "CommsRouting": "AMEND_NBS"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked Local Appointment",
+                        "Description": "Amend local future booking",
+                        "Priority": 1100,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CommsRouting": "MANAGE_LOCAL"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Already vaccinated default text",
+                        "Description": "Already vaccinated default text",
+                        "Priority": 3000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "20251001",
+                        "CommsRouting": "CHECK_CORRECT_ALREADY_VACCINATED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Too soon default text",
+                        "Description": "Too soon default text",
+                        "Priority": 3100,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "COVID",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": "D>=",
+                        "Comparator": "-91",
+                        "CommsRouting": "CHECK_CORRECT_ALREADY_VACCINATED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3200,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "CARE_HOME_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3300,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DE_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3400,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "13Q_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    }
+                ],
+                "ActionsMapper": {
+                    "BOOK_NBS_INFO": {
+                        "ExternalRoutingCode": "BookNBSInfoText",
+                        "ActionDescription": "### Book an appointment online at a pharmacy\n\nYou can book an appointment online at a pharmacy that offers the COVID-19 vaccination. You need to be registered with a GP to do this.",
+                        "ActionType": "ButtonWithAuthLinkWithInfoText",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/book-covid-19-vaccination/",
+                        "UrlLabel": "Continue to booking"
+                    },
+                    "AMEND_NBS": {
+                        "ExternalRoutingCode": "AmendNBS",
+                        "ActionDescription": "## You have a COVID-19 vaccination appointment booked\n\nYou can view, change or cancel your appointment below.",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/book-covid-19-vaccination/",
+                        "UrlLabel": "Manage your appointment"
+                    },
+                    "CONTACT_GP": {
+                        "ExternalRoutingCode": "ContactGP",
+                        "ActionDescription": "### Get vaccinated at your GP surgery\n\nContact your GP surgery to book an appointment.",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "BOOK_LOCAL": {
+                        "ExternalRoutingCode": "BookLocal",
+                        "ActionDescription": "### Getting the vaccine\n\nYou can get a COVID-19 vaccination at your GP surgery.\n\nYour GP surgery may contact you about getting the COVID-19 vaccine. This may be by letter, text, phone call, email or through the NHS App. You do not need to wait to be contacted before booking your vaccination.",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "MANAGE_LOCAL": {
+                        "ExternalRoutingCode": "ManageLocal",
+                        "ActionDescription": "## You have an COVID-19 vaccination appointment booked\n\nTo change or cancel your appointment, contact the provider you booked with.",
+                        "ActionType": "CardWithText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "HELP_SUPPORT": {
+                        "ExternalRoutingCode": "HelpSupportInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_X": {
+                        "ExternalRoutingCode": "HealthcareProInfo",
+                        "ActionDescription": "### If this applies to you\n\nSpeak to your healthcare professional if you think you should be offered this vaccine.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_ALREADY_VACCINATED": {
+                        "ExternalRoutingCode": "AlreadyVaccinatedInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you believe you've not been vaccinated against COVID-19, speak to your healthcare professional.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "WALKIN": {
+                        "ExternalRoutingCode": "WalkIn",
+                        "ActionDescription": "### Get vaccinated without an appointment\n\nYou can get an COVID-19 vaccination at some pharmacies without needing an appointment.\n\nYou do not need to be registered with a GP to do this.",
+                        "ActionType": "ActionLinkWithInfoText",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/find-a-walk-in-covid-19-vaccination-site/",
+                        "UrlLabel": "Find a pharmacy where you can get a free COVID-19 vaccination"
+                    },
+                    "CHECK_CORRECT_OTHER_SETTING": {
+                        "ExternalRoutingCode": "ManagedSettingInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    }
+                }
+            }
+        ]
+    }
+}
