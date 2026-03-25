@@ -45,8 +45,18 @@ def parse_run_time_to_seconds(run_time: str) -> int:
 
 
 def main() -> None:
-    users = int(get_env("USERS"))
-    spawn_rate = int(get_env("SPAWN_RATE"))
+    global users, spawn_rate
+
+    try:
+        users = int(get_env("USERS"))
+    except ValueError:
+        fail("Invalid input", "USERS must be an integer.")
+
+    try:
+        spawn_rate = int(get_env("SPAWN_RATE"))
+    except ValueError:
+        fail("Invalid input", "SPAWN_RATE must be an integer.")
+
     run_time = get_env("RUN_TIME")
 
     validate_range("users", users, 1, MAX_USERS)
