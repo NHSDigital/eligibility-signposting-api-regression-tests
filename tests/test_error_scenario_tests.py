@@ -357,7 +357,7 @@ def test_no_config_error(eligibility_client):
         nhs_number="9990032010",
         headers={
             "nhs-login-nhs-number": "9990032010",
-            "NHSE-Product-ID": "Story_Test_Consumer_ID",
+            "NHSE-Product-ID": "test-Story_Test_Consumer_ID",
         },
         raise_on_error=False,
     )
