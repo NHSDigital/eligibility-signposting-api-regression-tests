@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - Actionable - Manage your appointment - NBS E2E",
     "request_headers": {
         "nhs-login-nhs-number": "9735548844",
-        "NHSE-Product-ID": "We_Googled_It_Medical_Group_ID",
+        "NHSE-Product-ID": "test-We_Googled_It_Medical_Group_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation"
     },
     "config_filenames": [

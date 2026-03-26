@@ -63,6 +63,8 @@ def _build_locust_command(
         html_report,
         "--stop-timeout",
         "30",
+        "--processes",
+        "-1",
     ]
 
 
