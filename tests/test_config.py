@@ -35,6 +35,9 @@ CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.j
 PERF_CONSUMER_MAPPING_FILE = (
     "data/configs/consumerMappings/perf/consumer_mapping_config.json"
 )
+PREPROD_CONSUMER_MAPPING_FILE = (
+    "data/configs/consumerMappings/preprod/consumer_mapping_config.json"
+)
 
 # Location of Integration Test Configs
 INT_TEST_CONFIG_PATHS: list[str] = [
