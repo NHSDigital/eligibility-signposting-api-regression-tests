@@ -32,6 +32,9 @@ PERFORMANCE_TEST_CONFIGS: str = "data/configs/performanceTestConfigs"
 
 # Consumer Mapping file - this is a single one for all environments but this may change
 CONSUMER_MAPPING_FILE = "data/configs/consumerMappings/consumer_mapping_config.json"
+PREPROD_CONSUMER_MAPPING_FILE = (
+    "data/configs/consumerMappings/preprod/consumer_mapping_config.json"
+)
 
 # Location of Integration Test Configs
 INT_TEST_CONFIG_PATHS: list[str] = [
