@@ -179,14 +179,16 @@ def load_all_test_scenarios(folder_path):
         query_params = raw_json.get("query_params")
         secret_version = raw_json.get("secret_version")
 
-        if not any(k == "NHSE-Product-ID" for k in request_headers):
+        product_id = request_headers.get("NHSE-Product-ID")
+
+        if not product_id:
             request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
-        if request_headers["NHSE-Product-ID"] == "P.XWA-VFF":
-            request_headers["NHSE-Product-ID"] = "test-P.XWA-VFF"
-        if request_headers["NHSE-Product-ID"] == "P.WTJ-FJT":
-            request_headers["NHSE-Product-ID"] = "test-P.WTJ-FJT"
-        if request_headers["NHSE-Product-ID"] == "Story_Test_Consumer_ID":
-            request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
+        else:
+            product_id = str(product_id).strip()
+            if not product_id.startswith("test-"):
+                request_headers["NHSE-Product-ID"] = f"test-{product_id}"
+            else:
+                request_headers["NHSE-Product-ID"] = product_id
 
         # Resolve placeholders
         resolved_data = resolve_placeholders_in_data(templated_data, path.name)
