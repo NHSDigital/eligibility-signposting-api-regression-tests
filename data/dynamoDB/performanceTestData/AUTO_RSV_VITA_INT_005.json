@@ -2,8 +2,8 @@
     "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( existing non-NBS booking ) - empty cohorts - ManageLocal",
     "request_headers": {
         "nhs-login-nhs-number": "9658218903",
-        "NHSE-Product-ID": "P.XWA-VFF",
-        "nhsd-End-User-Organisation-ods": "elid_automation"
+        "NHSE-Product-ID": "test-P.XWA-VFF",
+        "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [
         "MV_COVID_Config_v1.2.json",
@@ -24,6 +24,28 @@
         "WGIMG_RSV_Config_April 2026_v0.4.json"
     ],
     "data": [
+        {
+            "NHS_NUMBER": "9658218903",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_75to79_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "flu_65+_autumnwinter2025",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "mmr_75to79_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "covid_75+_AutumnWinter2025",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
+        },
         {
             "NHS_NUMBER": "9658218903",
             "ATTRIBUTE_TYPE": "PERSON",
