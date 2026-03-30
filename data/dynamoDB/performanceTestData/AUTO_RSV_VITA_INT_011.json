@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - NotActionable - You should have the RSV vaccine ( managed setting ) - age rolling - OtherSetting",
     "request_headers": {
         "nhs-login-nhs-number": "9658220150",
-        "NHSE-Product-ID": "test-Probably_Fine_Health_Group_ID",
+        "NHSE-Product-ID": "Probably_Fine_Health_Group_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [

@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - - Not Eligible",
     "request_headers": {
         "nhs-login-nhs-number": "9657933617",
-        "NHSE-Product-ID": "test-We_Googled_It_Medical_Group_ID",
+        "NHSE-Product-ID": "We_Googled_It_Medical_Group_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [

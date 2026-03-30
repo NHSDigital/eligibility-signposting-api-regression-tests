@@ -3,7 +3,7 @@
     "comment": "requested as an additional test.  ref data had a vacc on this user so creating the data as required here",
     "request_headers": {
         "nhs-login-nhs-number": "9461135831",
-        "NHSE-Product-ID": "test-P.WTJ-FJT",
+        "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [

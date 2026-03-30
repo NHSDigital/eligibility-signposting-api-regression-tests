@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - Actionable - You should have the RSV vaccine ( out CP area ) - age rolling - age rolling - BookLocal",
     "request_headers": {
         "nhs-login-nhs-number": "9686368906",
-        "NHSE-Product-ID": "test-P.WTJ-FJT",
+        "NHSE-Product-ID": "P.WTJ-FJT",
         "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
    "config_filenames": [

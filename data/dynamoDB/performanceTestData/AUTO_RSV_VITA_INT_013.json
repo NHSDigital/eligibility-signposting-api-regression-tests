@@ -2,7 +2,7 @@
     "scenario_name": "RSV - Vita Integration - NotActionable - You should have the RSV vaccine (already vaccinated) - empty cohorts - AlreadyVaccinated",
     "request_headers": {
         "nhs-login-nhs-number": "9466447939",
-        "NHSE-Product-ID": "test-Probably_Fine_Health_Group_ID",
+        "NHSE-Product-ID": "Probably_Fine_Health_Group_ID",
         "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [
