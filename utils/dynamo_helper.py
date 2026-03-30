@@ -201,7 +201,7 @@ def reset_dynamo_tables():
     table_name = os.getenv("DYNAMODB_TABLE_NAME")
 
     logger.info("Resetting DynamoDB. This may take a few moments, please be patient.")
-    if environment not in ["dev", "test"]:
+    if environment not in ["dev"]:
         logger.warning(
             f"{environment} is not supported. Resetting DynamoDB is only supported in dev or test."
         )

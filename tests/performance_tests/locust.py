@@ -64,3 +64,42 @@ class GetPatientId(HttpUser):
                     f"Response didn't contain processedSuggestions (expected), nhsNumber was {patient_id}. "
                     f"Response was {response.text}"
                 )
+            else:
+                full_response = response.json()
+                write_row_to_csv(
+                    Path("temp/request_ids.txt"),
+                    "Patient ID",
+                    "Response Id",
+                    patient_id,
+                    full_response["responseId"],
+                )
+
+
+def write_row_to_csv(
+    file_path: Path,
+    header1: str,
+    header2: str,
+    value1: str,
+    value2: str,
+) -> None:
+    """
+    Writes two values to a CSV file with given headers.
+    - Creates file with headers if it doesn't exist
+    - Appends a new row if it does exist
+
+    Args:
+        file_path (Path): Path to the CSV file
+        header1 (str): First column header
+        header2 (str): Second column header
+        value1 (str): First value
+        value2 (str): Second value
+    """
+    file_exists = file_path.exists()
+
+    with file_path.open(mode="a", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
+
+        if not file_exists:
+            writer.writerow([header1, header2])
+
+        writer.writerow([value1, value2])

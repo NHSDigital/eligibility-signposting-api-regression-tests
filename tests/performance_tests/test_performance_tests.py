@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict
 
@@ -26,7 +26,7 @@ LOCUST_FILE = "tests/performance_tests/locust.py"
 LOCUST_CSV_PREFIX = "temp/locust_results"
 LOCUST_HTML_REPORT = "temp/locust_report.html"
 AWS_HTML_REPORT = "temp/aws_logs_report.html"
-CW_INGESTION_WAIT_S = 150
+CW_INGESTION_WAIT_S = 300
 CW_QUERY_POLL_S = 1
 
 all_data = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
@@ -63,8 +63,8 @@ def _build_locust_command(
         html_report,
         "--stop-timeout",
         "30",
-        "--processes",
-        "-1",
+        # "--processes",
+        # "-1",
     ]
 
 
@@ -331,8 +331,8 @@ def test_locust_run_and_csv_exists(
     insights_result = _run_logs_insights_query(
         logs_client,
         log_group=CW_LOG_GROUP,
-        start_time=int(start_time.timestamp()),
-        end_time=int(end_time.timestamp()),
+        start_time=int(start_time.timestamp()) - 5,
+        end_time=int(end_time.timestamp()) + 5,
         query=_logs_insights_query_string(),
         poll_interval_s=CW_QUERY_POLL_S,
         timeout_s=60,
@@ -344,8 +344,8 @@ def test_locust_run_and_csv_exists(
     _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
 
     xray_metrics = collect_xray_metrics(
-        start_time=start_time,
-        end_time=end_time,
+        start_time=start_time - timedelta(seconds=5),
+        end_time=end_time + timedelta(seconds=5),
         region_name=CW_REGION,
         filter_expression='service("eligibility_signposting_api")',
     )
