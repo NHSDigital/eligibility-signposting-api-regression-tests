@@ -172,6 +172,12 @@ def restore_tags_to_table(dynamo_db_table: DynamoDBHelper):
 
 
 def file_backup_exists(dynamo_db_table: DynamoDBHelper):
+    """Return True if all required backup files exist and contain valid JSON.
+
+    Args:
+        dynamo_db_table: DynamoDBHelper instance whose environment is used to
+            locate the backup files.
+    """
     try:
         json.loads(
             load_from_file(
@@ -192,10 +198,11 @@ def file_backup_exists(dynamo_db_table: DynamoDBHelper):
             f"{DYNAMO_TEMP_LOCATION}table_arn-{dynamo_db_table.environment}.json"
         )
         return True
-    except FileNotFoundError:
+    except (FileNotFoundError, OSError):
         return False
     except json.JSONDecodeError as e:
-        logger.warning(f"Corrupted backup file detected: {e}")
+        logger.warning("Corrupted backup file detected: %s", e)
+        return False
 
 
 def reset_dynamo_tables():

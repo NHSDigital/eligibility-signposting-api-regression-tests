@@ -97,3 +97,6 @@ endif
 
 run-vita-preprod-tests:
 	poetry run pytest --env=preprod --log-cli-level=info tests/test_vita_integration_tests.py tests/test_upload_consumer_configs.py
+
+run-unit-tests: guard-env guard-log_level
+	poetry run pytest --env=${env} --log-cli-level=${log_level} tests/test_error_handling_utils.py -v
