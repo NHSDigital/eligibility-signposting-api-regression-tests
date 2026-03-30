@@ -1,5 +1,5 @@
 {
-    "P.WTJ-FJT": [
+    "test-P.WTJ-FJT": [
         {
             "CampaignConfigID": "VITA_Campaign_Config_ID_RSV",
             "Description": "RSV Ongoing for My Vaccines"
@@ -17,7 +17,7 @@
             "Description": "Shared Config for My Vaccines and NBS"
         }
     ],
-    "P.XWA-VFF": [
+    "test-P.XWA-VFF": [
         {
             "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d1",
             "Description": "RSV Ongoing for NBS"
@@ -43,7 +43,7 @@
             "Description": "Shared Config for My Vaccines and NBS"
         }
     ],
-    "Story_Test_Consumer_ID": [
+    "test-Story_Test_Consumer_ID": [
         {
             "CampaignConfigID": "Story_Campaign_Config_ID",
             "Description": "General Config ID"
