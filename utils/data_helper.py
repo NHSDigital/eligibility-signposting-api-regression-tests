@@ -180,7 +180,13 @@ def _load_json_file(path: Path):
 def _ensure_default_product_id(request_headers: dict) -> dict:
     """Add the default NHSE-Product-ID header if not already present."""
     if not any(k == "NHSE-Product-ID" for k in request_headers):
-        request_headers["NHSE-Product-ID"] = _DEFAULT_PRODUCT_ID
+        request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
+    if request_headers["NHSE-Product-ID"] == "P.XWA-VFF":
+        request_headers["NHSE-Product-ID"] = "test-P.XWA-VFF"
+    if request_headers["NHSE-Product-ID"] == "P.WTJ-FJT":
+        request_headers["NHSE-Product-ID"] = "test-P.WTJ-FJT"
+    if request_headers["NHSE-Product-ID"] == "Story_Test_Consumer_ID":
+        request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
     return request_headers
 
 
