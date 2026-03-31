@@ -190,7 +190,7 @@ def _ensure_default_product_id(request_headers: dict) -> dict:
     return request_headers
 
 
-def _build_test_scenario_entry(raw_json: dict, resolved_data, path_name: str) -> dict:
+def _build_test_scenario_entry(raw_json: dict, resolved_data) -> dict:
     """Construct the standard scenario dict from resolved template data."""
     return {
         "dynamo_items": resolved_data,
@@ -207,18 +207,6 @@ def _build_test_scenario_entry(raw_json: dict, resolved_data, path_name: str) ->
 
 
 def _process_single_scenario(path: Path, data_builder: TemplateEngine) -> dict | None:
-    """Parse and resolve a single scenario JSON file.
-
-    Extracted from ``load_all_test_scenarios`` to keep cyclomatic complexity
-    within the flake8 C901 limit of 10.
-
-    Args:
-        path: Path to the scenario JSON file.
-        data_builder: Initialized TemplateEngine instance.
-
-    Returns:
-        Resolved scenario dict, or ``None`` if the file cannot be processed.
-    """
     raw_json = _load_json_file(path)
     if raw_json is None:
         return None
@@ -235,7 +223,7 @@ def _process_single_scenario(path: Path, data_builder: TemplateEngine) -> dict |
         return None
 
     resolved_data = resolve_placeholders_in_data(templated_data, path.name)
-    return _build_test_scenario_entry(raw_json, resolved_data, path.name)
+    return _build_test_scenario_entry(raw_json, resolved_data)
 
 
 def load_all_test_scenarios(folder_path):
