@@ -118,7 +118,7 @@ def _logs_insights_query_string() -> str:
         " avg(responseLatency) as avgResponseLatency,"
         " max(responseLatency) as maxResponseLatency,"
         " min(responseLatency) as minResponseLatency,"
-        " count_distinct(requestId) as recordCount"
+        " count(requestId) as recordCount"
     )
 
 
@@ -254,7 +254,7 @@ def xray_sampling_rate():
     original_reservoir_size = default_rule["ReservoirSize"]
 
     logging.warning(
-        "XRAY SAMPLING: setting rule '%s' reservoir to 100 (was %s)",
+        "XRAY SAMPLING: setting rule '%s' reservoir to 400 (was %s)",
         sample_rule_name,
         original_reservoir_size,
     )
