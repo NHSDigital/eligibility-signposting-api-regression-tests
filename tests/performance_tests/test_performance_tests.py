@@ -295,7 +295,7 @@ def test_locust_run_and_csv_exists(
     xray_sampling_rate,
     perf_mapping_upload,
 ):
-    global proc
+
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
 
