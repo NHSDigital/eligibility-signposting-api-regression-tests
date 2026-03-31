@@ -183,7 +183,7 @@ def _ensure_default_product_id(request_headers: dict, cached_test: bool) -> dict
     return request_headers
 
 
-def _build_test_scenario_entry(raw_json: dict, resolved_data, path_name: str) -> dict:
+def _build_test_scenario_entry(raw_json: dict, resolved_data) -> dict:
     """Construct the standard scenario dict from resolved template data."""
     return {
         "dynamo_items": resolved_data,
@@ -228,7 +228,7 @@ def _process_single_scenario(
 
     resolved_data = resolve_placeholders_in_data(templated_data, path.name)
 
-    return _build_test_scenario_entry(raw_json, resolved_data, path.name)
+    return _build_test_scenario_entry(raw_json, resolved_data)
 
 
 def load_all_test_scenarios(folder_path):
