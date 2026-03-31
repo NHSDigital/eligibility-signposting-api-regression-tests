@@ -24,8 +24,19 @@ class TemplateEngine:
     @classmethod
     @lru_cache(maxsize=1)
     def create(cls):
-        with open(DEFAULT_TEMPLATE) as f:
-            templates = json.load(f)
+        try:
+            with open(DEFAULT_TEMPLATE) as f:
+                templates = json.load(f)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"Default template file not found: {DEFAULT_TEMPLATE}"
+            )
+        except json.JSONDecodeError:
+            raise ValueError(
+                f"Invalid JSON in default template file: {DEFAULT_TEMPLATE}"
+            )
+        except (OSError, IOError) as e:
+            raise IOError(f"Error reading template file: {DEFAULT_TEMPLATE}, {e}")
         return cls(templates, DEFAULT_INHERITANCE)
 
     def apply(self, scenario_data):

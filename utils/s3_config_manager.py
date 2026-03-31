@@ -93,11 +93,8 @@ class S3ConfigManager:
             logger.warning("📭 Nothing to delete.")
         self._uploaded_configs.clear()
 
-    def upload_all_configs(self, local_paths: list[Path]) -> None:
-        desired_filenames = [p.name for p in local_paths]
-        desired_keys = {self._s3_key(name) for name in desired_filenames}
-
-        # Resolve all configs locally first
+    def _resolve_local_configs(self, local_paths: list[Path]) -> dict[str, str]:
+        """Helper to read and resolve local JSON configs safely."""
         resolved_configs: dict[str, str] = {}
         for path in local_paths:
             filename = path.name
@@ -105,13 +102,40 @@ class S3ConfigManager:
 
             logger.debug("🔧 Resolving placeholders in config: %s", filename)
 
-            with path.open() as f:
-                raw_data = json.load(f)
+            try:
+                with path.open() as f:
+                    raw_data = json.load(f)
+            except (OSError, IOError) as e:
+                logger.error("Failed to read config file %s: %s", path, e)
+                continue
+            except json.JSONDecodeError as e:
+                logger.error("Invalid JSON in config file %s: %s", path, e)
+                continue
 
             resolved = resolve_placeholders_in_data(raw_data, filename)
             resolved_configs[s3_key] = json.dumps(resolved, indent=2)
 
-        # Check if the desired state matches what we've already uploaded
+        return resolved_configs
+
+    def _delete_stale_keys(self, desired_keys: set[str]) -> None:
+        """Helper to remove stale keys from S3 and local cache."""
+        if self._uploaded_configs:
+            stale_keys = [k for k in self._uploaded_configs if k not in desired_keys]
+        else:
+            existing_keys = self._list_existing_keys()
+            stale_keys = [k for k in existing_keys if k not in desired_keys]
+
+        if stale_keys:
+            self._delete_keys(stale_keys)
+            for k in stale_keys:
+                self._uploaded_configs.pop(k, None)
+
+    def upload_all_configs(self, local_paths: list[Path]) -> None:
+        desired_filenames = [p.name for p in local_paths]
+        desired_keys = {self._s3_key(name) for name in desired_filenames}
+
+        resolved_configs = self._resolve_local_configs(local_paths)
+
         if (
             self._uploaded_configs
             and set(self._uploaded_configs.keys()) == desired_keys
@@ -123,21 +147,8 @@ class S3ConfigManager:
             logger.debug("⏭️ S3 configs unchanged since last upload. Skipping.")
             return
 
-        # Delete stale keys not in the desired set
-        if self._uploaded_configs:
-            # Use in-memory state — no list API call needed
-            stale_keys = [k for k in self._uploaded_configs if k not in desired_keys]
-        else:
-            # First call — check S3 for any pre-existing objects
-            existing_keys = self._list_existing_keys()
-            stale_keys = [k for k in existing_keys if k not in desired_keys]
+        self._delete_stale_keys(desired_keys)
 
-        if stale_keys:
-            self._delete_keys(stale_keys)
-            for k in stale_keys:
-                self._uploaded_configs.pop(k, None)
-
-        # Upload configs that are new or changed
         for s3_key, resolved_json_str in resolved_configs.items():
             if self._uploaded_configs.get(s3_key) == resolved_json_str:
                 logger.debug("✅ Config '%s' unchanged. Skipping upload.", s3_key)

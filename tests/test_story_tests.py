@@ -36,7 +36,10 @@ def test_run_story_test_cases(
         query_params=query_params,
         strict_ssl=False,
     )
-    expected_response = all_expected_responses.get(filename).get("response_items", {})
+
+    expected_response = all_expected_responses.get(filename, {}).get(
+        "response_items", {}
+    )
     expected_response_code = expected_response_code or http.HTTPStatus.OK
 
     assert actual_response["status_code"] == expected_response_code

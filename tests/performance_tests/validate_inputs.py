@@ -35,6 +35,7 @@ def parse_run_time_to_seconds(run_time: str) -> int:
             "run_time must look like 30s or 5m (seconds or minutes only). "
             f"Got: '{run_time}'",
         )
+        return 0
 
     value = int(match.group(1))
     unit = match.group(2)

@@ -1,6 +1,7 @@
 import ast
 import csv
 import os
+import sys
 from pathlib import Path
 
 import urllib3
@@ -18,10 +19,22 @@ def _(parser):
     )
 
 
-with open("temp/nhs_numbers.csv", newline="") as csvFile:
-    reader = csv.reader(csvFile)
-    next(reader, None)
-    csvData = list(reader)
+csvData = []
+try:
+    with open("temp/nhs_numbers.csv", newline="") as csvFile:
+        reader = csv.reader(csvFile)
+        next(reader, None)  # Skip header
+        csvData = list(reader)
+
+    if not csvData:
+        print("Error: temp/nhs_numbers.csv is empty.", file=sys.stderr)
+except FileNotFoundError:
+    print(
+        "Error: temp/nhs_numbers.csv not found. Ensure test data is generated.",
+        file=sys.stderr,
+    )
+except (OSError, IOError) as e:
+    print(f"Error reading temp/nhs_numbers.csv: {e}", file=sys.stderr)
 
 
 # Class for API execution
