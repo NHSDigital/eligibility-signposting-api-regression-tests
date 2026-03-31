@@ -198,7 +198,7 @@ def file_backup_exists(dynamo_db_table: DynamoDBHelper):
             f"{DYNAMO_TEMP_LOCATION}table_arn-{dynamo_db_table.environment}.json"
         )
         return True
-    except (FileNotFoundError, OSError):
+    except OSError:
         return False
     except json.JSONDecodeError as e:
         logger.warning("Corrupted backup file detected: %s", e)
