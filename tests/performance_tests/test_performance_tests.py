@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict
 
@@ -12,7 +12,6 @@ import pytest
 
 from tests import test_config
 from utils.data_helper import initialise_tests
-from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
 from .xray_query_helper import (
     collect_xray_metrics,
     log_xray_metrics,
@@ -27,12 +26,11 @@ LOCUST_FILE = "tests/performance_tests/locust.py"
 LOCUST_CSV_PREFIX = "temp/locust_results"
 LOCUST_HTML_REPORT = "temp/locust_report.html"
 AWS_HTML_REPORT = "temp/aws_logs_report.html"
-CW_INGESTION_WAIT_S = 150
+CW_INGESTION_WAIT_S = 300
 CW_QUERY_POLL_S = 1
 
 all_data = initialise_tests(test_config.PERFORMANCE_TEST_DATA)
 config_path = test_config.PERFORMANCE_TEST_CONFIGS
-upload_consumer_mapping_file_to_s3(test_config.CONSUMER_MAPPING_FILE)
 
 param_list = list(all_data.items())
 id_list = [
@@ -118,7 +116,7 @@ def _logs_insights_query_string() -> str:
         " avg(responseLatency) as avgResponseLatency,"
         " max(responseLatency) as maxResponseLatency,"
         " min(responseLatency) as minResponseLatency,"
-        " count_distinct(requestId) as recordCount"
+        " count(requestId) as recordCount"
     )
 
 
@@ -254,7 +252,7 @@ def xray_sampling_rate():
     original_reservoir_size = default_rule["ReservoirSize"]
 
     logging.warning(
-        "XRAY SAMPLING: setting rule '%s' reservoir to 100 (was %s)",
+        "XRAY SAMPLING: setting rule '%s' reservoir to 400 (was %s)",
         sample_rule_name,
         original_reservoir_size,
     )
@@ -295,6 +293,7 @@ def test_locust_run_and_csv_exists(
     perf_users,
     perf_spawn_rate,
     xray_sampling_rate,
+    perf_mapping_upload,
 ):
     custom_env = os.environ.copy()
     custom_env["BASE_URL"] = eligibility_client.api_url
@@ -330,8 +329,8 @@ def test_locust_run_and_csv_exists(
     insights_result = _run_logs_insights_query(
         logs_client,
         log_group=CW_LOG_GROUP,
-        start_time=int(start_time.timestamp()),
-        end_time=int(end_time.timestamp()),
+        start_time=int(start_time.timestamp()) - 5,
+        end_time=int(end_time.timestamp()) + 5,
         query=_logs_insights_query_string(),
         poll_interval_s=CW_QUERY_POLL_S,
         timeout_s=60,
@@ -343,8 +342,8 @@ def test_locust_run_and_csv_exists(
     _warn_on_aws_sla(aws_log_stats, avg_sla_ms=SLA_AVG_MS, max_sla_ms=SLA_MAX_MS)
 
     xray_metrics = collect_xray_metrics(
-        start_time=start_time,
-        end_time=end_time,
+        start_time=start_time - timedelta(seconds=5),
+        end_time=end_time + timedelta(seconds=5),
         region_name=CW_REGION,
         filter_expression='service("eligibility_signposting_api")',
     )

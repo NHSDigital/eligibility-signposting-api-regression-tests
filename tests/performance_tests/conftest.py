@@ -1,5 +1,8 @@
 import pytest
 
+from tests import test_config
+from utils.s3_config_manager import upload_consumer_mapping_file_to_s3
+
 
 def pytest_addoption(parser):
     """Performance-test-specific CLI options.
@@ -44,3 +47,8 @@ def perf_spawn_rate(request) -> str:
 @pytest.fixture(scope="session")
 def perf_run_time(request) -> str:
     return str(request.config.getoption("--perf-run-time"))
+
+
+@pytest.fixture(scope="session")
+def perf_mapping_upload():
+    upload_consumer_mapping_file_to_s3(test_config.PERF_CONSUMER_MAPPING_FILE)
