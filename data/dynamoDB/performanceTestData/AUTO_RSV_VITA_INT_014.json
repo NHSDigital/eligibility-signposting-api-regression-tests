@@ -2,13 +2,50 @@
     "scenario_name": "RSV - Vita Integration - - Not Eligible",
     "request_headers": {
         "nhs-login-nhs-number": "9657933617",
-        "NHSE-Product-ID": "P.WTJ-FJT",
-        "nhsd-End-User-Organisation-ods": "elid_automation"
+        "NHSE-Product-ID": "We_Googled_It_Medical_Group_ID",
+        "nhsd-End-User-Organisation-ods": "elid_automation_perf"
     },
     "config_filenames": [
-        "RSV_Config_v1.1.json"
+        "MV_COVID_Config_v1.2.json",
+        "MV_FLU_Config_v1.2.json",
+        "MV_MMR_Config_v1.2.json",
+        "MV_RSV_Config_v1.2.json",
+        "NBS_COVID_Config_Spring2026_v0.3WIP.json",
+        "NBS_FLU_Config_v1.2.json",
+        "NBS_MMR_Config_v1.2.json",
+        "NBS_RSV_Config_April 2026_v0.4.json",
+        "PFHG_COVID_Config_Spring2026_v0.3WIP.json",
+        "PFHG_FLU_Config_v1.2.json",
+        "PFHG_MMR_Config_v1.2.json",
+        "PFHG_RSV_Config_April 2026_v0.4.json",
+        "WGIMG_COVID_Config_Spring2026_v0.3WIP.json",
+        "WGIMG_FLU_Config_v1.2.json",
+        "WGIMG_MMR_Config_v1.2.json",
+        "WGIMG_RSV_Config_April 2026_v0.4.json"
     ],
     "data": [
+        {
+            "NHS_NUMBER": "9657933617",
+            "ATTRIBUTE_TYPE": "COHORTS",
+            "COHORT_MEMBERSHIPS": [
+                {
+                    "COHORT_LABEL": "rsv_75to79_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "flu_65+_autumnwinter2025",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "mmr_75to79_plus1day",
+                    "DATE_JOINED": "20231020"
+                },
+                {
+                    "COHORT_LABEL": "covid_75+_AutumnWinter2025",
+                    "DATE_JOINED": "20231020"
+                }
+            ]
+        },
         {
             "NHS_NUMBER": "9657933617",
             "ATTRIBUTE_TYPE": "PERSON",

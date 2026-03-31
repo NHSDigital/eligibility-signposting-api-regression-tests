@@ -1,0 +1,74 @@
+{
+    "P.WTJ-FJT": [
+        {
+            "CampaignConfigID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d0",
+            "Description": "RSV Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d1",
+            "Description": "COVID Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d2",
+            "Description": "FLU Ongoing for My Vaccines"
+        },
+        {
+            "CampaignConfigID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d3",
+            "Description": "MMR Inactive for My Vaccines"
+        }
+    ],
+    "P.XWA-VFF": [
+        {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d0",
+            "Description": "RSV Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d1",
+            "Description": "COVID Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d2",
+            "Description": "FLU Ongoing for NBS"
+        },
+        {
+            "CampaignConfigID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d3",
+            "Description": "MMR Ongoing for NBS"
+        }
+    ],
+    "Probably_Fine_Health_Group_ID": [
+        {
+            "CampaignConfigID": "3f7c9e21-8b6a-4d5e-9c1f-2a7b4e6d8f90",
+            "Description": "RSV Ongoing for Probably Fine Health Group"
+        },
+        {
+            "CampaignConfigID": "3f7c9e21-8b6a-4d5e-9c1f-2a7b4e6d8f91",
+            "Description": "RSV Ongoing for Probably Fine Health Group"
+        },
+        {
+            "CampaignConfigID": "3f7c9e21-8b6a-4d5e-9c1f-2a7b4e6d8f92",
+            "Description": "RSV Ongoing for Probably Fine Health Group"
+        },
+        {
+            "CampaignConfigID": "3f7c9e21-8b6a-4d5e-9c1f-2a7b4e6d8f93",
+            "Description": "RSV Ongoing for Probably Fine Health Group"
+        }
+    ],
+    "We_Googled_It_Medical_Group_ID": [
+        {
+            "CampaignConfigID": "a92d5c74-1e3f-4b8a-97d2-5f6c1e0a3b40",
+            "Description": "RSV Ongoing for We Googled It Medical Group"
+        },
+        {
+            "CampaignConfigID": "a92d5c74-1e3f-4b8a-97d2-5f6c1e0a3b41",
+            "Description": "COVID Ongoing for We Googled It Medical Group"
+        },
+        {
+            "CampaignConfigID": "a92d5c74-1e3f-4b8a-97d2-5f6c1e0a3b42",
+            "Description": "FLU Ongoing for We Googled It Medical Group"
+        },
+        {
+            "CampaignConfigID": "a92d5c74-1e3f-4b8a-97d2-5f6c1e0a3b43",
+            "Description": "MMR Ongoing for We Googled It Medical Group"
+        }
+    ]
+}

@@ -1,0 +1,439 @@
+{
+    "CampaignConfig": {
+        "ID": "7fcb742b-45fa-4w0d-8f2f-9c2efb1f46d2",
+        "Version": 1,
+        "Name": "EliD Flu campaign example config",
+        "Type": "V",
+        "Target": "FLU",
+        "Manager": [
+            "example@nhs.net"
+        ],
+        "Approver": [
+            "example@nhs.net"
+        ],
+        "Reviewer": [
+            "example@nhs.net"
+        ],
+        "IterationFrequency": "X",
+        "IterationType": "O",
+        "IterationTime": "07:00:00",
+        "StartDate": "20250401",
+        "EndDate": "20270616",
+        "ApprovalMinimum": 0,
+        "ApprovalMaximum": 0,
+        "DefaultCommsRouting": "PLACEHOLDER_COMMS_ROUTING",
+        "Iterations": [
+            {
+                "ID": "8fcb742b-45fa-4e0d-8f2f-9c2efb1f46d1",
+                "DefaultCommsRouting": "CONTACT_GP|BOOK_NBS_INFO|119|WALKIN|HELP_SUPPORT",
+                "DefaultNotActionableRouting": "",
+                "DefaultNotEligibleRouting": "CHECK_CORRECT_X",
+                "Version": 1,
+                "Name": "EliD Flu campaign example config",
+                "IterationDate": "20250401",
+                "IterationNumber": 1,
+                "CommsType": "I",
+                "ApprovalMinimum": 0,
+                "ApprovalMaximum": 0,
+                "Type": "O",
+                "StatusText": {
+                    "NotEligible": "NBS - We do not believe you can have the FLU vaccine",
+                    "NotActionable": "NBS - You should have the FLU vaccine",
+                    "Actionable": "NBS - You should have the FLU vaccine"
+                },
+                "IterationCohorts": [
+                    {
+                        "CohortLabel": "flu_65+_autumnwinter2025",
+                        "CohortGroup": "flu_age_65+",
+                        "PositiveDescription": "are aged 65 or over (including those who will be 65 by 31 March 2026)",
+                        "NegativeDescription": "are not aged 65 or over by 31 March 2026",
+                        "Priority": 10
+                    },
+                    {
+                        "CohortLabel": "flu_4to16_autumnwinter2025",
+                        "CohortGroup": "flu_school_age",
+                        "PositiveDescription": "are of school age (Reception to Year 11)",
+                        "NegativeDescription": "are not of school age (Reception to Year 11)",
+                        "Priority": 20
+                    },
+                    {
+                        "CohortLabel": "flu_2to3_autumnwinter2025",
+                        "CohortGroup": "flu_age_2to3",
+                        "PositiveDescription": "are aged 2 or 3 years (born between 1 September 2021 and 31 August 2023)",
+                        "NegativeDescription": "are not aged 2 or 3 years (born between 1 September 2021 and 31 August 2023)",
+                        "Priority": 30
+                    },
+                    {
+                        "CohortLabel": "flu_chronic_heart_disease",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 40
+                    },
+                    {
+                        "CohortLabel": "flu_chronic_kidney_disease",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 50
+                    },
+                    {
+                        "CohortLabel": "flu_chronic_liver_disease",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 60
+                    },
+                    {
+                        "CohortLabel": "flu_chronic_neurological_disease",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 70
+                    },
+                    {
+                        "CohortLabel": "flu_chronic_respiratory_disease",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 80
+                    },
+                    {
+                        "CohortLabel": "flu_coded_eligibility",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 90
+                    },
+                    {
+                        "CohortLabel": "flu_diabetes",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 100
+                    },
+                    {
+                        "CohortLabel": "flu_immunosuppression",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 110
+                    },
+                    {
+                        "CohortLabel": "flu_morbid_obesity",
+                        "CohortGroup": "flu_clinical_risk",
+                        "PositiveDescription": "have a specific long term health condition",
+                        "NegativeDescription": "do not have a specific long term health condition",
+                        "Priority": 120
+                    },
+                    {
+                        "CohortLabel": "elid_all_people",
+                        "CohortGroup": "magic_cohort",
+                        "PositiveDescription": "",
+                        "NegativeDescription": "",
+                        "Priority": 130,
+                        "Virtual": "Y"
+                    }
+                ],
+                "IterationRules": [
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone NOT already vaccinated within the current campaign and do not have a future booking from the magic cohort",
+                        "Operator": "<",
+                        "Comparator": "20251001[[NVL:18000101]]",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 500
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from magic cohort unless already vaccinated or have future booking",
+                        "Description": "Remove anyone without a future booking from magic cohort",
+                        "Operator": "D<",
+                        "Comparator": "0[[NVL:18000101]]",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "elid_all_people",
+                        "Priority": 500
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove under 65 Years at end of campaign",
+                        "Description": "Ensure anyone who has a PDS date of birth which determines their age to be less than 65 years at the end of campaign is filtered out.",
+                        "Priority": 550,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DATE_OF_BIRTH",
+                        "Operator": ">=",
+                        "Comparator": "19610331",
+                        "CohortLabel": "flu_65+_AutumnWinter2025"
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if already vaccinated",
+                        "Description": "Remove anyone already vaccinated from eliglbe cohorts",
+                        "Operator": ">=",
+                        "Comparator": "20250901",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "CohortLabel": "flu_65+_autumnwinter2025,flu_4to16_autumnwinter2025,flu_2to3_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_immunosuppression,flu_morbid_obesity",
+                        "Priority": 570
+                    },
+                    {
+                        "Type": "F",
+                        "Name": "Remove from eligible cohorts if future booking",
+                        "Description": "Remove anyone with a future booking from eligible cohorts",
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "COVID",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CohortLabel": "flu_65+_autumnwinter2025,flu_4to16_autumnwinter2025,flu_2to3_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_immunosuppression,flu_morbid_obesity",
+                        "Priority": 590
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "AlreadyVaccinated",
+                        "Description": "## You've had your flu vaccination\n\nWe believe you were vaccinated against flu on [[TARGET.COVID.LAST_SUCCESSFUL_DATE:DATE(%-d %B %Y)]]",
+                        "Priority": 700,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "20250901",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "SchoolAge",
+                        "Description": "## How to get the vaccine\n\nMost school-aged children (Reception to Year 11) get their flu vaccine at school.\n\nYou should get an invitation from your child's school or the School Age Immunisation Service to get their vaccine, usually during the autumn term.\n\nIf your child misses their vaccination at school or if they are home educated (home-schooled), they should be offered a flu vaccine at a community clinic.\n\n If your child is 4 years old but has not started school yet, they can get vaccinated at either: \n * a community clinic – if they turned 4 years of age on or before 31 August 2025 \n * their GP surgery or a pharmacy that offers flu vaccination – if they turned 4 years of age after 31 August 2025",
+                        "Priority": 720,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "flu_4to16_autumnwinter2025",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 740,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "CARE_HOME_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "flu_65+_autumnwinter2025,flu_4to16_autumnwinter2025,flu_2to3_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_immunosuppression,flu_morbid_obesity",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 760,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DE_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "flu_65+_autumnwinter2025,flu_4to16_autumnwinter2025,flu_2to3_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_immunosuppression,flu_morbid_obesity",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "S",
+                        "Name": "OtherSetting",
+                        "Description": "### Getting the vaccine\n\nWe believe you live in a setting where care is provided.\n\nSpeak to a member of staff where you live about getting the COVID-19 vaccine.",
+                        "Priority": 780,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "13Q_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CohortLabel": "flu_65+_autumnwinter2025,flu_4to16_autumnwinter2025,flu_2to3_autumnwinter2025,flu_chronic_heart_disease,flu_chronic_kidney_disease,flu_chronic_liver_disease,flu_chronic_neurological_disease,flu_chronic_respiratory_disease,flu_coded_eligibility,flu_diabetes,flu_immunosuppression,flu_morbid_obesity",
+                        "RuleStop": "Y"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked NBS Appointment",
+                        "Description": "Amend NBS future booking",
+                        "Priority": 1000,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CommsRouting": "AMEND_NBS"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked NBS Appointment",
+                        "Description": "Amend NBS future booking",
+                        "Priority": 1000,
+                        "Operator": "=",
+                        "Comparator": "MYA,NBS",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_PROVIDER",
+                        "CommsRouting": "AMEND_NBS"
+                    },
+                    {
+                        "Type": "R",
+                        "Name": "Actionable Future Booked Local Appointment",
+                        "Description": "Amend local future booking",
+                        "Priority": 1100,
+                        "Operator": "D>=",
+                        "Comparator": "0",
+                        "AttributeTarget": "FLU",
+                        "AttributeLevel": "TARGET",
+                        "AttributeName": "BOOKED_APPOINTMENT_DATE",
+                        "CommsRouting": "MANAGE_LOCAL"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Already vaccinated default text",
+                        "Description": "Already vaccinated default text",
+                        "Priority": 3000,
+                        "AttributeLevel": "TARGET",
+                        "AttributeTarget": "FLU",
+                        "AttributeName": "LAST_SUCCESSFUL_DATE",
+                        "Operator": ">=",
+                        "Comparator": "20250901",
+                        "CommsRouting": "CHECK_CORRECT_ALREADY_VACCINATED"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3200,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "CARE_HOME_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3300,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "DE_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "Other setting default text",
+                        "Description": "Other setting default text",
+                        "Priority": 3400,
+                        "AttributeLevel": "PERSON",
+                        "AttributeName": "13Q_FLAG",
+                        "Operator": "=",
+                        "Comparator": "Y",
+                        "CommsRouting": "CHECK_CORRECT_OTHER_SETTING"
+                    },
+                    {
+                        "Type": "Y",
+                        "Name": "School age default text",
+                        "Description": "School age default text",
+                        "Priority": 3500,
+                        "AttributeLevel": "COHORT",
+                        "AttributeName": "COHORT_LABEL",
+                        "Operator": "MemberOf",
+                        "Comparator": "flu_4to16_autumnwinter2025",
+                        "CommsRouting": "CHECK_CORRECT_SCHOOL_AGE"
+                    }
+                ],
+                "ActionsMapper": {
+                    "BOOK_NBS_INFO": {
+                        "ExternalRoutingCode": "BookNBSInfoText",
+                        "ActionDescription": "### Book an appointment online\n\nThe service will check if you need a vaccine before you book.",
+                        "ActionType": "ButtonWithAuthLinkWithInfoText",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/book-flu-vaccination/",
+                        "UrlLabel": "Continue to booking"
+                    },
+                    "AMEND_NBS": {
+                        "ExternalRoutingCode": "AmendNBS",
+                        "ActionDescription": "## You have a flu vaccination appointment booked\n\nYou can view, change or cancel your appointment below.",
+                        "ActionType": "ButtonWithAuthLink",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/book-flu-vaccination/",
+                        "UrlLabel": "Manage your appointment"
+                    },
+                    "CONTACT_GP": {
+                        "ExternalRoutingCode": "ContactGP",
+                        "ActionDescription": "### Get vaccinated at your GP surgery\n\nContact your GP surgery to book an appointment.",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "BOOK_LOCAL": {
+                        "ExternalRoutingCode": "BookLocal",
+                        "ActionDescription": "### Getting the vaccine\n\nYou can get a flu vaccination at your GP surgery.\n\nYour GP surgery may contact you about getting the flu vaccine. This may be by letter, text, phone call, email or through the NHS App. You do not need to wait to be contacted before booking your vaccination.",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "MANAGE_LOCAL": {
+                        "ExternalRoutingCode": "ManageLocal",
+                        "ActionDescription": "## You have an flu vaccination appointment booked\n\nTo change or cancel your appointment, contact the provider you booked with.",
+                        "ActionType": "CardWithText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "HELP_SUPPORT": {
+                        "ExternalRoutingCode": "HelpSupportInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_X": {
+                        "ExternalRoutingCode": "HealthcareProInfo",
+                        "ActionDescription": "### If this applies to you\n\nSpeak to your healthcare professional if you think you should be offered this vaccine.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_ALREADY_VACCINATED": {
+                        "ExternalRoutingCode": "AlreadyVaccinatedInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you believe you've not been vaccinated against COVID-19, speak to your healthcare professional.\n\nFor anything else, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "WALKIN": {
+                        "ExternalRoutingCode": "WalkIn",
+                        "ActionDescription": "### Get vaccinated without an appointment\n\nYou can find a pharmacy that offers walk-in appointments without booking. This service will be open from 1 September.",
+                        "ActionType": "ActionLinkWithInfoText",
+                        "UrlLink": "https://www.nhs.uk/nhs-services/vaccination-and-booking-services/find-a-pharmacy-that-offers-free-flu-vaccination/",
+                        "UrlLabel": "Find a pharmacy where you can get a free flu vaccination"
+                    },
+                    "119": {
+                        "ExternalRoutingCode": "119",
+                        "ActionDescription": "### Book over the phone\n\nYou can call [119](tel:119) free of charge to book over the phone if you cannot book online.\n\n You can speak to a translator if you need to.",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_SCHOOL_AGE": {
+                        "ExternalRoutingCode": "SchoolAgeInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    },
+                    "CHECK_CORRECT_OTHER_SETTING": {
+                        "ExternalRoutingCode": "ManagedSettingInfo",
+                        "ActionDescription": "### If you think this is incorrect\n\nIf you have already had this vaccination or your personal details are wrong, visit our [help and support page](https://www.nhs.uk/nhs-app/nhs-app-help-and-support/).",
+                        "ActionType": "InfoText",
+                        "UrlLink": null,
+                        "UrlLabel": ""
+                    }
+                }
+            }
+        ]
+    }
+}
