@@ -19,7 +19,7 @@ load_dotenv()
 AWS_REGION = "eu-west-2"
 logger = logging.getLogger(__name__)
 
-_DEFAULT_PRODUCT_ID = "Story_Test_Consumer_ID"
+_DEFAULT_PRODUCT_ID = "test-Story_Test_Consumer_ID"
 
 
 def initialise_tests(folder):
@@ -147,6 +147,7 @@ def load_all_expected_responses(folder_path):
     for path in Path(folder_path).iterdir():
         if path.suffix != ".json":
             continue
+
         try:
             with path.open() as f:
                 raw_json = json.load(f)
@@ -165,50 +166,48 @@ def load_all_expected_responses(folder_path):
     return all_data
 
 
-def _load_json_file(path: Path):
-    """Read and parse a JSON file, returning None on any read or parse error."""
-    try:
-        with path.open() as f:
-            return json.load(f)
-    except (OSError, IOError) as e:
-        logger.error("Failed to read test scenario file %s: %s", path, e)
-    except json.JSONDecodeError as e:
-        logger.error("Invalid JSON in test scenario file %s: %s", path, e)
-    return None
-
-
-def _ensure_default_product_id(request_headers: dict) -> dict:
+def _ensure_default_product_id(request_headers: dict, cached_test: bool) -> dict:
     """Add the default NHSE-Product-ID header if not already present."""
-    if not any(k == "NHSE-Product-ID" for k in request_headers):
-        request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
-    if request_headers["NHSE-Product-ID"] == "P.XWA-VFF":
-        request_headers["NHSE-Product-ID"] = "test-P.XWA-VFF"
-    if request_headers["NHSE-Product-ID"] == "P.WTJ-FJT":
-        request_headers["NHSE-Product-ID"] = "test-P.WTJ-FJT"
-    if request_headers["NHSE-Product-ID"] == "Story_Test_Consumer_ID":
-        request_headers["NHSE-Product-ID"] = "test-Story_Test_Consumer_ID"
+    if cached_test:
+        return request_headers
+
+    product_id = request_headers.get("NHSE-Product-ID")
+    if not product_id:
+        request_headers["NHSE-Product-ID"] = _DEFAULT_PRODUCT_ID
+    else:
+        product_id = str(product_id).strip()
+        if not product_id.startswith("test-"):
+            request_headers["NHSE-Product-ID"] = f"test-{product_id}"
+        else:
+            request_headers["NHSE-Product-ID"] = product_id
     return request_headers
 
 
-def _build_test_scenario_entry(raw_json: dict, resolved_data) -> dict:
+def _build_test_scenario_entry(raw_json: dict, resolved_data, path_name: str) -> dict:
     """Construct the standard scenario dict from resolved template data."""
     return {
         "dynamo_items": resolved_data,
         "nhs_number": extract_nhs_number_from_data(resolved_data),
         "config_filenames": raw_json.get("config_filenames"),
         "expected_response_code": raw_json.get("expected_response_code"),
-        "request_headers": _ensure_default_product_id(
-            raw_json.get("request_headers") or {}
-        ),
+        "request_headers": raw_json.get("request_headers") or {},
         "query_params": raw_json.get("query_params"),
         "scenario_name": raw_json.get("scenario_name"),
         "secret_version": raw_json.get("secret_version"),
     }
 
 
-def _process_single_scenario(path: Path, data_builder: TemplateEngine) -> dict | None:
-    raw_json = _load_json_file(path)
-    if raw_json is None:
+def _process_single_scenario(
+    path: Path, data_builder: TemplateEngine, cached_test: bool
+) -> dict | None:
+    try:
+        with path.open() as f:
+            raw_json = json.load(f)
+    except (OSError, IOError) as e:
+        logger.error("Failed to read test scenario file %s: %s", path, e)
+        return None
+    except json.JSONDecodeError as e:
+        logger.error("Invalid JSON in test scenario file %s: %s", path, e)
         return None
 
     scenario_data = raw_json.get("data")
@@ -222,35 +221,28 @@ def _process_single_scenario(path: Path, data_builder: TemplateEngine) -> dict |
         logger.error("Template application failed for %s: %s", path, e)
         return None
 
+    request_headers = raw_json.get("request_headers") or {}
+    raw_json["request_headers"] = _ensure_default_product_id(
+        request_headers, cached_test
+    )
+
     resolved_data = resolve_placeholders_in_data(templated_data, path.name)
-    return _build_test_scenario_entry(raw_json, resolved_data)
+
+    return _build_test_scenario_entry(raw_json, resolved_data, path.name)
 
 
 def load_all_test_scenarios(folder_path):
-    """Load, template-expand, and resolve all scenario JSON files in ``folder_path``.
+    all_data = {}
 
-    Files are processed in alphabetical order. Files that cannot be read,
-    parsed, or template-expanded are skipped with an error log entry.
+    data_builder = TemplateEngine.create()
+    cached_test = "performance" in folder_path.name.lower()
 
-    Args:
-        folder_path: Directory containing scenario JSON files.
-
-    Returns:
-        Dict mapping filenames to resolved scenario dicts.
-    """
-    all_data: dict = {}
-
-    try:
-        data_builder = TemplateEngine.create()
-    except Exception as e:
-        logger.error("Failed to initialize TemplateEngine: %s", e)
-        raise
-
+    # Sort files alphabetically by filename
     for path in sorted(Path(folder_path).iterdir(), key=lambda p: p.name.lower()):
         if path.suffix != ".json":
             continue
 
-        scenario_result = _process_single_scenario(path, data_builder)
+        scenario_result = _process_single_scenario(path, data_builder, cached_test)
         if scenario_result is not None:
             all_data[path.name] = scenario_result
 
@@ -258,14 +250,6 @@ def load_all_test_scenarios(folder_path):
 
 
 def load_data_items_to_dynamo(folder_path):
-    """Load raw DynamoDB items from JSON files and insert them immediately.
-
-    Each file must contain a top-level ``"data"`` key with a list of item dicts.
-    Files that cannot be read or parsed are skipped with an error log entry.
-
-    Args:
-        folder_path: Directory containing data JSON files.
-    """
     for path in Path(folder_path).iterdir():
         if path.suffix != ".json":
             continue
@@ -274,10 +258,10 @@ def load_data_items_to_dynamo(folder_path):
             with path.open() as f:
                 raw_json = json.load(f)
         except (OSError, IOError) as e:
-            logger.error("Failed to read data file %s: %s", path, e)
+            logger.error("Failed to read data item file %s: %s", path, e)
             continue
         except json.JSONDecodeError as e:
-            logger.error("Invalid JSON in data file %s: %s", path, e)
+            logger.error("Invalid JSON in data item file %s: %s", path, e)
             continue
 
         raw_data = raw_json.get("data")
@@ -285,7 +269,10 @@ def load_data_items_to_dynamo(folder_path):
             logger.error("Missing required 'data' key in file %s", path)
             continue
 
+        # Resolve placeholders with shared DTO
         resolved_data = resolve_placeholders_in_data(raw_data, path.name)
+
+        # Insert immediately
         insert_into_dynamo(resolved_data)
 
 
