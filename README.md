@@ -51,3 +51,5 @@ Pre commit hooks run checks on your code to ensure quality before being allowed 
 You can perform this process by running: <br /> `make pre-commit`
 
 You may need to run this multiple times to ensure everything is ok before committing.
+
+This is added for Adam
