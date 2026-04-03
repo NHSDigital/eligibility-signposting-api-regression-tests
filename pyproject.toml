@@ -28,7 +28,7 @@ boto3 = "^1.42.82"
 faker = "^40.12.0"
 pyright = "^1.1.408"
 pyflakes = "^3.4.0"
-locust = "^2.43.3"
+locust = "^2.43.4"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.5.1"
